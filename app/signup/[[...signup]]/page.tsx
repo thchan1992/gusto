@@ -1,15 +1,15 @@
-import { SignIn } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
 
-const SigninPage = () => {
+const SignupPage = () => {
   return (
     <>
       <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4">
-              <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:p-[60px] ">
-                <SignIn path="/signin" signUpUrl="/signup" />
+              <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:p-[60px]">
+                <SignUp path="/signup" signInUrl="/signin" />
               </div>
             </div>
           </div>
@@ -76,4 +76,4 @@ const SigninPage = () => {
   );
 };
 
-export default SigninPage;
+export default SignupPage;
