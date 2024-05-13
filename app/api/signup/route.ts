@@ -1,10 +1,10 @@
 import { NextResponse, NextRequest } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import Quiz from "@/lib/models/Quiz";
+
 import { getAuth } from "@clerk/nextjs/server";
 import { User } from "@/lib/models/User";
 import { useUser } from "@clerk/nextjs";
-import Clerk from "@clerk/clerk-js";
+
 export async function POST(req: NextRequest, res: NextResponse) {
   await dbConnect();
 
