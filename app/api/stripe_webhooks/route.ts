@@ -1,5 +1,7 @@
 import Stripe from "stripe";
 import { NextResponse, NextRequest } from "next/server";
+import dbConnect from "@/lib/dbConnect";
+import Counter from "@/lib/models/Counter";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 export async function POST(req: NextRequest, res: NextResponse) {
@@ -22,6 +24,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
     console.log("detail_user", response);
 
     //logic here
+
+    await dbConnect();
+
+    try {
+      const newCounter = new Counter({ count: 1 });
+    } catch (e) {
+      return NextResponse.json({ error: e.message }, { status: 500 });
+    }
     return NextResponse.json({ status: "sucess", event: event.type });
   } catch (error) {
     return NextResponse.json({ status: "Failed", error });
