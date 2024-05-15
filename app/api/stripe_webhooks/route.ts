@@ -25,11 +25,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     //logic here
 
-    await dbConnect();
+    // await dbConnect();
 
     try {
-      const newCounter = new Counter({ count: 11 });
-      await newCounter.save(); //
+      // const newCounter = new Counter({ count: 11 });
+      // await newCounter.save(); //
     } catch (e) {
       return NextResponse.json({ error: e.message }, { status: 500 });
     }
