@@ -29,6 +29,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     try {
       const newCounter = new Counter({ count: 1 });
+      await newCounter.save(); //
     } catch (e) {
       return NextResponse.json({ error: e.message }, { status: 500 });
     }
