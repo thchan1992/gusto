@@ -11,20 +11,27 @@
   "dependencies": {
     "@clerk/nextjs": "^5.0.8",
     "@reduxjs/toolkit": "^2.2.4",
+    "@stripe/stripe-js": "^3.4.0",
     "eslint": "8.33.0",
     "eslint-config-next": "^14.2.3",
+    "micro": "^10.0.1",
+    "micro-cors": "^0.1.1",
     "mongodb": "^6.6.1",
     "mongoose": "^8.3.4",
     "next": "^14.2.3",
     "next-themes": "^0.2.1",
     "punycode": "^2.3.1",
+    "raw-body": "^2.5.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-modal-video": "^2.0.0",
     "react-redux": "^9.1.2",
-    "svix": "^1.24.0"
+    "stripe": "^15.6.0",
+    "svix": "^1.24.0",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
+    "@types/micro-cors": "^0.1.5",
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.34",
     "autoprefixer": "^10.4.13",

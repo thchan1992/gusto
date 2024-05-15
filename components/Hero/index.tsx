@@ -34,6 +34,13 @@ const Hero = () => {
                     Download Now
                   </Link> */}
                   <DownloadButton />
+
+                  <Link
+                    href="https://buy.stripe.com/test_fZebLb0SR5wrfledQQ"
+                    className="rounded-md bg-black/20 px-8 py-4 text-base font-semibold text-black duration-300 ease-in-out hover:bg-black/30 dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
+                  >
+                    Payment
+                  </Link>
                   <Link
                     href="https://github.com/NextJSTemplates/startup-nextjs"
                     className="rounded-md bg-black/20 px-8 py-4 text-base font-semibold text-black duration-300 ease-in-out hover:bg-black/30 dark:bg-white/20 dark:text-white dark:hover:bg-white/30"
