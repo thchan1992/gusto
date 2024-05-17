@@ -18,6 +18,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         _id: userId,
         email: user.primaryEmailAddress,
       });
+      //save user
+      await newUser.save();
     } catch (err: any) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
