@@ -15,7 +15,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   if (userId) {
     try {
       const newUser = new User({
-        _id: userId,
+        userId: userId,
         email: user.primaryEmailAddress,
       });
       //save user
