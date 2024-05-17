@@ -21,7 +21,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     );
 
     console.log("event", event.type);
-    console.log("detail_user", response);
+    console.log("detail_user.", response);
 
     //logic here
 
