@@ -11,15 +11,17 @@ export async function POST(req: NextRequest, res: NextResponse) {
   const { user } = useUser();
   const { userId } = getAuth(req);
 
-  console.log(user.primaryEmailAddress);
+  console.log("user email", user.primaryEmailAddress);
+  console.log("user id ", userId);
+  // console.log("xxxx")
   if (userId) {
     try {
-      const newUser = new User({
-        userId: userId,
-        email: user.primaryEmailAddress,
-      });
-      //save user
-      await newUser.save();
+      // const newUser = new User({
+      //   userId: userId,
+      //   email: user.primaryEmailAddress,
+      // });
+      // //save user
+      // await newUser.save();
     } catch (err: any) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }

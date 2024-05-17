@@ -59,8 +59,8 @@ export async function POST(req: Request) {
     console.log("useremail:", evt.data.email_addresses[0].email_address);
 
     const newUser = new User({
-      _id: evt.data.id,
       email: evt.data.email_addresses[0].email_address,
+      userId: evt.data.id,
     });
     await newUser.save();
     console.log("user saved to db completed");
