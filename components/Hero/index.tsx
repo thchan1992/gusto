@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import DownloadButton from "../TestButton";
+
 import { TestRedux } from "./testRedux";
 import { useUser } from "@clerk/nextjs";
 import Dashboard from "@/components/Dashboard";
@@ -42,7 +42,6 @@ const Hero = () => {
                   >
                     Download Now
                   </Link> */}
-                    <DownloadButton />
 
                     <Link
                       href="https://buy.stripe.com/test_fZebLb0SR5wrfledQQ"
