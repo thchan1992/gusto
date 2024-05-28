@@ -1,12 +1,12 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface ITroubleShoot extends Document {
-  quizList: Types.ObjectId[];
+  quizList: mongoose.Schema.Types.ObjectId[];
   title: string;
   createdBy: string;
 }
 
-const troubleShootSchema: Schema<ITroubleShoot> = new Schema<ITroubleShoot>(
+const troubleShootSchema: Schema = new Schema<ITroubleShoot>(
   {
     quizList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Quiz" }],
     title: { type: String, required: true },
@@ -19,6 +19,7 @@ const troubleShootSchema: Schema<ITroubleShoot> = new Schema<ITroubleShoot>(
   { timestamps: true }
 );
 
-export const TroubleShoot =
-  mongoose.models.TroubleShoot ||
-  mongoose.model<ITroubleShoot>("TroubleShoot", troubleShootSchema);
+export const TroubleShoot = mongoose.model<ITroubleShoot>(
+  "TroubleShoot",
+  troubleShootSchema
+);
