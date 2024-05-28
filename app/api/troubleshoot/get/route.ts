@@ -1,8 +1,7 @@
-import { NextResponse, NextRequest } from "next/server";
 import dbConnect from "@/lib/dbConnect";
-import Quiz from "@/lib/models/Quiz";
+import { NextResponse, NextRequest } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
-import { ITroubleShoot, TroubleShoot } from "@/lib/models/TroubleShoot";
+import { TroubleShoot, ITroubleShoot } from "@/lib/models/TroubleShoot";
 
 export async function GET(req: NextRequest) {
   await dbConnect();
@@ -13,15 +12,17 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const troubleShoots: ITroubleShoot[] = (await TroubleShoot.find({
+    const troubleShoots = await TroubleShoot.find<ITroubleShoot>({
       createdBy: userId,
-    }).exec()) as ITroubleShoot[];
+    }).exec();
+
+    console.log("TroubleShoots found:", troubleShoots);
 
     return NextResponse.json({ data: troubleShoots }, { status: 200 });
-  } catch (err: any) {
-    console.error("Error fetching TroubleShoots:", err);
+  } catch (error: any) {
+    console.error("Error fetching TroubleShoots:", error);
     return NextResponse.json(
-      { error: err.message || "Internal Server Error" },
+      { error: error.message || "Internal Server Error" },
       { status: 500 }
     );
   }
