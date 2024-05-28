@@ -7,7 +7,7 @@ const CreateTroubleShootPage = () => {
   return (
     <>
       <Breadcrumb
-        pageName="Create A TroubleShoot"
+        pageName="Create A TroubleShoot."
         description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In varius eros eget sapien consectetur ultrices. Ut quis dapibus libero."
       />
       <CreateTroubleShoot />
