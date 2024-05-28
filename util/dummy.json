@@ -1,0 +1,48 @@
+[
+  {
+    "_id": "1",
+    "isFirst": true,
+    "question": "Check count history and gather the last counting date",
+    "imageUrl": "",
+    "options": [
+      {
+        "text": "Next",
+        "nextQuizId": "2"
+      }
+    ]
+  },
+  {
+    "_id": "2",
+    "question": "Is Up or Down?",
+    "isFirst": false,
+    "imageUrl": "",
+    "options": [
+      { "text": "Down", "nextQuizId": "3" },
+      { "text": "Up", "nextQuizId": "4" }
+    ]
+  },
+  {
+    "_id": "3",
+    "question": "Checking the GBI portal to gather all the serial number without POS number/reverse request since the last counting date",
+    "isFirst": false,
+    "imageUrl": "",
+    "options": [
+      {
+        "text": "Next",
+        "nextQuizId": "1"
+      }
+    ]
+  },
+  {
+    "_id": "4",
+    "question": "Checking whether there are any deliveries which have not been booked in on the receiving section of the backstage app?",
+    "isFirst": false,
+    "imageUrl": "",
+    "options": [
+      {
+        "text": "Next",
+        "nextQuizId": "1"
+      }
+    ]
+  }
+]
