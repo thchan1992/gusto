@@ -6,7 +6,7 @@ export interface ITroubleShoot extends Document {
   createdBy: string;
 }
 
-const troubleShootSchema: Schema = new Schema<ITroubleShoot>(
+const troubleShootSchema: Schema<ITroubleShoot> = new Schema<ITroubleShoot>(
   {
     quizList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Quiz" }],
     title: { type: String, required: true },

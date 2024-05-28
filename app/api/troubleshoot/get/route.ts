@@ -12,9 +12,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const troubleShoots = await TroubleShoot.find<ITroubleShoot>({
+    const troubleShoots = await (TroubleShoot.find({
       createdBy: userId,
-    }).exec();
+    }).exec() as Promise<ITroubleShoot[]>);
 
     console.log("TroubleShoots found:", troubleShoots);
 
