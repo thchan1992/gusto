@@ -26,7 +26,23 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   >([]);
 
   useEffect(() => {
-    console.log(id, "troubeshoot id");
+    const fetchTroubleShoots = async () => {
+      try {
+        const response = await fetch("/api/troubleshoot/get/" + id);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        console.log("response", response);
+        const data = await response.json();
+        console.log(data, "data");
+      } catch (error) {
+        // setError(error.message);
+      } finally {
+        // setLoading(false);
+      }
+    };
+    fetchTroubleShoots();
+
     console.log(loadedQuestions);
   }, [loadedQuestions, id]);
 

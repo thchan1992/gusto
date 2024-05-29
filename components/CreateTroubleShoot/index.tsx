@@ -14,7 +14,7 @@ const CreateTroubleShoot = () => {
   useEffect(() => {
     const fetchTroubleShoots = async () => {
       try {
-        const response = await fetch("/api/troubleshoot/get");
+        const response = await fetch("/api/troubleshoot/get_all");
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }

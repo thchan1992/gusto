@@ -19,7 +19,6 @@ const troubleShootSchema: Schema = new Schema<ITroubleShoot>(
   { timestamps: true }
 );
 
-export const TroubleShoot = mongoose.model<ITroubleShoot>(
-  "TroubleShoot",
-  troubleShootSchema
-);
+export const TroubleShoot =
+  mongoose.models.TroubleShoot ||
+  mongoose.model<ITroubleShoot>("TroubleShoot", troubleShootSchema);
