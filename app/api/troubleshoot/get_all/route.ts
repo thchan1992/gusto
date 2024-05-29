@@ -5,7 +5,7 @@ import { getAuth } from "@clerk/nextjs/server";
 import { TroubleShoot } from "@/lib/models/TroubleShoot";
 import { NextApiRequest } from "next";
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
   await dbConnect();
   const { userId } = getAuth(req);
   console.log(userId, "userId");
