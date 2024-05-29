@@ -10,7 +10,6 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const idToUse = params.id;
-  console.log(params.id, "paramss");
 
   await dbConnect();
 
@@ -18,7 +17,7 @@ export async function GET(
     const troubleShoot = await TroubleShoot.findById(idToUse).exec();
     console.log(troubleShoot, "troubleshoot found");
 
-    return NextResponse.json({ data: idToUse }, { status: 200 });
+    return NextResponse.json({ data: troubleShoot }, { status: 200 });
   } catch (err: any) {
     console.error("Error fetching TroubleShoots:", err);
     return NextResponse.json(

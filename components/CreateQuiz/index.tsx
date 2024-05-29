@@ -13,6 +13,7 @@ interface CreateQuizProps {
   id: string;
 }
 const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
+  const [troubleShootTitle, setTroubleShootTitle] = useState("");
   const [loadedQuestions, setLoadedQuestions] = useState<Quiz[]>(data);
   const [panelStatus, setPanelStatus] = useState<string>("NORMAL");
   const [questionText, setQuestionText] = useState<string>("");
@@ -34,7 +35,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
         }
         console.log("response", response);
         const data = await response.json();
-        console.log(data, "data");
+        console.log(data.data.title, "data found");
+        setTroubleShootTitle(data.data.title);
       } catch (error) {
         // setError(error.message);
       } finally {
@@ -154,6 +156,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
         id="createQuiz"
         className="overflow-hidden py-16 md:py-20 lg:py-28"
       >
+        <h1>{troubleShootTitle}</h1>
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4 lg:w-7/12 xl:w-8/12">
