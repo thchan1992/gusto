@@ -9,6 +9,7 @@ const CreateTroubleShoot = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [troubleshootList, setTroubleshootList] = useState([]);
+  const [troubleshootTitle, setTroubleShootTitle] = useState<string>("");
   const router = useRouter();
 
   useEffect(() => {
@@ -50,6 +51,12 @@ const CreateTroubleShoot = () => {
                   console.log("creating a new troubleshoot");
                   const response = await fetch("/api/troubleshoot/create", {
                     method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      title: troubleshootTitle,
+                    }),
                   });
                   if (response.ok) {
                     console.log("created a new troubleshoot");
@@ -57,6 +64,16 @@ const CreateTroubleShoot = () => {
 
                     router.push("/create_troubleshoot/" + result.data._id);
                   }
+                }}
+              />
+              <input
+                type="text"
+                name="questionText"
+                placeholder="Title for troubleshoot"
+                className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                value={troubleshootTitle}
+                onChange={(e) => {
+                  setTroubleShootTitle(e.target.value);
                 }}
               />
               <div
