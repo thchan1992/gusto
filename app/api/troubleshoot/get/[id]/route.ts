@@ -9,15 +9,22 @@ export async function GET(
   // res: NextResponse,
   { params }: { params: { id: string } }
 ) {
-  const idToUse = params.id;
+  const troubleShootId = params.id;
 
   await dbConnect();
 
   try {
-    const troubleShoot = await TroubleShoot.findById(idToUse).exec();
+    const troubleShoot = await TroubleShoot.findById(troubleShootId).exec();
+    const relatedQuizzes = await Quiz.find({
+      troubleShootId: troubleShootId,
+    }).sort({ createdAt: 1 });
     console.log(troubleShoot, "troubleshoot found");
+    console.log(relatedQuizzes, "relatedQuizzes");
 
-    return NextResponse.json({ data: troubleShoot }, { status: 200 });
+    return NextResponse.json(
+      { data: { questions: relatedQuizzes, troubleshoot: troubleShoot } },
+      { status: 200 }
+    );
   } catch (err: any) {
     console.error("Error fetching TroubleShoots:", err);
     return NextResponse.json(

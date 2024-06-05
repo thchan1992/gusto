@@ -8,6 +8,7 @@ export interface IQuiz extends Document {
   question: string;
   options: { text: string; nextQuizId?: mongoose.Schema.Types.ObjectId }[];
   createdBy: mongoose.Schema.Types.ObjectId;
+  troubleShootId: mongoose.Schema.Types.ObjectId;
 }
 
 const optionSchema: Schema = new mongoose.Schema({
@@ -31,6 +32,11 @@ const quizSchema: Schema = new Schema<IQuiz>(
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
+    },
+    troubleShootId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TroubleShoot",
       required: true,
     },
   },
