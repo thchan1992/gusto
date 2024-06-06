@@ -19,9 +19,9 @@ const CreateTroubleShoot = () => {
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
-        console.log("response", response);
+
         const data = await response.json();
-        console.log(data, "data");
+
         setTroubleshootList(data.data);
       } catch (error) {
         setError(error.message);
@@ -40,42 +40,56 @@ const CreateTroubleShoot = () => {
     <>
       <section
         id="createQuiz"
-        className="overflow-hidden py-16 md:py-20 lg:py-28"
+        className="overflow-hidden py-16 md:py-20 lg:py-28 "
       >
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
-            <div className="w-full px-4 lg:w-7/12 xl:w-8/12">
-              <Button
-                title="Create a new troubleshoot"
-                onClick={async () => {
-                  console.log("creating a new troubleshoot");
-                  const response = await fetch("/api/troubleshoot/create", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      title: troubleshootTitle,
-                    }),
-                  });
-                  if (response.ok) {
-                    console.log("created a new troubleshoot");
-                    const result = await response.json();
+            <div className="w-full px-4 lg:w-7/12 xl:w-8/12 ">
+              <div className="flex flex-row justify-between ">
+                <input
+                  type="text"
+                  name="questionText"
+                  placeholder="Title for troubleshoot"
+                  value={troubleshootTitle}
+                  onChange={(e) => {
+                    setTroubleShootTitle(e.target.value);
+                  }}
+                  className="input input-bordered input-primary w-full mb-8 mr-1"
+                />
+                <button
+                  className="btn btn-primary w-1/4 mb-8"
+                  // title="Create a new troubleshoot"
+                  onClick={async () => {
+                    const response = await fetch("/api/troubleshoot/create", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        title: troubleshootTitle,
+                      }),
+                    });
+                    if (response.ok) {
+                      const result = await response.json();
 
-                    router.push("/create_troubleshoot/" + result.data._id);
-                  }
-                }}
-              />
-              <input
-                type="text"
-                name="questionText"
-                placeholder="Title for troubleshoot"
-                className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                value={troubleshootTitle}
-                onChange={(e) => {
-                  setTroubleShootTitle(e.target.value);
-                }}
-              />
+                      router.push("/create_troubleshoot/" + result.data._id);
+                    }
+                  }}
+                >
+                  Create a new troubleshoot
+                </button>
+
+                {/* <input
+                  type="text"
+                  name="questionText"
+                  placeholder="Title for troubleshoot"
+                  className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                  value={troubleshootTitle}
+                  onChange={(e) => {
+                    setTroubleShootTitle(e.target.value);
+                  }}
+                /> */}
+              </div>
               <div
                 className="wow fadeInUp mb-12 rounded-md bg-primary/[3%] px-8 py-11 dark:bg-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]"
                 data-wow-delay=".15s
@@ -83,11 +97,22 @@ const CreateTroubleShoot = () => {
               >
                 {troubleshootList.length > 0 &&
                   troubleshootList.map((troubleshoot, i) => (
-                    <div key={i}>
+                    <div
+                      key={i}
+                      className="card w-96 bg-base-100 shadow-xl mt-2"
+                    >
                       <Link href={"/create_troubleshoot/" + troubleshoot._id}>
-                        {troubleshoot.title}
+                        <div className="card-body">
+                          {/* <h2 className="card-title">Shoes!</h2> */}
+                          {troubleshoot.title}
+                        </div>
                       </Link>
                     </div>
+                    // <div key={i}>
+                    //   <Link href={"/create_troubleshoot/" + troubleshoot._id}>
+                    //     {troubleshoot.title}
+                    //   </Link>
+                    // </div>
                   ))}
               </div>
             </div>
