@@ -38,11 +38,12 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
-        console.log("response", response);
+
         const data = await response.json();
-        console.log(data.data.troubleshoot.title, "data found");
+
         setTroubleShootTitle(data.data.troubleshoot.title);
-        console.log(data.data.questions);
+        console.log(data.data, "Question List");
+
         setQuestionList(data.data.questions);
       } catch (error) {
         // setError(error.message);
@@ -52,12 +53,6 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     };
     fetchTroubleShoots();
   }, [id]);
-
-  // useEffect(()=>{setQuestionList(prev=>[...prev,])},[questionList])
-
-  const handleSaveQuestion = () => {
-    console.log("saving question");
-  };
 
   const addQuestionAPI = async () => {
     const res = await fetch("/api/create_quiz", {
@@ -73,109 +68,10 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     });
 
     const data = await res.json();
-    // console.log(data.data);
 
     setQuestionList(data.data.questionList);
     setQuizId(data.data.newQuestion._id);
   };
-  // const Panel = () => {
-  //   if (panelStatus === "NORMAL") {
-  //     return (
-  //       <>
-  //         <Button
-  //           title="Add a new Question"
-  //           onClick={() => {
-  //             setPanelStatus("SET_QUESTION");
-  //           }}
-  //         />
-  //       </>
-  //     );
-  //   } else if (panelStatus === "SET_QUESTION") {
-  //     return (
-  //       <>
-  //         <h1>{questionText}</h1>
-
-  //         <Button
-  //           title="Done"
-  //           onClick={() => {
-  //             setPanelStatus("NORMAL");
-  //             handleSaveQuestion();
-  //           }}
-  //         />
-  //         <input
-  //           type="text"
-  //           name="questionText"
-  //           placeholder="question"
-  //           className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-  //           value={questionText}
-  //           onChange={(e) => {
-  //             setQuestionText(e.target.value);
-  //           }}
-  //         />
-  //         <Button
-  //           title="Add an answer for this "
-  //           onClick={() => {
-  //             setPanelStatus("SET_ANSWER");
-  //             handleSaveQuestion();
-  //           }}
-  //         />
-  //         {/* <select
-  //                       className="select select-bordered w-full max-w-xs"
-  //                       value={option}
-  //                       onChange={(e) => setOption(e.target.value)}
-  //                     >
-  //                       <option disabled>Link</option>
-  //                       {loadedQuestions.map((item, i) => {
-  //                         return <option key={i} value={item._id}>{item.question}</option>;
-  //                       })}
-  //                     </select> */}
-  //       </>
-  //     );
-  //   } else {
-  //     return (
-  //       <>
-  //         <h1>{questionText}</h1>
-
-  //         <input
-  //           type="text"
-  //           name="answerText"
-  //           placeholder="option"
-  //           className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-  //           value={answerText}
-  //           onChange={(e) => {
-  //             setAnswerText(e.target.value);
-  //           }}
-  //         />
-  //         <select
-  //           className="select select-bordered w-full max-w-xs"
-  //           value={answerText}
-  //           onChange={(e) => setAnswerLink(e.target.value)}
-  //         >
-  //           <option disabled>Link</option>
-  //           {loadedQuestions.map((item, i) => {
-  //             return (
-  //               <option key={i} value={item._id}>
-  //                 {item.question}
-  //               </option>
-  //             );
-  //           })}
-  //         </select>
-  //         <Button
-  //           title={"Finish the option"}
-  //           onClick={() => {
-  //             setOptionList((prev) => [
-  //               ...prev,
-  //               { text: answerText, nextQuizId: answerLink },
-  //             ]);
-  //             setAnswerText("");
-  //             setAnswerLink("");
-  //             setPanelStatus("SET_QUESTION");
-  //           }}
-  //         />
-  //       </>
-  //     );
-  //   }
-  // };
 
   const addOptionAPI = async () => {
     const res = await fetch("/api/create_quiz/create_option", {
@@ -191,7 +87,6 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
     const data = await res.json();
     // console.log(data.data);
-    console.log(data, "Questio Liwt");
 
     setQuestionList(data.data.questionList);
   };
@@ -200,14 +95,18 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     switch (panelStatus) {
       case NORMAL: {
         setPanelStatus(SET_ANSWER);
+
         await addQuestionAPI();
         //send api request to link the question id to trouble shooting
-
         break;
       }
       case SET_ANSWER: {
         setPanelStatus(NORMAL);
-        console.log(optionList);
+        setOptionList([]);
+        setQuestionText("");
+        setAnswerText("");
+        setAnswerLink("");
+
         await addOptionAPI();
         //send optionList and question to API
         break;
@@ -266,7 +165,14 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                 {/* Question List */}
                 {questionList.length > 0 && panelStatus === NORMAL
                   ? questionList.map((item, i) => {
-                      return <div key={i}>{item.question}</div>;
+                      return (
+                        <div
+                          key={i}
+                          className="card w-96 bg-base-100 shadow-xl mt-2"
+                        >
+                          <div className="card-body">{item.question}</div>
+                        </div>
+                      );
                     })
                   : undefined}
 
@@ -279,51 +185,51 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                 })}
 
                 {panelStatus === SET_ANSWER && (
-                  <div className="flex flex-row">
-                    <input
-                      type="text"
-                      name="answerText"
-                      placeholder="Answer"
-                      className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                      value={answerText}
+                  <div>
+                    <div className="flex flex-row">
+                      <input
+                        type="text"
+                        name="answerText"
+                        placeholder="Answer"
+                        className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                        value={answerText}
+                        onChange={(e) => {
+                          setAnswerText(e.target.value);
+                        }}
+                      />
+                      <Button
+                        title="Add option"
+                        onClick={() => {
+                          setOptionList((prev) => [
+                            ...prev,
+                            { text: answerText, nextQuizId: answerLink },
+                          ]);
+                          //add more answer
+                          setAnswerLink("");
+                          setAnswerText("");
+                        }}
+                      />
+                    </div>
+                    <select
+                      className="select select-bordered w-full max-w-xs"
+                      value={answerLink}
                       onChange={(e) => {
-                        setAnswerText(e.target.value);
+                        setAnswerLink(e.target.value);
                       }}
-                    />
-                    <Button
-                      title="Add option"
-                      onClick={() => {
-                        setOptionList((prev) => [
-                          ...prev,
-                          { text: answerText, nextQuizId: answerLink },
-                        ]);
-                        //add more answer
-                        setAnswerLink("");
-                        setAnswerText("");
-                      }}
-                    />
+                    >
+                      <option value="" disabled>
+                        Answer
+                      </option>
+                      {questionList.map((item, i) => {
+                        return (
+                          <option key={i} value={item._id}>
+                            {item.question}
+                          </option>
+                        );
+                      })}
+                    </select>
                   </div>
                 )}
-
-                <select
-                  className="select select-bordered w-full max-w-xs"
-                  value={answerLink}
-                  onChange={(e) => {
-                    setAnswerLink(e.target.value);
-                    console.log(e.target.value);
-                  }}
-                >
-                  <option value="" disabled>
-                    Answer
-                  </option>
-                  {questionList.map((item, i) => {
-                    return (
-                      <option key={i} value={item._id}>
-                        {item.question}
-                      </option>
-                    );
-                  })}
-                </select>
 
                 {/* button */}
                 {/* {Panel()} */}
