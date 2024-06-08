@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addQuizList } from "@/lib/features/quizList/quizListSlice";
 import { Quiz } from "@/lib/types/Quiz";
 import data from "@/util/dummy.json";
+import Modal from "./Modal";
 
 interface CreateQuizProps {
   id: string;
@@ -21,6 +22,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   const [answerText, setAnswerText] = useState<string>("");
   const [answerLink, setAnswerLink] = useState<string>("");
   const [quizId, setQuizId] = useState<string>("");
+  const [visible, setVisble] = useState(false);
   const [optionList, setOptionList] = useState<
     {
       text: string;
@@ -123,6 +125,15 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
         id="createQuiz"
         className="overflow-hidden py-16 md:py-20 lg:py-28"
       >
+        <Button title={"open modal"} onClick={() => setVisble(true)} />
+        <Modal
+          title={"hello"}
+          child="hello"
+          visible={visible}
+          onClose={() => {
+            visible ? setVisble(false) : setVisble(true);
+          }}
+        />
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4 lg:w-7/12 xl:w-8/12">
@@ -146,6 +157,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                       setQuestionText(e.target.value);
                     }}
                   />
+
                   <div className="mt-5 ml-1">
                     <Button
                       title={
@@ -162,6 +174,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                     />
                   </div>
                 </div>
+
                 {/* Question List */}
                 {questionList.length > 0 && panelStatus === NORMAL
                   ? questionList.map((item, i) => {
