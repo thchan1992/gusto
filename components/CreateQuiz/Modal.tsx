@@ -1,6 +1,13 @@
 import { useRef, useEffect } from "react";
 
-function Modal({ title, text, visible, onClose }) {
+interface ModalProps {
+  title: string;
+  child: any;
+  visible: boolean;
+  onClose: () => void;
+}
+
+function Modal({ title, child, visible, onClose }: ModalProps) {
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -30,7 +37,7 @@ function Modal({ title, text, visible, onClose }) {
     >
       <form method="dialog" className="modal-box">
         <h3 className="font-bold text-lg">{title}</h3>
-        <p className="py-4">{text}</p>
+        <p className="py-4">{child}</p>
         <div className="modal-action">
           {/* if there is a button in form, it will close the modal */}
           <button className="btn" onClick={handleClose}>
