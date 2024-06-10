@@ -1,5 +1,6 @@
 import { Quiz } from "@/lib/types/Quiz";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import Button from "../Button";
 
 interface ModalProps {
   title: string;
@@ -23,6 +24,14 @@ function Modal({
   questionList,
 }: ModalProps) {
   const modalRef = useRef(null);
+  const [answerText, setAnswerText] = useState<string>("");
+  const [answerLink, setAnswerLink] = useState<string>("");
+  const [optionList, setOptionList] = useState<
+    {
+      text: string;
+      nextQuizId: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     if (!modalRef.current) {
@@ -82,6 +91,20 @@ function Modal({
       });
     }
   };
+
+  const addOption = () => {
+    if (answerText.trim()) {
+      const newOption = { text: answerText, nextQuizId: answerLink };
+      const updatedOptions = [...question.options, newOption];
+      setSelectedQuestion({
+        ...question,
+        options: updatedOptions,
+      });
+      setAnswerText("");
+      setAnswerLink("");
+    }
+  };
+
   return (
     <dialog
       ref={modalRef}
@@ -89,7 +112,11 @@ function Modal({
       className="modal"
       onCancel={handleESC}
     >
-      <form method="dialog" className="modal-box">
+      <form
+        method="dialog"
+        className="modal-box"
+        onSubmit={(e) => e.preventDefault()}
+      >
         <h3 className="font-bold text-lg">{title}</h3>
 
         {question ? (
@@ -145,6 +172,49 @@ function Modal({
         ) : (
           <p>Loading</p>
         )}
+
+        <input
+          type="text"
+          name="answerText"
+          placeholder="Answer"
+          className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+          value={answerText}
+          onChange={(e) => {
+            setAnswerText(e.target.value);
+          }}
+        />
+        <Button
+          title="Add option"
+          onClick={() => {
+            // setOptionList((prev) => [
+            //   ...prev,
+            //   { text: answerText, nextQuizId: answerLink },
+            // ]);
+            addOption();
+
+            //add more answer
+            setAnswerLink("");
+            setAnswerText("");
+          }}
+        />
+        <select
+          className="select select-bordered w-full max-w-xs"
+          value={answerLink || ""}
+          onChange={(e) => {
+            setAnswerLink(e.target.value);
+          }}
+        >
+          <option value="" disabled>
+            Answer
+          </option>
+          {questionList.map((questionItem, j) => {
+            return (
+              <option key={j} value={questionItem._id}>
+                {questionItem.question}
+              </option>
+            );
+          })}
+        </select>
 
         <div className="modal-action">
           {/* if there is a button in form, it will close the modal */}
