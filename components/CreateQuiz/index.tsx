@@ -18,11 +18,12 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   // const [loadedQuestions, setLoadedQuestions] = useState<Quiz[]>(data);
   const [panelStatus, setPanelStatus] = useState<string>("NORMAL");
   const [questionText, setQuestionText] = useState<string>("");
-  const [questionList, setQuestionList] = useState([]);
+  const [questionList, setQuestionList] = useState<Quiz[]>([]);
   const [answerText, setAnswerText] = useState<string>("");
   const [answerLink, setAnswerLink] = useState<string>("");
   const [quizId, setQuizId] = useState<string>("");
   const [visible, setVisble] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState<Quiz | null>(null);
   const [optionList, setOptionList] = useState<
     {
       text: string;
@@ -44,7 +45,6 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
         const data = await response.json();
 
         setTroubleShootTitle(data.data.troubleshoot.title);
-        console.log(data.data, "Question List");
 
         setQuestionList(data.data.questions);
       } catch (error) {
@@ -88,7 +88,6 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     });
 
     const data = await res.json();
-    // console.log(data.data);
 
     setQuestionList(data.data.questionList);
   };
@@ -125,13 +124,20 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
         id="createQuiz"
         className="overflow-hidden py-16 md:py-20 lg:py-28"
       >
-        <Button title={"open modal"} onClick={() => setVisble(true)} />
         <Modal
+          questionList={questionList}
           title={"hello"}
           child="hello"
+          question={selectedQuestion}
+          setSelectedQuestion={setSelectedQuestion}
           visible={visible}
           onClose={() => {
             visible ? setVisble(false) : setVisble(true);
+          }}
+          onConfirm={() => {
+            visible ? setVisble(false) : setVisble(true);
+            //send api to update the question
+            console.log("new updated question", selectedQuestion);
           }}
         />
         <div className="container">
@@ -183,7 +189,16 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                           key={i}
                           className="card w-96 bg-base-100 shadow-xl mt-2"
                         >
-                          <div className="card-body">{item.question}</div>
+                          <div className="card-body">
+                            {item.question}
+                            <Button
+                              title={"Edit"}
+                              onClick={() => {
+                                setSelectedQuestion(item);
+                                setVisble(true);
+                              }}
+                            />
+                          </div>
                         </div>
                       );
                     })
