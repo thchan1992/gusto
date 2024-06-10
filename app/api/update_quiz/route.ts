@@ -22,8 +22,7 @@ export async function PUT(req: Request) {
         }
         return updatedQuiz;
       } catch (error) {
-        console.error("Error updating quiz:", error);
-        throw error;
+        return NextResponse.json({ status: 500, message: "Server error" });
       }
     };
 

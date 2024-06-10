@@ -104,10 +104,16 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     });
     const data = await res.json();
     console.log(data.data.questionList, "response from the update");
+    setQuestionList(data.data.questionList);
   };
 
   const handleDeleteQuestion = async (item: Quiz) => {
-    console.log(item);
+    const res = await fetch("/api/remove_quiz/" + item._id + "/" + id, {
+      method: "DELETE",
+    });
+    const data = await res.json();
+    console.log(data.data, "response from the del question");
+    setQuestionList(data.data.questionList);
   };
   const handleAddAnswer = async () => {
     switch (panelStatus) {
