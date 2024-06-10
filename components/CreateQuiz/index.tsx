@@ -106,6 +106,9 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     console.log(data.data.questionList, "response from the update");
   };
 
+  const handleDeleteQuestion = async (item: Quiz) => {
+    console.log(item);
+  };
   const handleAddAnswer = async () => {
     switch (panelStatus) {
       case NORMAL: {
@@ -212,6 +215,13 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                               onClick={() => {
                                 setSelectedQuestion(item);
                                 setVisble(true);
+                              }}
+                            />
+                            <Button
+                              title={"Delete"}
+                              onClick={() => {
+                                // setSelectedQuestion(item);
+                                handleDeleteQuestion(item);
                               }}
                             />
                           </div>
