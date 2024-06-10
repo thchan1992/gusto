@@ -92,6 +92,20 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     setQuestionList(data.data.questionList);
   };
 
+  const updateQuestion = async () => {
+    const res = await fetch("/api/update_quiz", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        updatedQuestion: selectedQuestion,
+      }),
+    });
+    const data = await res.json();
+    console.log(data.data.questionList, "response from the update");
+  };
+
   const handleAddAnswer = async () => {
     switch (panelStatus) {
       case NORMAL: {
@@ -99,6 +113,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
         await addQuestionAPI();
         //send api request to link the question id to trouble shooting
+
         break;
       }
       case SET_ANSWER: {
@@ -138,6 +153,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
             visible ? setVisble(false) : setVisble(true);
             //send api to update the question
             console.log("new updated question", selectedQuestion);
+            updateQuestion();
           }}
         />
         <div className="container">
