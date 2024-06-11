@@ -8,6 +8,7 @@ const initialState: Quiz[] = [
     question: "string1",
     imageUrl: "string",
     options: [{ text: "string", nextQuizId: "string" }],
+    troubleShootId: "",
   },
 ];
 

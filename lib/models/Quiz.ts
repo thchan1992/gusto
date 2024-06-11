@@ -1,11 +1,14 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
+import { IUser } from "./User";
 
 export interface IQuiz extends Document {
-  _id: string;
+  // _id: string;
   isFirst: boolean;
-  question: string;
   imageUrl: string;
-  options: { text: string; nextQuizId: string }[];
+  question: string;
+  options: { text: string; nextQuizId?: mongoose.Schema.Types.ObjectId }[];
+  createdBy: mongoose.Schema.Types.ObjectId;
+  troubleShootId: mongoose.Schema.Types.ObjectId;
 }
 
 const optionSchema: Schema = new mongoose.Schema({
@@ -14,26 +17,31 @@ const optionSchema: Schema = new mongoose.Schema({
     required: true,
   },
   nextQuizId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Quiz",
     required: false,
   },
 });
 
-const quizSchema: Schema = new mongoose.Schema({
-  isFirst: {
-    type: Boolean,
-    require: true,
+const quizSchema: Schema = new Schema<IQuiz>(
+  {
+    isFirst: { type: Boolean, required: true },
+    imageUrl: { type: String, required: false },
+    question: { type: String, required: true },
+    options: [optionSchema],
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    troubleShootId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TroubleShoot",
+      required: true,
+    },
   },
-  question: {
-    type: String,
-    require: true,
-  },
-  imageUrl: {
-    type: String,
-    require: false,
-  },
-  option: [optionSchema],
-});
+  { timestamps: true }
+);
 
 const Quiz = mongoose.models.Quiz || mongoose.model<IQuiz>("Quiz", quizSchema);
 

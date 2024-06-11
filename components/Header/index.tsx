@@ -147,6 +147,16 @@ const Header = () => {
                         )}
                       </li>
                     ))}
+                    {isSignedIn ? (
+                      <li className="group relative">
+                        <Link
+                          href={"/create_troubleshoot"}
+                          className={`flex py-2 text-base text-dark group-hover:opacity-70 dark:text-white lg:mr-0 lg:inline-flex lg:px-0 lg:py-6`}
+                        >
+                          Quiz
+                        </Link>
+                      </li>
+                    ) : undefined}
                   </ul>
                 </nav>
               </div>
