@@ -23,7 +23,6 @@ export async function POST(req: Request) {
     title: title,
   });
   const savedTroubleShoot = await newTroubleShoot.save();
-  console.log("trouble saved to db completed");
 
   return NextResponse.json({ data: savedTroubleShoot }, { status: 200 });
 }

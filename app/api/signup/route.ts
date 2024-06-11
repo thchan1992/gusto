@@ -13,7 +13,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   console.log("user email", user.primaryEmailAddress);
   console.log("user id ", userId);
-  // console.log("xxxx")
+
   if (userId) {
     try {
       // const newUser = new User({

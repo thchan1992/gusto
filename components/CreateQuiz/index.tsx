@@ -103,7 +103,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       }),
     });
     const data = await res.json();
-    console.log(data.data.questionList, "response from the update");
+
     setQuestionList(data.data.questionList);
   };
 
@@ -112,7 +112,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       method: "DELETE",
     });
     const data = await res.json();
-    console.log(data.data, "response from the del question");
+
     setQuestionList(data.data.questionList);
   };
   const handleAddAnswer = async () => {
@@ -161,7 +161,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
           onConfirm={() => {
             visible ? setVisble(false) : setVisble(true);
             //send api to update the question
-            console.log("new updated question", selectedQuestion);
+
             updateQuestion();
           }}
         />

@@ -18,8 +18,6 @@ export async function GET(
     const relatedQuizzes = await Quiz.find({
       troubleShootId: troubleShootId,
     }).sort({ createdAt: 1 });
-    console.log(troubleShoot, "troubleshoot found");
-    console.log(relatedQuizzes, "relatedQuizzes");
 
     return NextResponse.json(
       { data: { questions: relatedQuizzes, troubleshoot: troubleShoot } },

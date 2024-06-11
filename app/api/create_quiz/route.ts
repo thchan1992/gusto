@@ -39,8 +39,6 @@ export async function POST(req: Request) {
 
     const { title, isFirst, troubleShootId } = data;
 
-    console.log(data);
-
     const newQuestion = new Quiz({
       isFirst: isFirst,
       imageUrl: "",
@@ -59,8 +57,6 @@ export async function POST(req: Request) {
     const relatedQuizzes = await Quiz.find({
       troubleShootId: troubleShootId,
     }).sort({ createdAt: 1 });
-
-    console.log(relatedQuizzes, "related Quizzes");
 
     return NextResponse.json({
       status: 200,

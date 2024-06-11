@@ -33,7 +33,7 @@ export async function PUT(req: Request) {
     }
 
     const { updatedQuestion } = data;
-    console.log(updatedQuestion);
+
     await updateQuiz(updatedQuestion._id, updatedQuestion);
 
     const relatedQuizzes = await Quiz.find({

@@ -8,7 +8,6 @@ import { NextApiRequest } from "next";
 export async function GET(req: NextRequest) {
   await dbConnect();
   const { userId } = getAuth(req);
-  console.log(userId, "userId");
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -18,7 +17,6 @@ export async function GET(req: NextRequest) {
     const troubleShoots = await TroubleShoot.find({
       createdBy: userId,
     }).exec();
-    console.log(troubleShoots, "trouble");
 
     return NextResponse.json({ data: troubleShoots }, { status: 200 });
   } catch (err: any) {

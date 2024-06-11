@@ -10,7 +10,6 @@ const Hero = () => {
   const { isSignedIn } = useUser();
   useEffect(() => {
     console.log(isSignedIn);
-    console.log("loadingx");
   }, [isSignedIn]);
 
   if (isSignedIn) {

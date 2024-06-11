@@ -18,8 +18,6 @@ export async function POST(req: Request) {
     }
 
     const { quizId, optionList } = data;
-    console.log(data);
-    console.log(quizId, "quizID");
 
     if (!mongoose.Types.ObjectId.isValid(quizId)) {
       return NextResponse.json({ status: 400, message: "Invalid quizId" });
