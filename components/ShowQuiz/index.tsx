@@ -1,3 +1,5 @@
+"use client";
+
 import { Quiz } from "@/lib/types/Quiz";
 import React, { useEffect, useState } from "react";
 
