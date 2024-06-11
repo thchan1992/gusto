@@ -34,6 +34,18 @@ export async function PUT(req: Request) {
 
     const { updatedQuestion } = data;
 
+    if (updatedQuestion.isFirst === true) {
+      await Quiz.updateOne(
+        {
+          troubleShootId: new mongoose.Types.ObjectId(
+            updatedQuestion.troubleShootId
+          ),
+          isFirst: true,
+        },
+        { isFirst: false }
+      );
+    }
+
     await updateQuiz(updatedQuestion._id, updatedQuestion);
 
     const relatedQuizzes = await Quiz.find({

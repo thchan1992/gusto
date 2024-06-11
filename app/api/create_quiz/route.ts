@@ -18,6 +18,7 @@ import { TroubleShoot } from "@/lib/models/TroubleShoot";
 import { auth } from "@clerk/nextjs/server";
 import Quiz from "@/lib/models/Quiz";
 import { User } from "@/lib/models/User";
+import mongoose from "mongoose";
 export async function POST(req: Request) {
   try {
     const data = await req.json();
@@ -39,8 +40,13 @@ export async function POST(req: Request) {
 
     const { title, isFirst, troubleShootId } = data;
 
+    //see if we have any question in the collection
+    const question = await Quiz.findOne({
+      troubleShootId: new mongoose.Types.ObjectId(troubleShootId),
+    });
+
     const newQuestion = new Quiz({
-      isFirst: isFirst,
+      isFirst: question !== null ? false : true,
       imageUrl: "",
       question: title,
       options: [],

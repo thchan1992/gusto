@@ -26,6 +26,7 @@ function Modal({
   const modalRef = useRef(null);
   const [answerText, setAnswerText] = useState<string>("");
   const [answerLink, setAnswerLink] = useState<string>("");
+  const [allowSetIsFirst, setAllowSetIsFirst] = useState<boolean>(false);
   const [optionList, setOptionList] = useState<
     {
       text: string;
@@ -105,6 +106,13 @@ function Modal({
     }
   };
 
+  const handleToggleChange = (e) => {
+    setSelectedQuestion({
+      ...question,
+      isFirst: e.target.checked,
+    });
+  };
+
   return (
     <dialog
       ref={modalRef}
@@ -168,53 +176,68 @@ function Modal({
                 </div>
               );
             })}
+            <input
+              type="text"
+              name="answerText"
+              placeholder="Answer"
+              className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+              value={answerText}
+              onChange={(e) => {
+                setAnswerText(e.target.value);
+              }}
+            />
+            <Button
+              title="Add option"
+              onClick={() => {
+                // setOptionList((prev) => [
+                //   ...prev,
+                //   { text: answerText, nextQuizId: answerLink },
+                // ]);
+                addOption();
+
+                //add more answer
+                setAnswerLink("");
+                setAnswerText("");
+              }}
+            />
+            <select
+              className="select select-bordered w-full max-w-xs"
+              value={answerLink || ""}
+              onChange={(e) => {
+                setAnswerLink(e.target.value);
+              }}
+            >
+              <option value="" disabled>
+                Answer
+              </option>
+              {questionList.map((questionItem, j) => {
+                return (
+                  <option key={j} value={questionItem._id}>
+                    {questionItem.question}
+                  </option>
+                );
+              })}
+            </select>
+            {!question.isFirst ? (
+              <div className="form-control w-52">
+                <label className="cursor-pointer label">
+                  <span className="label-text">First Question</span>
+                  <input
+                    type="checkbox"
+                    className="toggle toggle-primary"
+                    checked={question.isFirst}
+                    onChange={handleToggleChange}
+                    disabled={question.isFirst ? true : false}
+                  />
+                </label>
+              </div>
+            ) : (
+              <div>this is a first question</div>
+            )}
           </>
         ) : (
           <p>Loading</p>
         )}
-
-        <input
-          type="text"
-          name="answerText"
-          placeholder="Answer"
-          className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-          value={answerText}
-          onChange={(e) => {
-            setAnswerText(e.target.value);
-          }}
-        />
-        <Button
-          title="Add option"
-          onClick={() => {
-            // setOptionList((prev) => [
-            //   ...prev,
-            //   { text: answerText, nextQuizId: answerLink },
-            // ]);
-            addOption();
-
-            //add more answer
-            setAnswerLink("");
-            setAnswerText("");
-          }}
-        />
-        <select
-          className="select select-bordered w-full max-w-xs"
-          value={answerLink || ""}
-          onChange={(e) => {
-            setAnswerLink(e.target.value);
-          }}
-        >
-          <option value="" disabled>
-            Answer
-          </option>
-          {questionList.map((questionItem, j) => {
-            return (
-              <option key={j} value={questionItem._id}>
-                {questionItem.question}
-              </option>
-            );
-          })}
-        </select>
 
         <div className="modal-action">
           {/* if there is a button in form, it will close the modal */}
