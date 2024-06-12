@@ -88,6 +88,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     });
 
     const data = await res.json();
+    console.log(data.data.questionList, "question List");
 
     setQuestionList(data.data.questionList);
   };
