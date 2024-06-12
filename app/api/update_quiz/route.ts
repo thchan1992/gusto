@@ -12,16 +12,20 @@ export async function PUT(req: Request) {
     await dbConnect();
 
     const updateQuiz = async (quizId: string, updatedData: Partial<IQuiz>) => {
+      console.log(quizId, "quizId");
+      console.log(updatedData, "updatedData");
       try {
+        console.log("try");
         const updatedQuiz = await Quiz.findByIdAndUpdate(quizId, updatedData, {
           new: true,
           runValidators: true,
         });
+
+        console.log(updatedQuiz, "updated Quiz");
         if (!updatedQuiz) {
           //   throw new Error("Quiz not found");
           return NextResponse.json({ status: 400, message: "Invalid quizId" });
         }
-        console.log(updatedQuiz, "updated Quiz");
         return updatedQuiz;
       } catch (error) {
         return NextResponse.json({ status: 500, message: "Server error" });
