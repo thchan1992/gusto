@@ -23,11 +23,13 @@ export async function PUT(req: Request) {
 
         console.log(updatedQuiz, "updated Quiz");
         if (!updatedQuiz) {
+          console.error("Quiz not found");
           //   throw new Error("Quiz not found");
           return NextResponse.json({ status: 400, message: "Invalid quizId" });
         }
         return updatedQuiz;
       } catch (error) {
+        console.error("Error updating quiz:", error);
         return NextResponse.json({ status: 500, message: "Server error" });
       }
     };
