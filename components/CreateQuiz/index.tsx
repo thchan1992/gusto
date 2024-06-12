@@ -57,40 +57,48 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   }, [id]);
 
   const addQuestionAPI = async () => {
-    const res = await fetch("/api/create_quiz", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        isFirst: true,
-        title: questionText,
-        troubleShootId: id,
-      }),
-    });
+    try {
+      const res = await fetch("/api/create_quiz", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          isFirst: true,
+          title: questionText,
+          troubleShootId: id,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    setQuestionList(data.data.questionList);
-    setQuizId(data.data.newQuestion._id);
+      setQuestionList(data.data.questionList);
+      setQuizId(data.data.newQuestion._id);
+    } catch (e) {
+      alert(e);
+    }
   };
 
   const addOptionAPI = async () => {
-    const res = await fetch("/api/create_quiz/create_option", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        quizId: quizId,
-        optionList: optionList,
-      }),
-    });
+    try {
+      const res = await fetch("/api/create_quiz/create_option", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          quizId: quizId,
+          optionList: optionList,
+        }),
+      });
 
-    const data = await res.json();
-    console.log(data.data.questionList, "question List");
+      const data = await res.json();
+      console.log(data.data.questionList, "question List");
 
-    setQuestionList(data.data.questionList);
+      setQuestionList(data.data.questionList);
+    } catch (e) {
+      alert(e);
+    }
   };
 
   const updateQuestion = async () => {
