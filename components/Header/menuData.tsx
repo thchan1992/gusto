@@ -80,6 +80,6 @@ const menuData: Menu[] = [
   //     },
   //   ],
   // },
-  // { id: 5, title: "Quiz", path: "/quiz/", newTab: false },
+  // { id: 5, title: "Quiz", path: "/show_troubleshoot", newTab: false },
 ];
 export default menuData;

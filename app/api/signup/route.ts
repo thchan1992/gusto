@@ -16,12 +16,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   if (userId) {
     try {
-      // const newUser = new User({
-      //   userId: userId,
-      //   email: user.primaryEmailAddress,
-      // });
-      // //save user
-      // await newUser.save();
     } catch (err: any) {
       return NextResponse.json({ error: err.message }, { status: 500 });
     }

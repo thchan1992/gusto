@@ -1,17 +1,3 @@
-// import dbConnect from "@/lib/dbConnect";
-// import { NextResponse, NextRequest } from "next/server";
-// import { User } from "@/lib/models/User";
-// import { getAuth } from "@clerk/nextjs/server";
-// import { TroubleShoot } from "@/lib/models/TroubleShoot";
-
-// export async function POST(req: Request) {
-//   const data = await req.json();
-//   await dbConnect();
-//   //   const { userId } = getAuth(req);
-//   console.log(data);
-
-// }
-
 import dbConnect from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
 import { TroubleShoot } from "@/lib/models/TroubleShoot";

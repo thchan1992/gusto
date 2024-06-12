@@ -79,7 +79,6 @@ const ShowQuestion = ({ id }) => {
                       <div
                         key={i}
                         onClick={() => {
-                          console.log(item.nextQuizId);
                           if (item.nextQuizId !== undefined) {
                             const nextQuestion = questionList.find(
                               (quest: Quiz) => {
@@ -88,7 +87,7 @@ const ShowQuestion = ({ id }) => {
                             );
                             setCurrentQuestion(nextQuestion);
                           } else {
-                            console.log("the end");
+                            console.log("the end of the troubleshoot");
                           }
                         }}
                       >
