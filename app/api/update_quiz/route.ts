@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 export async function PUT(req: Request) {
   try {
     const data = await req.json();
-    console.log(data.updatedQuestion);
+    console.log(data.updatedQuestion, "updated Question");
 
     await dbConnect();
 
@@ -21,6 +21,7 @@ export async function PUT(req: Request) {
           //   throw new Error("Quiz not found");
           return NextResponse.json({ status: 400, message: "Invalid quizId" });
         }
+        console.log(updatedQuiz, "updated Quiz");
         return updatedQuiz;
       } catch (error) {
         return NextResponse.json({ status: 500, message: "Server error" });
