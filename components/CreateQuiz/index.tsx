@@ -71,11 +71,19 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       });
 
       const data = await res.json();
-
-      setQuestionList(data.data.questionList);
-      setQuizId(data.data.newQuestion._id);
+      if (data?.data?.questionList) {
+        setQuestionList(data.data.questionList);
+      } else {
+        console.error("No questionList found in the response");
+      }
+      if (data?.data?.newQuestion?._id) {
+        setQuizId(data.data.newQuestion._id);
+      } else {
+        console.error("No newQuestion ID found in the response");
+      }
     } catch (e) {
       alert(e);
+      console.error("Error adding question:", e);
     }
   };
 
@@ -93,11 +101,14 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       });
 
       const data = await res.json();
-      console.log(data.data.questionList, "question List");
-
-      setQuestionList(data.data.questionList);
+      if (data?.data?.questionList) {
+        setQuestionList(data.data.questionList);
+      } else {
+        console.error("No questionList found in the response");
+      }
     } catch (e) {
       alert(e);
+      console.error("Error adding options:", e);
     }
   };
 
