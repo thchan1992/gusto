@@ -124,6 +124,10 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     });
     const data = await res.json();
 
+    alert(data.data);
+
+    console.log(data.data.questionList, "updated question list");
+
     setQuestionList(data.data.questionList);
   };
 
