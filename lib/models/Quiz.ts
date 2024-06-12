@@ -2,11 +2,13 @@ import mongoose, { Document, Schema, Types } from "mongoose";
 import { IUser } from "./User";
 
 export interface IQuiz extends Document {
-  // _id: string;
   isFirst: boolean;
   imageUrl: string;
   question: string;
-  options: { text: string; nextQuizId?: mongoose.Schema.Types.ObjectId }[];
+  options: {
+    text: string;
+    nextQuizId?: mongoose.Schema.Types.ObjectId | null;
+  }[];
   createdBy: mongoose.Schema.Types.ObjectId;
   troubleShootId: mongoose.Schema.Types.ObjectId;
 }

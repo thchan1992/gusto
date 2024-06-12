@@ -14,6 +14,19 @@ export async function PUT(req: Request) {
     const updateQuiz = async (quizId: string, updatedData: Partial<IQuiz>) => {
       console.log(quizId, "quizId");
       console.log(updatedData, "updatedData");
+
+      if (updatedData.options) {
+        updatedData.options = updatedData.options.map((option) => ({
+          ...option,
+          nextQuizId: option.nextQuizId
+            ? new mongoose.Schema.Types.ObjectId(option.nextQuizId.toString())
+            : null,
+        })) as {
+          text: string;
+          nextQuizId?: mongoose.Schema.Types.ObjectId | null;
+        }[];
+      }
+
       try {
         console.log("try");
         const updatedQuiz = await Quiz.findByIdAndUpdate(quizId, updatedData, {
@@ -23,8 +36,6 @@ export async function PUT(req: Request) {
 
         console.log(updatedQuiz, "updated Quiz");
         if (!updatedQuiz) {
-          console.error("Quiz not found");
-          //   throw new Error("Quiz not found");
           return NextResponse.json({ status: 400, message: "Invalid quizId" });
         }
         return updatedQuiz;
@@ -54,7 +65,11 @@ export async function PUT(req: Request) {
       );
     }
 
-    await updateQuiz(updatedQuestion._id, updatedQuestion);
+    const result = await updateQuiz(updatedQuestion._id, updatedQuestion);
+
+    if (result?.status) {
+      return result;
+    }
 
     const relatedQuizzes = await Quiz.find({
       troubleShootId: updatedQuestion.troubleShootId,
@@ -65,7 +80,7 @@ export async function PUT(req: Request) {
       data: { questionList: relatedQuizzes },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error in PUT handler:", error);
     return NextResponse.json({ status: 500, message: "Internal Server Error" });
   }
 }
