@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 export async function PUT(req: Request) {
   try {
     const data = await req.json();
+    console.log(data.updatedQuestion);
 
     await dbConnect();
 
