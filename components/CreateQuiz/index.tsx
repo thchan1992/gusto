@@ -74,7 +74,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       if (data?.data?.questionList) {
         setQuestionList(data.data.questionList);
       } else {
-        console.error("No questionList found in the response");
+        console.error("No questionList found in the response", data);
       }
       if (data?.data?.newQuestion?._id) {
         setQuizId(data.data.newQuestion._id);
