@@ -32,10 +32,10 @@ export async function POST(req: Request) {
           console.warn(
             `Invalid nextQuizId: ${option.nextQuizId}. Treating as undefined.`
           );
-          nextQuizId = undefined;
+          nextQuizId = null;
         }
       } else {
-        nextQuizId = undefined;
+        nextQuizId = null;
       }
 
       return {
