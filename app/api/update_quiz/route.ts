@@ -4,37 +4,48 @@ import { auth } from "@clerk/nextjs/server";
 import Quiz, { IQuiz } from "@/lib/models/Quiz";
 import mongoose from "mongoose";
 
+type Option = {
+  text: string;
+  nextQuizId?: mongoose.Types.ObjectId | null;
+};
+
+interface IQuizUpdate {
+  _id: string;
+  isFirst?: boolean;
+  imageUrl?: string;
+  question?: string;
+  options?: Option[];
+  createdBy?: string;
+  troubleShootId?: mongoose.Types.ObjectId;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export async function PUT(req: Request) {
   try {
     const data = await req.json();
-    console.log(data.updatedQuestion, "updated Question");
 
     await dbConnect();
 
-    const updateQuiz = async (quizId: string, updatedData: Partial<IQuiz>) => {
-      console.log(quizId, "quizId");
-      console.log(updatedData, "updatedData");
-
+    const updateQuiz = async (
+      quizId: string,
+      updatedData: Partial<IQuizUpdate>
+    ) => {
       if (updatedData.options) {
         updatedData.options = updatedData.options.map((option) => ({
           ...option,
           nextQuizId: option.nextQuizId
-            ? new mongoose.Schema.Types.ObjectId(option.nextQuizId.toString())
+            ? new mongoose.Types.ObjectId(option.nextQuizId.toString())
             : null,
-        })) as {
-          text: string;
-          nextQuizId?: mongoose.Schema.Types.ObjectId | null;
-        }[];
+        })) as Option[];
       }
 
       try {
-        console.log("try");
         const updatedQuiz = await Quiz.findByIdAndUpdate(quizId, updatedData, {
           new: true,
           runValidators: true,
         });
 
-        console.log(updatedQuiz, "updated Quiz");
         if (!updatedQuiz) {
           return NextResponse.json({ status: 400, message: "Invalid quizId" });
         }

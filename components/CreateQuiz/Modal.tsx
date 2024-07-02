@@ -157,9 +157,11 @@ function Modal({
                   />
                   <select
                     className="select select-bordered w-full max-w-xs"
-                    value={item.nextQuizId || null}
+                    value={item.nextQuizId || ""}
                     onChange={(e) => {
-                      updateOptionField(i, "nextQuizId", e.target.value);
+                      const newVal =
+                        e.target.value !== "" ? e.target.value : null;
+                      updateOptionField(i, "nextQuizId", newVal);
                     }}
                   >
                     <option value="" disabled>
