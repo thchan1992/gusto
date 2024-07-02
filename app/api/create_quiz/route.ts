@@ -26,7 +26,6 @@ export async function POST(req: Request) {
 
     const { title, isFirst, troubleShootId } = data;
 
-    //see if we have any question in the collection
     const question = await Quiz.findOne({
       troubleShootId: new mongoose.Types.ObjectId(troubleShootId),
     });

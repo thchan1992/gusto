@@ -71,6 +71,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       });
 
       const data = await res.json();
+
       if (data?.data?.questionList) {
         setQuestionList(data.data.questionList);
       } else {
@@ -126,8 +127,6 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
     alert(data.data);
 
-    console.log(data.data.questionList, "updated question list");
-
     setQuestionList(data.data.questionList);
   };
 
@@ -150,11 +149,11 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
         break;
       }
       case SET_ANSWER: {
-        setPanelStatus(NORMAL);
         setOptionList([]);
         setQuestionText("");
         setAnswerText("");
         setAnswerLink("");
+        setPanelStatus(NORMAL);
 
         await addOptionAPI();
         //send optionList and question to API
