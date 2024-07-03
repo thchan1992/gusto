@@ -9,6 +9,7 @@ import { addQuizList } from "@/lib/features/quizList/quizListSlice";
 import { Quiz } from "@/lib/types/Quiz";
 import data from "@/util/dummy.json";
 import Modal from "./Modal";
+import { UploadForm } from "./S3UploadForm";
 
 interface CreateQuizProps {
   id: string;
@@ -17,6 +18,11 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   const [troubleShootTitle, setTroubleShootTitle] = useState("");
   // const [loadedQuestions, setLoadedQuestions] = useState<Quiz[]>(data);
   const [panelStatus, setPanelStatus] = useState<string>("NORMAL");
+  const [fileUrl, setFileUrl] = useState("");
+
+  const handleFileUrlChange = (url: string) => {
+    setFileUrl(url);
+  };
   const [questionText, setQuestionText] = useState<string>("");
   const [questionList, setQuestionList] = useState<Quiz[]>([]);
   const [answerText, setAnswerText] = useState<string>("");
@@ -269,6 +275,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
                 {panelStatus === SET_ANSWER && (
                   <div>
+                    file URL: {fileUrl}
+                    <UploadForm onFileUrlChange={handleFileUrlChange} />
                     <div className="flex flex-row">
                       <input
                         type="text"

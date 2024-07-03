@@ -45,7 +45,9 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const fileName = await uploadFileToS3(buffer, file.name);
 
-    return NextResponse.json({ success: true, fileName });
+    const fileUrl = `https://${process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_S3_REGION}.amazonaws.com/${fileName}`;
+
+    return NextResponse.json({ success: true, fileUrl });
   } catch (err: any) {
     console.error("Error fetching TroubleShoots:", err);
     return NextResponse.json(
