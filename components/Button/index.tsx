@@ -3,9 +3,9 @@
 interface ButtonProps {
   title: string;
   onClick: () => void;
-  disabled: boolean;
+  disabled?: boolean;
 }
-function Button({ title, onClick, disabled }: ButtonProps) {
+function Button({ title, onClick, disabled = false }: ButtonProps) {
   return (
     <button
       disabled={disabled}
