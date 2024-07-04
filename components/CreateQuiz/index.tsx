@@ -78,6 +78,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
       const data = await res.json();
 
+      console.log(data);
+
       if (data?.data?.questionList) {
         setQuestionList(data.data.questionList);
       } else {
@@ -220,6 +222,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
                   <div className="mt-5 ml-1">
                     <Button
+                      disabled={questionText === "" ? true : false}
                       title={
                         panelStatus === "NORMAL" ? "Add an question" : "Done"
                       }

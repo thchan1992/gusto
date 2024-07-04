@@ -49,6 +49,11 @@ export async function POST(req: Request) {
       troubleShootId: troubleShootId,
     }).sort({ createdAt: 1 });
 
+    console.log(
+      { questionList: relatedQuizzes, newQuestion: savedQuestion },
+      "respond"
+    );
+
     return NextResponse.json({
       status: 200,
       data: { questionList: relatedQuizzes, newQuestion: savedQuestion },

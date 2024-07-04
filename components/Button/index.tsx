@@ -1,33 +1,14 @@
-// "use client";
-
-// interface ButtonProps {
-//   title: string;
-//   onClick: () => void;
-//   height: number;
-//   width: number;
-// }
-
-// export default function Button({ title, onClick, height, width }: ButtonProps) {
-//   return (
-//     <button
-//       style={{ width: `${width}px`, height: `${height}px` }}
-//       className="bg-black p-3 m-3 border-black"
-//       onClick={onClick}
-//     >
-//       <b>{title}</b>
-//     </button>
-//   );
-// }
-
 "use client";
 
 interface ButtonProps {
   title: string;
   onClick: () => void;
+  disabled: boolean;
 }
-function Button({ title, onClick }: ButtonProps) {
+function Button({ title, onClick, disabled }: ButtonProps) {
   return (
     <button
+      disabled={disabled}
       onClick={() => {
         onClick();
       }}
