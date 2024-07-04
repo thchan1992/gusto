@@ -1,6 +1,7 @@
 import { Quiz } from "@/lib/types/Quiz";
 import { useRef, useEffect, useState } from "react";
 import Button from "../Button";
+import { UploadForm } from "./S3UploadForm";
 
 interface ModalProps {
   title: string;
@@ -24,6 +25,12 @@ function Modal({
   questionList,
 }: ModalProps) {
   const modalRef = useRef(null);
+  const [fileUrl, setFileUrl] = useState("");
+
+  const handleFileUrlChange = (url: string) => {
+    setFileUrl(url);
+    updateQuestionField("imageUrl", url);
+  };
   const [answerText, setAnswerText] = useState<string>("");
   const [answerLink, setAnswerLink] = useState<string>("");
   const [allowSetIsFirst, setAllowSetIsFirst] = useState<boolean>(false);
@@ -140,6 +147,9 @@ function Modal({
                 updateQuestionField("question", e.target.value);
               }}
             />
+            OLD Image URL {question.imageUrl}
+            NEW Image URL {fileUrl}
+            <UploadForm onFileUrlChange={handleFileUrlChange} />
             <h1>Answer</h1>
             {question.options.map((item, i) => {
               return (

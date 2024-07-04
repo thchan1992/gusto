@@ -63,6 +63,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   }, [id]);
 
   const addQuestionAPI = async () => {
+    console.log(fileUrl, "file URL");
+    const imageUrl = fileUrl === null ? "" : fileUrl;
     try {
       const res = await fetch("/api/create_quiz", {
         method: "POST",
@@ -73,12 +75,11 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
           isFirst: true,
           title: questionText,
           troubleShootId: id,
+          imageUrl: imageUrl,
         }),
       });
 
       const data = await res.json();
-
-      console.log(data);
 
       if (data?.data?.questionList) {
         setQuestionList(data.data.questionList);
@@ -90,6 +91,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       } else {
         console.error("No newQuestion ID found in the response");
       }
+
+      setFileUrl(null);
     } catch (e) {
       alert(e);
       console.error("Error adding question:", e);
@@ -278,7 +281,6 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
                 {panelStatus === SET_ANSWER && (
                   <div>
-                    file URL: {fileUrl}
                     <UploadForm onFileUrlChange={handleFileUrlChange} />
                     <div className="flex flex-row">
                       <input

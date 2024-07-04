@@ -24,7 +24,8 @@ export async function POST(req: Request) {
       });
     }
 
-    const { title, isFirst, troubleShootId } = data;
+    const { title, isFirst, troubleShootId, imageUrl } = data;
+    console.log(imageUrl, "image URL");
 
     const question = await Quiz.findOne({
       troubleShootId: new mongoose.Types.ObjectId(troubleShootId),
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
 
     const newQuestion = new Quiz({
       isFirst: question !== null ? false : true,
-      imageUrl: "",
+      imageUrl: imageUrl,
       question: title,
       options: [],
       createdBy: user._id,
