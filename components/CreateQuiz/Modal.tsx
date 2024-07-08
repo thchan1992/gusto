@@ -149,7 +149,10 @@ function Modal({
             />
             OLD Image URL {question.imageUrl}
             NEW Image URL {fileUrl}
-            <UploadForm onFileUrlChange={handleFileUrlChange} />
+            <UploadForm
+              onFileUrlChange={handleFileUrlChange}
+              oldFileUrl={question.imageUrl}
+            />
             <h1>Answer</h1>
             {question.options.map((item, i) => {
               return (
