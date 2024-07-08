@@ -4,9 +4,11 @@ export interface ITroubleShoot extends Document {
   quizList: mongoose.Schema.Types.ObjectId[];
   title: string;
   createdBy: string;
+  isPublic: boolean;
+  token: string | null;
 }
 
-const troubleShootSchema: Schema = new Schema<ITroubleShoot>(
+const troubleShootSchema: Schema<ITroubleShoot> = new Schema<ITroubleShoot>(
   {
     quizList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Quiz" }],
     title: { type: String, required: true },
@@ -15,6 +17,8 @@ const troubleShootSchema: Schema = new Schema<ITroubleShoot>(
       ref: "User",
       required: true,
     },
+    isPublic: { type: Boolean, default: false },
+    token: { type: String, default: null },
   },
   { timestamps: true }
 );
