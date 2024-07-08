@@ -4,6 +4,7 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
+import { auth } from "@clerk/nextjs/server";
 
 const s3Client = new S3Client({
   region: process.env.NEXT_PUBLIC_AWS_S3_REGION,
@@ -31,10 +32,8 @@ async function uploadFileToS3(fileBuffer, fileName, fileType) {
 async function deleteFileFromS3(fileUrl) {
   const bucketName = process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME;
   const key = fileUrl.split(
-    `https://${bucketName}.s3.eu-west-2.amazonaws.com/`
+    `https://${process.env.NEXT_PUBLIC_AWS_S3_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_S3_REGION}.amazonaws.com/`
   )[1];
-  console.log(fileUrl, "file URL");
-  console.log(key, "key");
 
   if (!key) {
     throw new Error("Invalid file URL");
@@ -50,6 +49,11 @@ async function deleteFileFromS3(fileUrl) {
 }
 
 export async function POST(req: NextRequest) {
+  const { userId } = auth();
+  if (!userId) {
+    return NextResponse.json({ status: 401, message: "Unauthorized" });
+  }
+
   try {
     const formData = await req.formData();
     const file = formData.get("file");
@@ -67,7 +71,6 @@ export async function POST(req: NextRequest) {
     const fileUrl = await uploadFileToS3(buffer, fileName, file.type);
 
     if (oldFileUrl) {
-      console.log(typeof oldFileUrl);
       await deleteFileFromS3(oldFileUrl);
     }
 

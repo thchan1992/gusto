@@ -16,6 +16,7 @@ const ShowQuestion = ({ id }) => {
 
   const findFirstQuestion = (questions: Quiz[]): Quiz => {
     const cur: Quiz = questions.find((item: Quiz) => item.isFirst === true);
+
     return cur;
   };
 
@@ -29,8 +30,14 @@ const ShowQuestion = ({ id }) => {
         const data = await response.json();
         setTroubleShootTitle(data.data.troubleshoot.title);
         setQuestionList(data.data.questions);
+        console.log(data.data.questions, "question?");
+
         const cur: Quiz = findFirstQuestion(data.data.questions);
-        setCurrentQuestion(cur);
+
+        if (cur === undefined) {
+        } else {
+          setCurrentQuestion(cur);
+        }
       } catch (error) {
         setError(error.message);
       } finally {
@@ -66,7 +73,7 @@ const ShowQuestion = ({ id }) => {
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4 lg:w-7/12 xl:w-8/12 ">
-              {currentQuestion !== null && (
+              {currentQuestion !== undefined ? (
                 <div
                   className="wow fadeInUp mb-12 rounded-md bg-primary/[3%] px-8 py-11 dark:bg-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]"
                   data-wow-delay=".15s"
@@ -149,6 +156,8 @@ const ShowQuestion = ({ id }) => {
                     })}
                   </div>
                 </div>
+              ) : (
+                <div>This trouble shoot dose not have a first question</div>
               )}
             </div>
           </div>

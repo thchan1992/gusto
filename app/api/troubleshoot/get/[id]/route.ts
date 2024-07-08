@@ -3,7 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 import Quiz from "@/lib/models/Quiz";
 import { getAuth } from "@clerk/nextjs/server";
 import { TroubleShoot } from "@/lib/models/TroubleShoot";
-
+import { auth } from "@clerk/nextjs/server";
 export async function GET(
   req: Request,
   // res: NextResponse,
@@ -11,6 +11,10 @@ export async function GET(
 ) {
   const troubleShootId = params.id;
 
+  const { userId } = auth();
+  if (!userId) {
+    return NextResponse.json({ status: 401, message: "Unauthorized" });
+  }
   await dbConnect();
 
   try {
