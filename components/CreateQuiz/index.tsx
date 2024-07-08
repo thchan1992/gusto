@@ -9,6 +9,7 @@ import { addQuizList } from "@/lib/features/quizList/quizListSlice";
 import { Quiz } from "@/lib/types/Quiz";
 import data from "@/util/dummy.json";
 import Modal from "./Modal";
+import { UploadForm } from "./S3UploadForm";
 
 interface CreateQuizProps {
   id: string;
@@ -17,6 +18,11 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   const [troubleShootTitle, setTroubleShootTitle] = useState("");
   // const [loadedQuestions, setLoadedQuestions] = useState<Quiz[]>(data);
   const [panelStatus, setPanelStatus] = useState<string>("NORMAL");
+  const [fileUrl, setFileUrl] = useState("");
+
+  const handleFileUrlChange = (url: string) => {
+    setFileUrl(url);
+  };
   const [questionText, setQuestionText] = useState<string>("");
   const [questionList, setQuestionList] = useState<Quiz[]>([]);
   const [answerText, setAnswerText] = useState<string>("");
@@ -57,6 +63,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   }, [id]);
 
   const addQuestionAPI = async () => {
+    console.log(fileUrl, "file URL");
+    const imageUrl = fileUrl === null ? "" : fileUrl;
     try {
       const res = await fetch("/api/create_quiz", {
         method: "POST",
@@ -67,6 +75,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
           isFirst: true,
           title: questionText,
           troubleShootId: id,
+          imageUrl: imageUrl,
         }),
       });
 
@@ -82,6 +91,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       } else {
         console.error("No newQuestion ID found in the response");
       }
+
+      setFileUrl(null);
     } catch (e) {
       alert(e);
       console.error("Error adding question:", e);
@@ -214,6 +225,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
                   <div className="mt-5 ml-1">
                     <Button
+                      disabled={questionText === "" ? true : false}
                       title={
                         panelStatus === "NORMAL" ? "Add an question" : "Done"
                       }
@@ -269,6 +281,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
                 {panelStatus === SET_ANSWER && (
                   <div>
+                    <UploadForm onFileUrlChange={handleFileUrlChange} />
                     <div className="flex flex-row">
                       <input
                         type="text"
