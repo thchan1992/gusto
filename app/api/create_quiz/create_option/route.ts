@@ -48,10 +48,12 @@ export async function POST(req: Request) {
       quizId,
       { $set: { options: transformedOptions } },
       { new: true, runValidators: true }
-    );
+    ).exec();
     const relatedQuizzes = await Quiz.find({
       troubleShootId: updatedQuiz.troubleShootId,
-    }).sort({ createdAt: 1 });
+    })
+      .sort({ createdAt: 1 })
+      .exec();
 
     if (!updatedQuiz) {
       return NextResponse.json({ status: 404, message: "Quiz not found" });
