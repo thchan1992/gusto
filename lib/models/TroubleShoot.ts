@@ -1,14 +1,14 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 
 export interface ITroubleShoot extends Document {
-  quizList: mongoose.Schema.Types.ObjectId[];
+  quizList: Types.ObjectId[];
   title: string;
   createdBy: string;
   isPublic: boolean;
   token: string | null;
 }
 
-const troubleShootSchema: Schema<ITroubleShoot> = new Schema<ITroubleShoot>(
+const troubleShootSchema: Schema = new Schema<ITroubleShoot>(
   {
     quizList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Quiz" }],
     title: { type: String, required: true },

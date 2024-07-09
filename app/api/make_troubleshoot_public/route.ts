@@ -1,4 +1,3 @@
-import { getAuth } from "@clerk/nextjs/server";
 import dbConnect from "@/lib/dbConnect";
 import { TroubleShoot } from "@/lib/models/TroubleShoot";
 import { v4 as uuidv4 } from "uuid";
@@ -14,10 +13,10 @@ export async function POST(req: Request) {
   }
 
   const { troubleshootId } = await req.json();
-  const token = uuidv4(); // get a new unique token
+  const token = uuidv4();
 
   try {
-    const troubleshoot = await TroubleShoot.findById(troubleshootId);
+    const troubleshoot = await TroubleShoot.findById(troubleshootId).exec();
 
     if (!troubleshoot) {
       return NextResponse.json(
@@ -33,13 +32,11 @@ export async function POST(req: Request) {
       );
     }
 
-    // Make the troubleshoot public and add the token
     troubleshoot.isPublic = true;
     troubleshoot.token = token;
     await troubleshoot.save();
 
-    // const shareableUrl = `${process.env.NEXT_PUBLIC_URL}/shared/${token}`;
-    const shareableUrl = `http://localhost:3000/shared/${token}`;
+    const shareableUrl = `${process.env.NEXT_PUBLIC_URL}/shared/${token}`;
 
     return NextResponse.json({ url: shareableUrl }, { status: 200 });
   } catch (error) {
