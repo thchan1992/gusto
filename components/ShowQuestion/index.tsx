@@ -11,6 +11,7 @@ const ShowQuestion = ({ id }) => {
   const [history, setHistory] = useState<Quiz[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [questionList, setQuestionList] = useState<Quiz[]>([]);
+  const [shareLink, setShareLink] = useState("");
   const [troubleshootTitle, setTroubleShootTitle] = useState<string>("");
   const router = useRouter();
 
@@ -30,7 +31,10 @@ const ShowQuestion = ({ id }) => {
         const data = await response.json();
         setTroubleShootTitle(data.data.troubleshoot.title);
         setQuestionList(data.data.questions);
-        console.log(data.data.questions, "question?");
+        console.log(data.data.troubleshoot);
+        if (data.data.troubleshoot.isPublic) {
+          setShareLink("http://localhost:3000/" + data.data.troubleshoot.token);
+        }
 
         const cur: Quiz = findFirstQuestion(data.data.questions);
 
@@ -49,6 +53,23 @@ const ShowQuestion = ({ id }) => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+
+  const onShare = async () => {
+    try {
+      const res = await fetch("/api/make_troubleshoot_public/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ troubleshootId: id }),
+      });
+
+      const data = await res.json();
+      console.log(data.url);
+      setShareLink(data.url);
+    } catch (e) {
+      alert(e);
+      console.error("Error adding question:", e);
+    }
+  };
 
   const onRestart = (): void => {
     const cur = findFirstQuestion(questionList);
@@ -89,6 +110,17 @@ const ShowQuestion = ({ id }) => {
                     ) : (
                       <div></div>
                     )}
+                    {shareLink === "" ? (
+                      <button
+                        className="btn btn-active btn-secondary"
+                        onClick={onShare}
+                      >
+                        Share
+                      </button>
+                    ) : (
+                      <div></div>
+                    )}
+                    Link: {shareLink}
                     <button
                       className="btn btn-active btn-secondary"
                       onClick={onRestart}
