@@ -33,7 +33,9 @@ const ShowQuestion = ({ id }) => {
         setQuestionList(data.data.questions);
         console.log(data.data.troubleshoot);
         if (data.data.troubleshoot.isPublic) {
-          setShareLink("http://localhost:3000/" + data.data.troubleshoot.token);
+          setShareLink(
+            "http://localhost:3000/shared/" + data.data.troubleshoot.token
+          );
         }
 
         const cur: Quiz = findFirstQuestion(data.data.questions);

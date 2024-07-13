@@ -10,7 +10,6 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const troubleShootId = params.id;
-
   const { userId } = auth();
   if (!userId) {
     return NextResponse.json({ status: 401, message: "Unauthorized" });
