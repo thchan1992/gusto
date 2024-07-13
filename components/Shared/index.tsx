@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Button from "../Button";
 import { Quiz } from "@/lib/types/Quiz";
 
-const ShowQuestion = ({ id }) => {
+const ShowQuestion = ({ token }) => {
   const [loading, setLoading] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState<Quiz | null>(null);
   const [history, setHistory] = useState<Quiz[]>([]);
@@ -24,19 +24,20 @@ const ShowQuestion = ({ id }) => {
   useEffect(() => {
     const fetchTroubleShoots = async () => {
       try {
-        const response = await fetch("/api/troubleshoot/get/" + id);
+        const response = await fetch("/api/get_troubleshoot_public/" + token);
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
         const data = await response.json();
+        console.log(data.questions, "troubleshoot returned");
         setTroubleShootTitle(data.data.troubleshoot.title);
         setQuestionList(data.data.questions);
         console.log(data.data.troubleshoot);
-        if (data.data.troubleshoot.isPublic) {
-          setShareLink(
-            "http://localhost:3000/shared/" + data.data.troubleshoot.token
-          );
-        }
+        // if (data.data.troubleshoot.isPublic) {
+        //   setShareLink(
+        //     "http://localhost:3000/shared/" + data.data.troubleshoot.token
+        //   );
+        // }
 
         const cur: Quiz = findFirstQuestion(data.data.questions);
 
@@ -51,27 +52,10 @@ const ShowQuestion = ({ id }) => {
       }
     };
     fetchTroubleShoots();
-  }, [id]);
+  }, [token]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
-
-  const onShare = async () => {
-    try {
-      const res = await fetch("/api/make_troubleshoot_public/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ troubleshootId: id }),
-      });
-
-      const data = await res.json();
-      console.log(data.url);
-      setShareLink(data.url);
-    } catch (e) {
-      alert(e);
-      console.error("Error adding question:", e);
-    }
-  };
 
   const onRestart = (): void => {
     const cur = findFirstQuestion(questionList);
@@ -112,7 +96,7 @@ const ShowQuestion = ({ id }) => {
                     ) : (
                       <div></div>
                     )}
-                    {shareLink === "" ? (
+                    {/* {shareLink === "" ? (
                       <button
                         className="btn btn-active btn-secondary"
                         onClick={onShare}
@@ -121,8 +105,8 @@ const ShowQuestion = ({ id }) => {
                       </button>
                     ) : (
                       <div></div>
-                    )}
-                    Link: {shareLink}
+                    )} */}
+                    {/* Link: {shareLink} */}
                     <button
                       className="btn btn-active btn-secondary"
                       onClick={onRestart}

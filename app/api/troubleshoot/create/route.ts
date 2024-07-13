@@ -21,6 +21,8 @@ export async function POST(req: Request) {
     quizList: [],
     createdBy: userId,
     title: title,
+    isPublic: false,
+    token: null,
   });
   const savedTroubleShoot = await newTroubleShoot.save();
 
