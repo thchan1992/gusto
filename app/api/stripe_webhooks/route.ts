@@ -57,6 +57,9 @@ import Stripe from "stripe";
 import { stripe } from "@/lib/stripe/stripe";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import dbConnect from "@/lib/dbConnect";
+import { TroubleShoot } from "@/lib/models/TroubleShoot";
+import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -77,7 +80,42 @@ export async function POST(req: Request) {
 
   if (event.type === "checkout.session.completed") {
     console.log("payment was successful");
-    console.log(session);
+    console.log(session.metadata.troubleshootId);
+    await dbConnect();
+    try {
+      const token = uuidv4();
+      const troubleshoot = await TroubleShoot.findById(
+        session.metadata.troubleshootId
+      ).exec();
+
+      if (!troubleshoot) {
+        return NextResponse.json(
+          { message: "Troubleshoot not found" },
+          { status: 404 }
+        );
+      }
+
+      if (troubleshoot.isPublic) {
+        return NextResponse.json(
+          { message: "Troubleshoot is already public" },
+          { status: 400 }
+        );
+      }
+
+      troubleshoot.isPublic = true;
+      troubleshoot.token = token;
+      await troubleshoot.save();
+
+      const shareableUrl = `${process.env.NEXT_PUBLIC_URL}/shared/${token}`;
+
+      return NextResponse.json({ url: shareableUrl }, { status: 200 });
+    } catch (error) {
+      console.log(error);
+      return NextResponse.json(
+        { message: "Internal Server Error" },
+        { status: 500 }
+      );
+    }
   }
 
   return new NextResponse("ok", { status: 200 });

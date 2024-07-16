@@ -1,9 +1,9 @@
 import React from "react";
 
-const CheckoutButton = () => {
+const CheckoutButton = ({ troubleshootId }) => {
   const handlePayment = async () => {
     try {
-      const response = await fetch("/api/payment", {
+      const response = await fetch("/api/payment/" + troubleshootId, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

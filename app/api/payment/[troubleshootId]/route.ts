@@ -2,9 +2,17 @@ import { stripe } from "@/lib/stripe/stripe";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-export async function GET() {
+export async function GET(
+  req: Request,
+  { params }: { params: { troubleshootId: string } }
+) {
+  const troubleshootId = params.troubleshootId;
+  console.log(troubleshootId, "id");
+  const { userId } = auth();
+  if (!userId) {
+    return NextResponse.json({ status: 401, message: "Unauthorized" });
+  }
   try {
-    const { userId } = auth();
     const stripeSession = await stripe.checkout.sessions.create({
       mode: "payment",
       success_url: "http://localhost:3000/",
@@ -23,7 +31,7 @@ export async function GET() {
           quantity: 1,
         },
       ],
-      metadata: { userId: userId },
+      metadata: { troubleshootId: troubleshootId },
     });
 
     return new NextResponse(JSON.stringify({ url: stripeSession.url }));

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Button from "../Button";
 import { Quiz } from "@/lib/types/Quiz";
 import CheckoutButton from "./CheckoutButton";
+import { TroubleShoot } from "@/lib/models/TroubleShoot";
 
 const ShowQuestion = ({ id }) => {
   const [loading, setLoading] = useState(true);
@@ -121,7 +122,7 @@ const ShowQuestion = ({ id }) => {
                         >
                           Share
                         </button>
-                        <CheckoutButton />
+                        <CheckoutButton troubleshootId={id} />
                       </>
                     ) : (
                       <div></div>
