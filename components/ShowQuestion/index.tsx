@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Button from "../Button";
 import { Quiz } from "@/lib/types/Quiz";
+import CheckoutButton from "./CheckoutButton";
 
 const ShowQuestion = ({ id }) => {
   const [loading, setLoading] = useState(true);
@@ -113,12 +114,15 @@ const ShowQuestion = ({ id }) => {
                       <div></div>
                     )}
                     {shareLink === "" ? (
-                      <button
-                        className="btn btn-active btn-secondary"
-                        onClick={onShare}
-                      >
-                        Share
-                      </button>
+                      <>
+                        <button
+                          className="btn btn-active btn-secondary"
+                          onClick={onShare}
+                        >
+                          Share
+                        </button>
+                        <CheckoutButton />
+                      </>
                     ) : (
                       <div></div>
                     )}
