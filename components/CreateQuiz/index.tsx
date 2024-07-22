@@ -178,19 +178,35 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     setQuestionList(data.data.questionList);
   };
 
-  const handleDeleteQuestion = async (item: Quiz) => {
-    const res = await fetch("/api/remove_quiz/" + item._id + "/" + id, {
-      method: "DELETE",
-    });
-    if (res.status === 401) {
-      await signOut();
-      router.push("/");
-      return;
+  const checkIsFirstQuestion = (id: string): boolean => {
+    // const question =  questionList.map((question, i )=>{if (question._id === id) {return question}});
+
+    let question: Quiz;
+
+    for (let i = 0; i < questionList.length; i++) {
+      if (questionList[i]._id === id) {
+        question = questionList[i];
+      }
     }
+    console.log(question);
+    return question.isFirst;
+  };
+  const handleDeleteQuestion = async (item: Quiz) => {
+    if (!checkIsFirstQuestion) {
+      const res = await fetch("/api/remove_quiz/" + item._id + "/" + id, {
+        method: "DELETE",
+      });
+      if (res.status === 401) {
+        await signOut();
+        router.push("/");
+        return;
+      }
 
-    const data = await res.json();
-
-    setQuestionList(data.data.questionList);
+      const data = await res.json();
+      setQuestionList(data.data.questionList);
+    } else {
+      console.log("Cannot delete the first question");
+    }
   };
   const handleAddAnswer = async () => {
     switch (panelStatus) {
