@@ -85,7 +85,7 @@ export async function PUT(req: Request) {
     const relatedQuizzes = await Quiz.find({
       troubleShootId: updatedQuestion.troubleShootId,
     }).sort({ createdAt: 1 });
-
+    // return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     return NextResponse.json({
       status: 200,
       data: { questionList: relatedQuizzes },

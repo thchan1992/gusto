@@ -10,7 +10,8 @@ import { Quiz } from "@/lib/types/Quiz";
 import data from "@/util/dummy.json";
 import Modal from "./Modal";
 import { UploadForm } from "./S3UploadForm";
-
+import { useUser, useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 interface CreateQuizProps {
   id: string;
 }
@@ -36,6 +37,19 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       nextQuizId: string;
     }[]
   >([]);
+  const router = useRouter();
+  const { signOut } = useAuth();
+  const { isSignedIn } = useUser();
+  useEffect(() => {
+    const handleAuthorised = async () => {
+      if (isSignedIn === false) {
+        await signOut();
+        router.push("/");
+      }
+    };
+    handleAuthorised();
+    console.log(isSignedIn);
+  }, [isSignedIn, router, signOut]);
 
   const NORMAL = "NORMAL";
   const SET_ANSWER = "SET_ANSWER";
@@ -46,6 +60,11 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
         const response = await fetch("/api/troubleshoot/get/" + id);
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
+        }
+        if (response.status === 401) {
+          await signOut();
+          router.push("/");
+          return;
         }
 
         const data = await response.json();
@@ -60,7 +79,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       }
     };
     fetchTroubleShoots();
-  }, [id]);
+  }, [id, router, signOut]);
 
   const addQuestionAPI = async () => {
     console.log(fileUrl, "file URL");
@@ -78,6 +97,13 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
           imageUrl: imageUrl,
         }),
       });
+      console.log(res.status, "a");
+      if (res.status === 401) {
+        console.log("create_Quiz: 401");
+        await signOut();
+        router.push("/");
+        return;
+      }
 
       const data = await res.json();
 
@@ -111,6 +137,11 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
           optionList: optionList,
         }),
       });
+      if (res.status === 401) {
+        await signOut();
+        router.push("/");
+        return;
+      }
 
       const data = await res.json();
       if (data?.data?.questionList) {
@@ -134,6 +165,12 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
         updatedQuestion: selectedQuestion,
       }),
     });
+    if (res.status === 401) {
+      await signOut();
+      router.push("/");
+      return;
+    }
+
     const data = await res.json();
 
     alert(data.data);
@@ -145,6 +182,12 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     const res = await fetch("/api/remove_quiz/" + item._id + "/" + id, {
       method: "DELETE",
     });
+    if (res.status === 401) {
+      await signOut();
+      router.push("/");
+      return;
+    }
+
     const data = await res.json();
 
     setQuestionList(data.data.questionList);

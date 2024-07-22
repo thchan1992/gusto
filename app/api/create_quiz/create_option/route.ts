@@ -59,6 +59,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ status: 404, message: "Quiz not found" });
     }
 
+    // return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     return NextResponse.json({
       status: 200,
       data: { updatedQuiz: updatedQuiz, questionList: relatedQuizzes },

@@ -6,7 +6,7 @@ import Button from "../Button";
 import { Quiz } from "@/lib/types/Quiz";
 import CheckoutButton from "./CheckoutButton";
 import { TroubleShoot } from "@/lib/models/TroubleShoot";
-
+import { useUser, useAuth } from "@clerk/nextjs";
 const ShowQuestion = ({ id }) => {
   const [loading, setLoading] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState<Quiz | null>(null);
@@ -16,9 +16,24 @@ const ShowQuestion = ({ id }) => {
   const [shareLink, setShareLink] = useState("");
   const [troubleshootTitle, setTroubleShootTitle] = useState<string>("");
   const router = useRouter();
+  const { signOut } = useAuth();
+  const { isSignedIn } = useUser();
+  useEffect(() => {
+    const handleAuthorised = async () => {
+      if (isSignedIn === false) {
+        await signOut();
+        router.push("/");
+      }
+    };
+    handleAuthorised();
+    console.log(isSignedIn);
+  }, [isSignedIn, router, signOut]);
 
   const findFirstQuestion = (questions: Quiz[]): Quiz => {
     const cur: Quiz = questions.find((item: Quiz) => item.isFirst === true);
+    if (cur === undefined) {
+      return questions[0];
+    }
 
     return cur;
   };
@@ -27,6 +42,11 @@ const ShowQuestion = ({ id }) => {
     const fetchTroubleShoots = async () => {
       try {
         const response = await fetch("/api/troubleshoot/get/" + id);
+        if (response.status === 401) {
+          await signOut();
+          router.push("/");
+          return;
+        }
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -53,7 +73,7 @@ const ShowQuestion = ({ id }) => {
       }
     };
     fetchTroubleShoots();
-  }, [id]);
+  }, [id, router, signOut]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
