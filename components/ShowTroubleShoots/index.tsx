@@ -5,17 +5,36 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Button from "../Button";
 
+import { useUser, useAuth } from "@clerk/nextjs";
+
 const ShowTroubleShoots = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [troubleshootList, setTroubleshootList] = useState([]);
 
   const router = useRouter();
+  const { signOut } = useAuth();
+  const { isSignedIn } = useUser();
+  useEffect(() => {
+    const handleAuthorised = async () => {
+      if (isSignedIn === false) {
+        await signOut();
+        router.push("/");
+      }
+    };
+    handleAuthorised();
+    console.log(isSignedIn);
+  }, [isSignedIn, router, signOut]);
 
   useEffect(() => {
     const fetchTroubleShoots = async () => {
       try {
         const response = await fetch("/api/troubleshoot/get_all");
+        if (response.status === 401) {
+          await signOut();
+          router.push("/");
+          return;
+        }
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -30,7 +49,7 @@ const ShowTroubleShoots = () => {
     };
 
     fetchTroubleShoots();
-  }, []);
+  }, [router, signOut]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
