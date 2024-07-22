@@ -235,6 +235,20 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     }
   };
 
+  const handleDeleteTroubleshoot = async () => {
+    const res = await fetch("/api/remove_troubleshoot/" + id, {
+      method: "DELETE",
+    });
+    if (res.status === 401) {
+      await signOut();
+      router.push("/");
+      return;
+    }
+    if (res.status === 200) {
+      router.push("/create_troubleshoot");
+    }
+  };
+
   return (
     <>
       <section
@@ -268,6 +282,12 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
               >
                 <div className="border-2 rounded p-2">
                   <h1>{troubleShootTitle}</h1>
+                  <Button
+                    title="Delete Troubleshoot"
+                    onClick={() => {
+                      handleDeleteTroubleshoot();
+                    }}
+                  />
                 </div>
                 {/* New Question */}
                 <div className="flex flex-row ">
@@ -317,13 +337,19 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                                 setVisble(true);
                               }}
                             />
-                            <Button
-                              title={"Delete"}
-                              onClick={() => {
-                                // setSelectedQuestion(item);
-                                handleDeleteQuestion(item);
-                              }}
-                            />
+                            {!item.isFirst ? (
+                              <Button
+                                title={"Delete"}
+                                onClick={() => {
+                                  // setSelectedQuestion(item);
+                                  handleDeleteQuestion(item);
+                                }}
+                              />
+                            ) : (
+                              <div>
+                                This is the first Question, cannot be deleted
+                              </div>
+                            )}
                           </div>
                         </div>
                       );
