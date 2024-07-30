@@ -7,7 +7,7 @@ import dbConnect from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import Quiz from "@/lib/models/Quiz";
-import mongoose from "mongoose";
+import { TroubleShoot } from "@/lib/models/TroubleShoot";
 
 export async function DELETE(request: Request, context: { params: Params }) {
   try {
@@ -24,9 +24,16 @@ export async function DELETE(request: Request, context: { params: Params }) {
     const deleteQuiz = async (quizId: string) => {
       try {
         const deletedQuiz = await Quiz.findByIdAndDelete(quizId);
+
         if (!deletedQuiz) {
           return NextResponse.json({ status: 400, message: "Invalid quizId" });
         }
+
+        // Remove the quiz from the TroubleShoot's quizList
+        await TroubleShoot.findByIdAndUpdate(troubleShootId, {
+          $pull: { quizList: quizId },
+        });
+
         return deletedQuiz;
       } catch (error) {
         return NextResponse.json({ status: 500, message: "Server error" });
@@ -38,8 +45,6 @@ export async function DELETE(request: Request, context: { params: Params }) {
     const relatedQuizzes = await Quiz.find({
       troubleShootId: troubleShootId,
     }).sort({ createdAt: 1 });
-
-    // return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
     return NextResponse.json({
       status: 200,

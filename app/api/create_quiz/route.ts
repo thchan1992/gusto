@@ -25,42 +25,49 @@ export async function POST(req: Request) {
     }
 
     const { title, isFirst, troubleShootId, imageUrl } = data;
-    console.log(imageUrl, "image URL");
 
-    const question = await Quiz.findOne({
-      troubleShootId: new mongoose.Types.ObjectId(troubleShootId),
+    const troubleShoot = await TroubleShoot.findOne({
+      _id: new mongoose.Types.ObjectId(troubleShootId),
     });
 
-    const newQuestion = new Quiz({
-      isFirst: question !== null ? false : true,
-      imageUrl: imageUrl,
-      question: title,
-      options: [],
-      createdBy: user._id,
-      troubleShootId: troubleShootId,
-    });
+    console.log(troubleShoot.quizList.length, "length");
+    console.log(troubleShoot.isPublic, "is public");
+    if (troubleShoot.quizList.length > 10 && !troubleShoot.isPublic) {
+      return NextResponse.json({
+        status: 400,
+        message: "Cannot add more question.",
+      });
+    } else {
+      const question = await Quiz.findOne({
+        troubleShootId: new mongoose.Types.ObjectId(troubleShootId),
+      });
 
-    const savedQuestion = await newQuestion.save();
+      const newQuestion = new Quiz({
+        isFirst: question !== null ? false : true,
+        imageUrl: imageUrl,
+        question: title,
+        options: [],
+        createdBy: user._id,
+        troubleShootId: troubleShootId,
+      });
 
-    await TroubleShoot.findByIdAndUpdate(troubleShootId, {
-      $push: { quizList: savedQuestion._id },
-    });
+      const savedQuestion = await newQuestion.save();
 
-    const relatedQuizzes = await Quiz.find({
-      troubleShootId: troubleShootId,
-    }).sort({ createdAt: 1 });
+      await TroubleShoot.findByIdAndUpdate(troubleShootId, {
+        $push: { quizList: savedQuestion._id },
+      });
 
-    console.log(
-      { questionList: relatedQuizzes, newQuestion: savedQuestion },
-      "respond"
-    );
+      const relatedQuizzes = await Quiz.find({
+        troubleShootId: troubleShootId,
+      }).sort({ createdAt: 1 });
 
-    // return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      // return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-    return NextResponse.json({
-      status: 200,
-      data: { questionList: relatedQuizzes, newQuestion: savedQuestion },
-    });
+      return NextResponse.json({
+        status: 200,
+        data: { questionList: relatedQuizzes, newQuestion: savedQuestion },
+      });
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.json({ status: 500, message: "Internal Server Error" });

@@ -12,6 +12,7 @@ import Modal from "./Modal";
 import { UploadForm } from "./S3UploadForm";
 import { useUser, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import CheckoutButton from "../ShowQuestion/CheckoutButton";
 interface CreateQuizProps {
   id: string;
 }
@@ -31,6 +32,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   const [quizId, setQuizId] = useState<string>("");
   const [visible, setVisble] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<Quiz | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [optionList, setOptionList] = useState<
     {
       text: string;
@@ -69,6 +71,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
         const data = await response.json();
 
+        setToken(data.data.troubleshoot.token);
+
         setTroubleShootTitle(data.data.troubleshoot.title);
 
         setQuestionList(data.data.questions);
@@ -82,7 +86,6 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   }, [id, router, signOut]);
 
   const addQuestionAPI = async () => {
-    console.log(fileUrl, "file URL");
     const imageUrl = fileUrl === null ? "" : fileUrl;
     try {
       const res = await fetch("/api/create_quiz", {
@@ -97,7 +100,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
           imageUrl: imageUrl,
         }),
       });
-      console.log(res.status, "a");
+
       if (res.status === 401) {
         console.log("create_Quiz: 401");
         await signOut();
@@ -180,19 +183,17 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
   const checkIsFirstQuestion = (id: string): boolean => {
     // const question =  questionList.map((question, i )=>{if (question._id === id) {return question}});
-
     let question: Quiz;
-
     for (let i = 0; i < questionList.length; i++) {
       if (questionList[i]._id === id) {
         question = questionList[i];
       }
     }
-    console.log(question);
+    console.log(question.isFirst, " Is First");
     return question.isFirst;
   };
   const handleDeleteQuestion = async (item: Quiz) => {
-    if (!checkIsFirstQuestion) {
+    if (!checkIsFirstQuestion(item._id)) {
       const res = await fetch("/api/remove_quiz/" + item._id + "/" + id, {
         method: "DELETE",
       });
@@ -203,6 +204,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       }
 
       const data = await res.json();
+      console.log(data.data, "returned data");
       setQuestionList(data.data.questionList);
     } else {
       console.log("Cannot delete the first question");
@@ -289,35 +291,49 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                     }}
                   />
                 </div>
+
+                {token === null && (
+                  <div>
+                    <CheckoutButton troubleshootId={id} />
+                  </div>
+                )}
                 {/* New Question */}
                 <div className="flex flex-row ">
-                  <input
-                    type="text"
-                    name="questionText"
-                    placeholder="question"
-                    className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                    value={questionText}
-                    onChange={(e) => {
-                      setQuestionText(e.target.value);
+                  {questionList.length < 10 || token !== null ? (
+                    <>
+                      <input
+                        type="text"
+                        name="questionText"
+                        placeholder="question"
+                        className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                        value={questionText}
+                        onChange={(e) => {
+                          setQuestionText(e.target.value);
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <div>
+                      {questionList.length} Please pay now to add more question
+                      or, remove some question and refresh the page.
+                    </div>
+                  )}
+                </div>
+                <div className="mt-5 ml-1">
+                  <Button
+                    disabled={questionText === "" ? true : false}
+                    title={
+                      panelStatus === "NORMAL" ? "Add an question" : "Done"
+                    }
+                    onClick={() => {
+                      handleAddAnswer();
+
+                      //call answer component to add an answer
+                      // panelStatus === "NORMAL"
+                      //   ? setPanelStatus("SET_ANSWER")
+                      //   : setPanelStatus("NORMAL");
                     }}
                   />
-
-                  <div className="mt-5 ml-1">
-                    <Button
-                      disabled={questionText === "" ? true : false}
-                      title={
-                        panelStatus === "NORMAL" ? "Add an question" : "Done"
-                      }
-                      onClick={() => {
-                        handleAddAnswer();
-
-                        //call answer component to add an answer
-                        // panelStatus === "NORMAL"
-                        //   ? setPanelStatus("SET_ANSWER")
-                        //   : setPanelStatus("NORMAL");
-                      }}
-                    />
-                  </div>
                 </div>
 
                 {/* Question List */}
