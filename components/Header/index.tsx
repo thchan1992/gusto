@@ -182,7 +182,7 @@ const Header = () => {
                     </Link>
                     <Link
                       href="/signup"
-                      className="ease-in-up hidden rounded-md bg-primary px-8 py-3 text-base font-bold text-white transition duration-300 hover:bg-opacity-90 hover:shadow-signUp md:block md:px-9 lg:px-6 xl:px-9"
+                      className="ease-in-up hidden rounded-md bg-sixthColor px-8 py-3 text-base font-bold text-white transition duration-300 hover:bg-opacity-90 hover:shadow-signUp md:block md:px-9 lg:px-6 xl:px-9"
                     >
                       Sign Up
                     </Link>
