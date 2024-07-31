@@ -55,6 +55,9 @@ module.exports = {
         sixthColor: "#42a5f5",
         seventhColor: "#8e24aa",
       },
+      // scrollBehavior: {
+      //   smooth: "smooth",
+      // },
     },
   },
   plugins: [require("daisyui")],

@@ -6,7 +6,7 @@ const Features = () => {
   return (
     <>
       <section
-        id="features"
+        id="about"
         className="bg-gradient-to-b from-secondaryColor to-fourthColor py-16 md:py-20 lg:py-28"
       >
         <div className="container">
