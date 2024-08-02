@@ -2,6 +2,7 @@ import { Quiz } from "@/lib/types/Quiz";
 import { useRef, useEffect, useState } from "react";
 import Button from "../Button";
 import { UploadForm } from "./S3UploadForm";
+import Image from "next/image";
 
 interface ModalProps {
   title: string;
@@ -136,22 +137,28 @@ function Modal({
 
         {question ? (
           <>
-            <h1>Question</h1>
+            {/* <h1>Question</h1> */}
+            <Image
+              src={question.imageUrl}
+              width={500}
+              height={500}
+              alt="Picture of the author"
+            />
+            {/* OLD Image URL {question.imageUrl}
+            NEW Image URL {fileUrl} */}
+            <UploadForm
+              onFileUrlChange={handleFileUrlChange}
+              oldFileUrl={question.imageUrl}
+            />
             <input
               type="text"
               name="questionText"
               placeholder="question"
-              className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+              className="mt-5 mb-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
               value={question.question}
               onChange={(e) => {
                 updateQuestionField("question", e.target.value);
               }}
-            />
-            OLD Image URL {question.imageUrl}
-            NEW Image URL {fileUrl}
-            <UploadForm
-              onFileUrlChange={handleFileUrlChange}
-              oldFileUrl={question.imageUrl}
             />
             <h1>Answer</h1>
             {question.options.map((item, i) => {

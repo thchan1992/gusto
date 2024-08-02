@@ -49,7 +49,7 @@ export const UploadForm = ({
   };
 
   return (
-    <div>
+    <div className="full-w justify-center items-center flex flex-row p-3">
       <input
         type="file"
         className="file-input file-input-bordered w-full max-w-xs"
@@ -57,7 +57,7 @@ export const UploadForm = ({
       />
       <button
         type="button"
-        className="btn btn-primary mt-4"
+        className="btn btn-primary ml-2"
         onClick={handleUpload}
         disabled={uploading}
       >
