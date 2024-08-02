@@ -13,6 +13,7 @@ import { UploadForm } from "./S3UploadForm";
 import { useUser, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CheckoutButton from "../ShowQuestion/CheckoutButton";
+import { FirstQuestionBadge } from "./FirstQuestionBadge";
 interface CreateQuizProps {
   id: string;
 }
@@ -259,7 +260,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       >
         <Modal
           questionList={questionList}
-          title={"hello"}
+          title={"Modify"}
           child="hello"
           question={selectedQuestion}
           setSelectedQuestion={setSelectedQuestion}
@@ -274,22 +275,38 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
             updateQuestion();
           }}
         />
-        <div className="container">
-          <div className="-mx-4 flex flex-wrap">
+        <div className="container ">
+          <div className="-mx-4 flex flex-wrap ">
             <div className="w-full px-4 lg:w-7/12 xl:w-8/12">
               <div
-                className="wow fadeInUp mb-12 rounded-md bg-primary/[3%] px-8 py-11 dark:bg-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]"
+                className=" mb-12 rounded-md bg-primary/[3%] px-8 py-11 dark:bg-thirdColor sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]"
                 data-wow-delay=".15s
               "
               >
-                <div className="border-2 rounded p-2">
-                  <h1>{troubleShootTitle}</h1>
-                  <Button
+                <div className="border-2 rounded-lg p-2 border-primaryColor flex flex-row ">
+                  <h1 className="m-1 text-center w-full text-primaryColor">
+                    {troubleShootTitle}
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Deserunt reprehenderit ducimus veniam quas. Fuga iusto nulla
+                    harum odit totam voluptas quibusdam vero quas? Totam
+                    sapiente cupiditate vel sequi iusto itaque.
+                  </h1>
+                  <div className="flex items-center">
+                    <button
+                      className="btn btn-error"
+                      onClick={() => {
+                        handleDeleteTroubleshoot();
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                  {/* <Button
                     title="Delete Troubleshoot"
                     onClick={() => {
                       handleDeleteTroubleshoot();
                     }}
-                  />
+                  /> */}
                 </div>
 
                 {token === null && (
@@ -298,42 +315,35 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                   </div>
                 )}
                 {/* New Question */}
-                <div className="flex flex-row ">
+                <div className="flex flex-row justify-items-center items-center">
                   {questionList.length < 10 || token !== null ? (
-                    <>
+                    <div className="w-full flex items-center">
                       <input
                         type="text"
                         name="questionText"
-                        placeholder="question"
-                        className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                        placeholder="Question"
+                        className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-fifthColor dark:shadow-signUp"
                         value={questionText}
                         onChange={(e) => {
                           setQuestionText(e.target.value);
                         }}
                       />
-                    </>
+                    </div>
                   ) : (
                     <div>
                       {questionList.length} Please pay now to add more question
                       or, remove some question and refresh the page.
                     </div>
                   )}
-                </div>
-                <div className="mt-5 ml-1">
-                  <Button
-                    disabled={questionText === "" ? true : false}
-                    title={
-                      panelStatus === "NORMAL" ? "Add an question" : "Done"
-                    }
-                    onClick={() => {
-                      handleAddAnswer();
-
-                      //call answer component to add an answer
-                      // panelStatus === "NORMAL"
-                      //   ? setPanelStatus("SET_ANSWER")
-                      //   : setPanelStatus("NORMAL");
-                    }}
-                  />
+                  <div className="ml-1 py-4">
+                    <button
+                      className="btn btn-info"
+                      disabled={questionText === "" ? true : false}
+                      onClick={handleAddAnswer}
+                    >
+                      {panelStatus === "NORMAL" ? "new question" : "Done"}
+                    </button>
+                  </div>
                 </div>
 
                 {/* Question List */}
@@ -346,6 +356,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                         >
                           <div className="card-body">
                             {item.question}
+
                             <Button
                               title={"Edit"}
                               onClick={() => {
@@ -362,9 +373,30 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                                 }}
                               />
                             ) : (
-                              <div>
-                                This is the first Question, cannot be deleted
-                              </div>
+                              // <div className="flex justify-end">
+                              //   <div className="relative group">
+                              //     <div className="badge badge-warning gap-2 mt-3 hover:bg-yellow-600 hover:text-white">
+                              //       <svg
+                              //         xmlns="http://www.w3.org/2000/svg"
+                              //         fill="none"
+                              //         viewBox="0 0 24 24"
+                              //         className="inline-block h-4 w-4 stroke-current"
+                              //       >
+                              //         <path
+                              //           strokeLinecap="round"
+                              //           strokeLinejoin="round"
+                              //           strokeWidth="2"
+                              //           d="M6 18L18 6M6 6l12 12"
+                              //         ></path>
+                              //       </svg>
+                              //       First question cannot be removed.
+                              //     </div>
+                              //     {/* <div className="absolute right-full top-1/2 transform -translate-y-1/2 ml-1 hidden w-32 p-2 m-2 bg-gray-800 text-red text-sm rounded-md group-hover:block">
+                              //       First question cannot be removed.
+                              //     </div> */}
+                              //   </div>
+                              // </div>
+                              <FirstQuestionBadge />
                             )}
                           </div>
                         </div>

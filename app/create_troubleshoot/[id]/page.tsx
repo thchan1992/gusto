@@ -8,10 +8,12 @@ const CreateQuizPage = ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Breadcrumb
-        pageName="Create A Quiz"
-        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In varius eros eget sapien consectetur ultrices. Ut quis dapibus libero."
+        pageName="Add or modify your questions/steps"
+        description="Add a new question/step by inserting the title, or modify any exisitng question/step by pressing edit."
       />
-      <CreateQuiz id={id} />
+      <div className="bg-gradient-to-b from-primaryColor to-fifthColor">
+        <CreateQuiz id={id} />
+      </div>
     </>
   );
 };
