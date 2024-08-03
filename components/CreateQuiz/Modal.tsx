@@ -134,124 +134,165 @@ function Modal({
         onSubmit={(e) => e.preventDefault()}
       >
         <h3 className="font-bold text-lg">{title}</h3>
-
         {question ? (
           <>
-            {/* <h1>Question</h1> */}
-            <Image
-              src={question.imageUrl}
-              width={500}
-              height={500}
-              alt="Picture of the author"
-            />
-            {/* OLD Image URL {question.imageUrl}
-            NEW Image URL {fileUrl} */}
-            <UploadForm
-              onFileUrlChange={handleFileUrlChange}
-              oldFileUrl={question.imageUrl}
-            />
-            <input
-              type="text"
-              name="questionText"
-              placeholder="question"
-              className="mt-5 mb-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-              value={question.question}
-              onChange={(e) => {
-                updateQuestionField("question", e.target.value);
-              }}
-            />
-            <h1>Answer</h1>
-            {question.options.map((item, i) => {
-              return (
-                <div key={i}>
-                  {item.text} is linked to {showAnswerLinkName(item.nextQuizId)}
-                  <input
-                    type="text"
-                    name={`optionText${i}`}
-                    placeholder="Option text"
-                    className="w-full rounded-md border border-transparent px-4 py-2 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                    value={item.text}
-                    onChange={(e) => {
-                      updateOptionField(i, "text", e.target.value);
-                    }}
+            <div className="card card-compact bg-primaryColor w-full shadow-xl mb-1 mt-1 border-2 border-primaryColor hover:border-fourthColor">
+              <figure>
+                <Image
+                  src={question.imageUrl}
+                  width={500}
+                  height={500}
+                  alt="Question Media"
+                />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title">Question Media</h2>
+                <p>Upload a picture to replace the current media.</p>
+                <div className="card-actions justify-end">
+                  <UploadForm
+                    onFileUrlChange={handleFileUrlChange}
+                    oldFileUrl={question.imageUrl}
                   />
-                  <select
-                    className="select select-bordered w-full max-w-xs"
-                    value={item.nextQuizId || ""}
-                    onChange={(e) => {
-                      const newVal =
-                        e.target.value !== "" ? e.target.value : null;
-                      updateOptionField(i, "nextQuizId", newVal);
-                    }}
-                  >
-                    <option value="" disabled>
-                      Answer
-                    </option>
-                    {questionList.map((questionItem, j) => {
-                      return (
-                        <option key={j} value={questionItem._id}>
-                          {questionItem.question}
-                        </option>
-                      );
-                    })}
-                  </select>
                 </div>
-              );
-            })}
-            <input
-              type="text"
-              name="answerText"
-              placeholder="Answer"
-              className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-              value={answerText}
-              onChange={(e) => {
-                setAnswerText(e.target.value);
-              }}
-            />
-            <Button
-              title="Add option"
-              onClick={() => {
-                // setOptionList((prev) => [
-                //   ...prev,
-                //   { text: answerText, nextQuizId: answerLink },
-                // ]);
-                addOption();
+              </div>
+            </div>
 
-                //add more answer
-                setAnswerLink("");
-                setAnswerText("");
-              }}
-            />
-            <select
-              className="select select-bordered w-full max-w-xs"
-              value={answerLink || ""}
-              onChange={(e) => {
-                setAnswerLink(e.target.value);
-              }}
-            >
-              <option value="" disabled>
-                Answer
-              </option>
-              {questionList.map((questionItem, j) => {
+            {/* <div className="border-2 m-1">
+              <Image
+                src={question.imageUrl}
+                width={500}
+                height={500}
+                alt="Question Media"
+              />
+              <UploadForm
+                onFileUrlChange={handleFileUrlChange}
+                oldFileUrl={question.imageUrl}
+              />
+            </div> */}
+            <div className="border-2 shadow-xl rounded-lg p-5 mt-2 border-primaryColor hover:border-fourthColor  bg-primaryColor">
+              <h1>Question Title</h1>
+              <input
+                type="text"
+                name="questionText"
+                placeholder="question"
+                className="mt-5 mb-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp m-1"
+                value={question.question}
+                onChange={(e) => {
+                  updateQuestionField("question", e.target.value);
+                }}
+              />
+            </div>
+
+            <div className="border-2 shadow-xl rounded-lg p-5 mt-2 border-primaryColor hover:border-fourthColor  bg-primaryColor">
+              <h1>Answer</h1>
+              {/* Need to add answer removal */}
+              {question.options.map((item, i) => {
                 return (
-                  <option key={j} value={questionItem._id}>
-                    {questionItem.question}
-                  </option>
+                  <div key={i}>
+                    - {item.text} is linked to{" "}
+                    {showAnswerLinkName(item.nextQuizId)}
+                    <input
+                      type="text"
+                      name={`optionText${i}`}
+                      placeholder="Option text"
+                      className="w-full rounded-md border border-transparent px-4 py-2 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp m-1"
+                      value={item.text}
+                      onChange={(e) => {
+                        updateOptionField(i, "text", e.target.value);
+                      }}
+                    />
+                    <select
+                      className="select select-bordered w-full m-1"
+                      value={item.nextQuizId || ""}
+                      onChange={(e) => {
+                        const newVal =
+                          e.target.value !== "" ? e.target.value : null;
+                        updateOptionField(i, "nextQuizId", newVal);
+                      }}
+                    >
+                      <option value="" disabled>
+                        Answer
+                      </option>
+                      {questionList.map((questionItem, j) => {
+                        return (
+                          <option key={j} value={questionItem._id}>
+                            {questionItem.question}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
                 );
               })}
-            </select>
+            </div>
+
+            <div className="border-2 shadow-xl rounded-lg p-5 mt-2 border-primaryColor hover:border-fourthColor  bg-primaryColor">
+              New answer
+              <div className="m-1 flex flex-row justify-center items-center">
+                <input
+                  type="text"
+                  name="answerText"
+                  placeholder="Option"
+                  className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                  value={answerText}
+                  onChange={(e) => {
+                    setAnswerText(e.target.value);
+                  }}
+                />
+                <div className="py-4 ml-1">
+                  <button
+                    className="btn btn-active btn-primary"
+                    onClick={() => {
+                      // setOptionList((prev) => [
+                      //   ...prev,
+                      //   { text: answerText, nextQuizId: answerLink },
+                      // ]);
+                      addOption();
+
+                      //add more answer
+                      setAnswerLink("");
+                      setAnswerText("");
+                    }}
+                  >
+                    new option
+                  </button>
+                </div>
+                {/* <Button title="Add option" /> */}
+              </div>
+              <select
+                className="select select-bordered w-full m-1"
+                value={answerLink || ""}
+                onChange={(e) => {
+                  setAnswerLink(e.target.value);
+                }}
+              >
+                <option value="" disabled>
+                  Answer
+                </option>
+                {questionList.map((questionItem, j) => {
+                  return (
+                    <option key={j} value={questionItem._id}>
+                      {questionItem.question}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+
             {!question.isFirst ? (
-              <div className="form-control w-52">
-                <label className="cursor-pointer label">
-                  <span className="label-text">First Question</span>
-                  <input
-                    type="checkbox"
-                    className="toggle toggle-primary"
-                    checked={question.isFirst}
-                    onChange={handleToggleChange}
-                    disabled={question.isFirst ? true : false}
-                  />
-                </label>
+              <div className="w-full m-1">
+                <div className="form-control w-52 ">
+                  <label className="cursor-pointer label">
+                    <span className="label-text">First Question</span>
+                    <input
+                      type="checkbox"
+                      className="toggle toggle-primary"
+                      checked={question.isFirst}
+                      onChange={handleToggleChange}
+                      disabled={question.isFirst ? true : false}
+                    />
+                  </label>
+                </div>
               </div>
             ) : (
               <div className="flex justify-end">
