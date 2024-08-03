@@ -43,6 +43,8 @@ function Modal({
   >([]);
 
   useEffect(() => {
+    console.log(question.imageUrl, "image url");
+    console.log(typeof question.imageUrl, "type");
     if (!modalRef.current) {
       return;
     }
@@ -137,14 +139,20 @@ function Modal({
         {question ? (
           <>
             <div className="card card-compact bg-primaryColor w-full shadow-xl mb-1 mt-1 border-2 border-primaryColor hover:border-fourthColor">
-              <figure>
-                <Image
-                  src={question.imageUrl}
-                  width={500}
-                  height={500}
-                  alt="Question Media"
-                />
-              </figure>
+              {question.imageUrl !== "" ? (
+                <figure>
+                  <Image
+                    src={question.imageUrl}
+                    width={500}
+                    height={500}
+                    alt="Question Media"
+                  />
+                </figure>
+              ) : (
+                <div className="flex justify-center items-center p-5">
+                  <h1>No Media</h1>
+                </div>
+              )}
               <div className="card-body">
                 <h2 className="card-title">Question Media</h2>
                 <p>Upload a picture to replace the current media.</p>
