@@ -3,7 +3,8 @@ import { useRef, useEffect, useState } from "react";
 import Button from "../Button";
 import { UploadForm } from "./S3UploadForm";
 import Image from "next/image";
-
+import divider from "@/assets/divider.png";
+import arrow from "@/assets/arrow.png";
 interface ModalProps {
   title: string;
   child: any;
@@ -43,8 +44,6 @@ function Modal({
   >([]);
 
   useEffect(() => {
-    console.log(question.imageUrl, "image url");
-    console.log(typeof question.imageUrl, "type");
     if (!modalRef.current) {
       return;
     }
@@ -135,10 +134,10 @@ function Modal({
         className="modal-box"
         onSubmit={(e) => e.preventDefault()}
       >
-        <h3 className="font-bold text-lg">{title}</h3>
+        <h3 className="text-lg font-bold">{title}</h3>
         {question ? (
           <>
-            <div className="card card-compact bg-primaryColor w-full shadow-xl mb-1 mt-1 border-2 border-primaryColor hover:border-fourthColor">
+            <div className="card card-compact mb-1 mt-1 w-full border-2 border-primaryColor bg-primaryColor shadow-xl hover:border-fourthColor">
               {question.imageUrl !== "" ? (
                 <figure>
                   <Image
@@ -149,13 +148,16 @@ function Modal({
                   />
                 </figure>
               ) : (
-                <div className="flex justify-center items-center p-5">
+                <div className="flex items-center justify-center p-5">
                   <h1>No Media</h1>
                 </div>
               )}
               <div className="card-body">
                 <h2 className="card-title">Question Media</h2>
-                <p>Upload a picture to replace the current media.</p>
+                <p>
+                  Upload a picture to add a new media or replace the current
+                  media.
+                </p>
                 <div className="card-actions justify-end">
                   <UploadForm
                     onFileUrlChange={handleFileUrlChange}
@@ -177,13 +179,13 @@ function Modal({
                 oldFileUrl={question.imageUrl}
               />
             </div> */}
-            <div className="border-2 shadow-xl rounded-lg p-5 mt-2 border-primaryColor hover:border-fourthColor  bg-primaryColor">
+            <div className="mt-2 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl  hover:border-fourthColor">
               <h1>Question Title</h1>
               <input
                 type="text"
                 name="questionText"
                 placeholder="question"
-                className="mt-5 mb-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp m-1"
+                className="m-1 mb-5 mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
                 value={question.question}
                 onChange={(e) => {
                   updateQuestionField("question", e.target.value);
@@ -191,52 +193,95 @@ function Modal({
               />
             </div>
 
-            <div className="border-2 shadow-xl rounded-lg p-5 mt-2 border-primaryColor hover:border-fourthColor  bg-primaryColor">
-              <h1>Answer</h1>
+            <div className="mt-2 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl  hover:border-fourthColor">
               {/* Need to add answer removal */}
               {question.options.map((item, i) => {
                 return (
                   <div key={i}>
-                    - {item.text} is linked to{" "}
-                    {showAnswerLinkName(item.nextQuizId)}
-                    <input
-                      type="text"
-                      name={`optionText${i}`}
-                      placeholder="Option text"
-                      className="w-full rounded-md border border-transparent px-4 py-2 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp m-1"
-                      value={item.text}
-                      onChange={(e) => {
-                        updateOptionField(i, "text", e.target.value);
-                      }}
-                    />
-                    <select
-                      className="select select-bordered w-full m-1"
-                      value={item.nextQuizId || ""}
-                      onChange={(e) => {
-                        const newVal =
-                          e.target.value !== "" ? e.target.value : null;
-                        updateOptionField(i, "nextQuizId", newVal);
-                      }}
-                    >
-                      <option value="" disabled>
-                        Answer
-                      </option>
-                      {questionList.map((questionItem, j) => {
-                        return (
-                          <option key={j} value={questionItem._id}>
-                            {questionItem.question}
+                    <div className="mb-1 mt-1 text-pretty rounded-lg border-2 border-secondaryColor text-center">
+                      <div className="rounded-t-lg bg-secondaryColor">
+                        <h1 className="text-center font-bold text-primaryColor">
+                          Answer {i + 1}
+                        </h1>
+                      </div>
+                      <div className="p-1">
+                        {item.text}
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Sit, rem eos debitis reiciendis officiis, quam repellat
+                        soluta, perspiciatis dolore tenetur nesciunt tempore
+                        nemo tempora amet eaque quod non. Illum, saepe!
+                      </div>
+                      <div className="flex items-center justify-center p-1">
+                        <input
+                          type="text"
+                          name={`optionText${i}`}
+                          placeholder="Option text"
+                          className="m-1 w-full rounded-md border border-transparent px-4 py-2 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                          value={item.text}
+                          onChange={(e) => {
+                            updateOptionField(i, "text", e.target.value);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <div className="m-1 flex items-center justify-center rounded-lg border-2 bg-secondaryColor p-1">
+                        <h2 className=" font-bold text-black">is linked to</h2>
+                        <Image
+                          src={arrow}
+                          width={50}
+                          height={50}
+                          alt="Question Media"
+                        />
+                      </div>
+                    </div>
+                    <div className="mb-1 mt-1 text-pretty rounded-lg border-2 border-secondaryColor text-center">
+                      <div className="rounded-t-lg bg-secondaryColor">
+                        <h1 className="text-center font-bold text-primaryColor">
+                          Question
+                        </h1>
+                      </div>
+                      {showAnswerLinkName(item.nextQuizId)}
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Iste, similique doloremque. Ab doloremque culpa id
+                      eligendi voluptatibus, ratione fugiat? Voluptates dolorem
+                      exercitationem excepturi cupiditate maxime nisi? Nemo nam
+                      perferendis ducimus.
+                      <div className="m-1 flex flex-row items-center justify-center">
+                        <select
+                          className="select select-bordered m-1 w-full"
+                          value={item.nextQuizId || ""}
+                          onChange={(e) => {
+                            const newVal =
+                              e.target.value !== "" ? e.target.value : null;
+                            updateOptionField(i, "nextQuizId", newVal);
+                          }}
+                        >
+                          <option value="" disabled>
+                            Question
                           </option>
-                        );
-                      })}
-                    </select>
+                          {questionList.map((questionItem, j) => {
+                            return (
+                              <option key={j} value={questionItem._id}>
+                                {questionItem.question}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-center">
+                      <div className="m-5 flex items-center justify-center rounded-lg border-2 bg-white p-1"></div>
+                    </div>
                   </div>
                 );
               })}
             </div>
 
-            <div className="border-2 shadow-xl rounded-lg p-5 mt-2 border-primaryColor hover:border-fourthColor  bg-primaryColor">
+            <div className="mt-2 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl  hover:border-fourthColor">
               New answer
-              <div className="m-1 flex flex-row justify-center items-center">
+              <div className="m-1 flex flex-row items-center justify-center">
                 <input
                   type="text"
                   name="answerText"
@@ -247,9 +292,9 @@ function Modal({
                     setAnswerText(e.target.value);
                   }}
                 />
-                <div className="py-4 ml-1">
+                <div className="ml-1 py-4">
                   <button
-                    className="btn btn-active btn-primary"
+                    className="btn btn-primary btn-active"
                     onClick={() => {
                       // setOptionList((prev) => [
                       //   ...prev,
@@ -268,7 +313,7 @@ function Modal({
                 {/* <Button title="Add option" /> */}
               </div>
               <select
-                className="select select-bordered w-full m-1"
+                className="select select-bordered m-1 w-full"
                 value={answerLink || ""}
                 onChange={(e) => {
                   setAnswerLink(e.target.value);
@@ -288,9 +333,9 @@ function Modal({
             </div>
 
             {!question.isFirst ? (
-              <div className="w-full m-1">
+              <div className="m-1 w-full">
                 <div className="form-control w-52 ">
-                  <label className="cursor-pointer label">
+                  <label className="label cursor-pointer">
                     <span className="label-text">First Question</span>
                     <input
                       type="checkbox"
@@ -304,8 +349,8 @@ function Modal({
               </div>
             ) : (
               <div className="flex justify-end">
-                <div className="relative group">
-                  <div className="badge badge-warning gap-2 mt-3 hover:bg-yellow-600 hover:text-white">
+                <div className="group relative">
+                  <div className="hover:bg-yellow-600 badge badge-warning mt-3 gap-2 hover:text-white">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
