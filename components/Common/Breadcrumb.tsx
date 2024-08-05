@@ -9,7 +9,7 @@ const Breadcrumb = ({
 }) => {
   return (
     <>
-      <section className="relative z-10 overflow-hidden pt-28 lg:pt-[150px]">
+      <section className="bg-primaryColor relative z-10 overflow-hidden pt-28 lg:pt-[150px]">
         <div className="container">
           <div className="-mx-4 flex flex-wrap items-center">
             <div className="w-full px-4 md:w-8/12 lg:w-7/12">
@@ -43,7 +43,7 @@ const Breadcrumb = ({
           </div>
         </div>
 
-        <div>
+        {/* <div>
           <span className="absolute top-0 left-0 z-[-1]">
             <svg
               width="287"
@@ -116,7 +116,7 @@ const Breadcrumb = ({
               </defs>
             </svg>
           </span>
-        </div>
+        </div> */}
       </section>
     </>
   );

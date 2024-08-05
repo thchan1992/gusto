@@ -46,6 +46,18 @@ module.exports = {
         one: "0px 2px 3px rgba(7, 7, 77, 0.05)",
         sticky: "inset 0 -1px 0 0 rgba(0, 0, 0, 0.1)",
       },
+      colors: {
+        secondaryColor: "#A7A2A9",
+        primaryColor: "#08090a",
+        thirdColor: "#f4f7f5",
+        fourthColor: "#575a5e",
+        fifthColor: "#222823",
+        sixthColor: "#42a5f5",
+        seventhColor: "#8e24aa",
+      },
+      // scrollBehavior: {
+      //   smooth: "smooth",
+      // },
     },
   },
   plugins: [require("daisyui")],

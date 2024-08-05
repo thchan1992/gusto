@@ -4,11 +4,11 @@ import Link from "next/link";
 const SigninPage = () => {
   return (
     <>
-      <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
+      <section className="relative z-10 overflow-hidden bg-gradient-to-b from-primaryColor to-fifthColor pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4">
-              <div className="mx-auto max-w-[500px] rounded-md bg-primary bg-opacity-5 px-6 py-10 dark:bg-dark sm:p-[60px] ">
+              <div className="mx-auto max-w-[500px] rounded-md   px-6 py-10 dark:bg-thirdColor sm:p-[60px] ">
                 <SignIn path="/signin" signUpUrl="/signup" />
               </div>
             </div>
@@ -54,8 +54,8 @@ const SigninPage = () => {
                 y2="453.581"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stopColor="#4A6CF7" />
-                <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="sixthColor" stopOpacity="0" />
               </linearGradient>
               <linearGradient
                 id="paint1_linear_95:1005"
@@ -65,8 +65,8 @@ const SigninPage = () => {
                 y2="1192.04"
                 gradientUnits="userSpaceOnUse"
               >
-                <stop stopColor="#4A6CF7" />
-                <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
+                <stop stopColor="white" />
+                <stop offset="1" stopColor="sixthColor" stopOpacity="0" />
               </linearGradient>
             </defs>
           </svg>

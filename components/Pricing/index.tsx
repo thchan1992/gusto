@@ -8,7 +8,10 @@ const Pricing = () => {
   const [isMonthly, setIsMonthly] = useState(true);
   const router = useRouter();
   return (
-    <section id="pricing" className="relative z-10 py-16 md:py-20 lg:py-28">
+    <section
+      id="pricing"
+      className="relative z-10 py-16 md:py-20 lg:py-28 bg-thirdColor"
+    >
       <div className="container">
         <SectionTitle
           title="Simple and Affordable Pricing"
@@ -156,8 +159,8 @@ const Pricing = () => {
               y2="1131.65"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
+              <stop stopColor="thirdColor" />
+              <stop offset="1" stopColor="primaryColor" stopOpacity="0" />
             </linearGradient>
             <linearGradient
               id="paint1_linear_93:235"
@@ -167,8 +170,8 @@ const Pricing = () => {
               y2="915.952"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stopColor="#4A6CF7" />
-              <stop offset="1" stopColor="#4A6CF7" stopOpacity="0" />
+              <stop stopColor="thirdColor" />
+              <stop offset="1" stopColor="primaryColor" stopOpacity="0" />
             </linearGradient>
           </defs>
         </svg>

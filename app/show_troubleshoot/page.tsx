@@ -10,10 +10,12 @@ const ShowTroubleShootsPage = ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Breadcrumb
-        pageName="Show Quiz"
-        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In varius eros eget sapien consectetur ultrices. Ut quis dapibus libero."
+        pageName="Preview trouble-shush"
+        description="Preview your trouble-shush manual. You can also share it by copying the link."
       />
-      <ShowTroubleShoots />
+      <div className="bg-gradient-to-b from-primaryColor to-fifthColor">
+        <ShowTroubleShoots />
+      </div>
     </>
   );
 };
