@@ -35,15 +35,16 @@ function Modal({
   };
   const [answerText, setAnswerText] = useState<string>("");
   const [answerLink, setAnswerLink] = useState<string>("");
-  const [allowSetIsFirst, setAllowSetIsFirst] = useState<boolean>(false);
-  const [optionList, setOptionList] = useState<
-    {
-      text: string;
-      nextQuizId: string;
-    }[]
-  >([]);
+  // const [allowSetIsFirst, setAllowSetIsFirst] = useState<boolean>(false);
+  // const [optionList, setOptionList] = useState<
+  //   {
+  //     text: string;
+  //     nextQuizId: string;
+  //   }[]
+  // >([]);
 
   useEffect(() => {
+    console.log("selected question", question);
     if (!modalRef.current) {
       return;
     }
@@ -102,16 +103,31 @@ function Modal({
     }
   };
 
+  const checkDuplicateOption = () => {
+    let res = false;
+    question.options.forEach((item) => {
+      if (item.text === answerText) {
+        res = true;
+      }
+    });
+    return res;
+  };
+
   const addOption = () => {
-    if (answerText.trim()) {
-      const newOption = { text: answerText, nextQuizId: answerLink };
-      const updatedOptions = [...question.options, newOption];
-      setSelectedQuestion({
-        ...question,
-        options: updatedOptions,
-      });
-      setAnswerText("");
-      setAnswerLink("");
+    if (checkDuplicateOption() === true) {
+      alert("Same option has been inserted.");
+      return;
+    } else {
+      if (answerText.trim()) {
+        const newOption = { text: answerText, nextQuizId: answerLink };
+        const updatedOptions = [...question.options, newOption];
+        setSelectedQuestion({
+          ...question,
+          options: updatedOptions,
+        });
+        setAnswerText("");
+        setAnswerLink("");
+      }
     }
   };
 
@@ -120,6 +136,20 @@ function Modal({
       ...question,
       isFirst: e.target.checked,
     });
+  };
+
+  const onDeleteAnswer = (text: string) => {
+    const updatedOptions = question.options.filter(
+      (option) => option.text !== text
+    );
+    setSelectedQuestion({
+      ...question,
+      options: updatedOptions,
+    });
+  };
+
+  const onDeleteLink = (index: number) => {
+    updateOptionField(index, "nextQuizId", null);
   };
 
   return (
@@ -167,18 +197,6 @@ function Modal({
               </div>
             </div>
 
-            {/* <div className="border-2 m-1">
-              <Image
-                src={question.imageUrl}
-                width={500}
-                height={500}
-                alt="Question Media"
-              />
-              <UploadForm
-                onFileUrlChange={handleFileUrlChange}
-                oldFileUrl={question.imageUrl}
-              />
-            </div> */}
             <div className="mt-2 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl  hover:border-fourthColor">
               <h1>Question Title</h1>
               <input
@@ -271,11 +289,28 @@ function Modal({
                             );
                           })}
                         </select>
+                        {item.nextQuizId !== null && (
+                          <button
+                            className="btn"
+                            onClick={() => onDeleteLink(i)}
+                          >
+                            Remove Link
+                          </button>
+                        )}
                       </div>
                     </div>
 
                     <div className="flex items-center justify-center">
-                      <div className="m-5 flex items-center justify-center rounded-lg border-2 bg-white p-1"></div>
+                      <div className="m-5 flex items-center justify-center rounded-lg border-2 bg-white p-1">
+                        <button
+                          className="btn btn-outline btn-error"
+                          onClick={() => {
+                            onDeleteAnswer(item.text);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
