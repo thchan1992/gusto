@@ -193,11 +193,14 @@ function Modal({
               />
             </div>
 
-            <div className="mt-2 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl  hover:border-fourthColor">
+            <div>
               {/* Need to add answer removal */}
               {question.options.map((item, i) => {
                 return (
-                  <div key={i}>
+                  <div
+                    key={i}
+                    className="mt-3 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl  hover:border-fourthColor"
+                  >
                     <div className="mb-1 mt-1 text-pretty rounded-lg border-2 border-secondaryColor text-center">
                       <div className="rounded-t-lg bg-secondaryColor">
                         <h1 className="text-center font-bold text-primaryColor">

@@ -97,17 +97,6 @@ const CreateTroubleShoot = () => {
                 >
                   New trouble-shush
                 </button>
-
-                {/* <input
-                  type="text"
-                  name="questionText"
-                  placeholder="Title for troubleshoot"
-                  className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                  value={troubleshootTitle}
-                  onChange={(e) => {
-                    setTroubleShootTitle(e.target.value);
-                  }}
-                /> */}
               </div>
               <div
                 className=" mb-12 rounded-md bg-primary/[3%] px-8 py-11 dark:bg-gradient-to-b from-thirdColor via-white to-thirdColor sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]"
@@ -128,11 +117,6 @@ const CreateTroubleShoot = () => {
                         </div>
                       </Link>
                     </div>
-                    // <div key={i}>
-                    //   <Link href={"/create_troubleshoot/" + troubleshoot._id}>
-                    //     {troubleshoot.title}
-                    //   </Link>
-                    // </div>
                   ))}
               </div>
             </div>

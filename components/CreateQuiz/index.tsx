@@ -14,6 +14,8 @@ import { useUser, useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CheckoutButton from "../ShowQuestion/CheckoutButton";
 import { FirstQuestionBadge } from "./FirstQuestionBadge";
+import arrow from "@/assets/arrow.png";
+import Image from "next/image";
 interface CreateQuizProps {
   id: string;
 }
@@ -252,6 +254,13 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     }
   };
 
+  const convertQuestionId = (nextQuizId: string): string => {
+    const res = questionList.filter((item) => {
+      return item._id === nextQuizId;
+    });
+    return res[0].question;
+  };
+
   return (
     <>
       <section
@@ -308,158 +317,187 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                     }}
                   /> */}
                 </div>
-
                 {token === null && (
                   <div>
                     <CheckoutButton troubleshootId={id} />
                   </div>
                 )}
                 {/* New Question */}
-                <div className="flex flex-row justify-items-center items-center">
-                  {questionList.length < 10 || token !== null ? (
-                    <div className="w-full flex items-center">
-                      <input
-                        type="text"
-                        name="questionText"
-                        placeholder="Question"
-                        className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-fifthColor dark:shadow-signUp"
-                        value={questionText}
-                        onChange={(e) => {
-                          setQuestionText(e.target.value);
-                        }}
-                      />
+
+                <div className="">
+                  <h1 className="text-black mt-2 font-bold">Question title</h1>
+                  <div className="flex flex-row justify-items-center items-center">
+                    {questionList.length < 10 || token !== null ? (
+                      <div className="w-full flex items-center">
+                        <input
+                          type="text"
+                          name="questionText"
+                          placeholder="Question"
+                          className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-fifthColor dark:shadow-signUp"
+                          value={questionText}
+                          onChange={(e) => {
+                            setQuestionText(e.target.value);
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        {questionList.length} Please pay now to add more
+                        question or, remove some question and refresh the page.
+                      </div>
+                    )}
+                    <div className="ml-1 py-4">
+                      <button
+                        className="btn btn-info"
+                        disabled={questionText === "" ? true : false}
+                        onClick={handleAddAnswer}
+                      >
+                        {panelStatus === "NORMAL" ? "new question" : "complete"}
+                      </button>
                     </div>
-                  ) : (
-                    <div>
-                      {questionList.length} Please pay now to add more question
-                      or, remove some question and refresh the page.
-                    </div>
-                  )}
-                  <div className="ml-1 py-4">
-                    <button
-                      className="btn btn-info"
-                      disabled={questionText === "" ? true : false}
-                      onClick={handleAddAnswer}
-                    >
-                      {panelStatus === "NORMAL" ? "new question" : "Done"}
-                    </button>
                   </div>
-                </div>
+                  {/* Question List */}
+                  {questionList.length > 0 && panelStatus === NORMAL
+                    ? questionList.map((item, i) => {
+                        return (
+                          <div
+                            key={i}
+                            className="card w-96 bg-base-100 shadow-xl mt-2"
+                          >
+                            <div className="card-body">
+                              {item.question}
 
-                {/* Question List */}
-                {questionList.length > 0 && panelStatus === NORMAL
-                  ? questionList.map((item, i) => {
-                      return (
-                        <div
-                          key={i}
-                          className="card w-96 bg-base-100 shadow-xl mt-2"
-                        >
-                          <div className="card-body">
-                            {item.question}
-
-                            <Button
-                              title={"Edit"}
-                              onClick={() => {
-                                setSelectedQuestion(item);
-                                setVisble(true);
-                              }}
-                            />
-                            {!item.isFirst ? (
                               <Button
-                                title={"Delete"}
+                                title={"Edit"}
                                 onClick={() => {
-                                  // setSelectedQuestion(item);
-                                  handleDeleteQuestion(item);
+                                  setSelectedQuestion(item);
+                                  setVisble(true);
                                 }}
                               />
-                            ) : (
-                              // <div className="flex justify-end">
-                              //   <div className="relative group">
-                              //     <div className="badge badge-warning gap-2 mt-3 hover:bg-yellow-600 hover:text-white">
-                              //       <svg
-                              //         xmlns="http://www.w3.org/2000/svg"
-                              //         fill="none"
-                              //         viewBox="0 0 24 24"
-                              //         className="inline-block h-4 w-4 stroke-current"
-                              //       >
-                              //         <path
-                              //           strokeLinecap="round"
-                              //           strokeLinejoin="round"
-                              //           strokeWidth="2"
-                              //           d="M6 18L18 6M6 6l12 12"
-                              //         ></path>
-                              //       </svg>
-                              //       First question cannot be removed.
-                              //     </div>
-                              //     {/* <div className="absolute right-full top-1/2 transform -translate-y-1/2 ml-1 hidden w-32 p-2 m-2 bg-gray-800 text-red text-sm rounded-md group-hover:block">
-                              //       First question cannot be removed.
-                              //     </div> */}
-                              //   </div>
-                              // </div>
-                              <FirstQuestionBadge />
-                            )}
+                              {!item.isFirst ? (
+                                <Button
+                                  title={"Delete"}
+                                  onClick={() => {
+                                    // setSelectedQuestion(item);
+                                    handleDeleteQuestion(item);
+                                  }}
+                                />
+                              ) : (
+                                <FirstQuestionBadge />
+                              )}
+                            </div>
                           </div>
+                        );
+                      })
+                    : undefined}
+                  {panelStatus === SET_ANSWER && (
+                    <>
+                      <h1 className="text-black mt-2 font-bold">
+                        Image for the question
+                      </h1>
+                      <UploadForm onFileUrlChange={handleFileUrlChange} />
+                      <div className="border-primaryColor border-2 p-1 rounded-md w-full">
+                        <h1 className="text-black mt-2 font-bold">
+                          Question title
+                        </h1>
+                        <div className="flex flex-row">
+                          <input
+                            type="text"
+                            name="answerText"
+                            placeholder="Answer"
+                            className="input input-bordered input-info w-full mb-3 mr-1"
+                            value={answerText}
+                            onChange={(e) => {
+                              setAnswerText(e.target.value);
+                            }}
+                          />
+                          <button
+                            className="btn btn-info"
+                            onClick={() => {
+                              setOptionList((prev) => [
+                                ...prev,
+                                { text: answerText, nextQuizId: answerLink },
+                              ]);
+                              //add more answer
+                              setAnswerLink("");
+                              setAnswerText("");
+                            }}
+                          >
+                            add answer
+                          </button>
                         </div>
-                      );
-                    })
-                  : undefined}
-
+                        <select
+                          className="select select-bordered w-full"
+                          value={answerLink}
+                          onChange={(e) => {
+                            setAnswerLink(e.target.value);
+                          }}
+                        >
+                          <option value="" disabled>
+                            Answer
+                          </option>
+                          {questionList.map((item, i) => {
+                            return (
+                              <option key={i} value={item._id}>
+                                {item.question}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>{" "}
+                    </>
+                  )}
+                </div>
                 {optionList.map((item, i) => {
                   return (
-                    <div key={i}>
-                      {item.text} = {item.nextQuizId}
+                    <div
+                      key={i}
+                      className="mt-3 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl  hover:border-fourthColor"
+                    >
+                      <div className="mb-1 mt-1 text-pretty rounded-lg border-2 border-secondaryColor text-center">
+                        <div className="rounded-t-lg bg-secondaryColor">
+                          <h1 className="text-center font-bold text-primaryColor">
+                            Answer {i + 1}
+                          </h1>
+                        </div>
+                        <div className="p-1">
+                          {item.text}
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Sit, rem eos debitis reiciendis officiis, quam
+                          repellat soluta, perspiciatis dolore tenetur nesciunt
+                          tempore nemo tempora amet eaque quod non. Illum,
+                          saepe!
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <div className="m-1 flex items-center justify-center rounded-lg border-2 bg-secondaryColor p-1">
+                          <h2 className=" font-bold text-black">
+                            is linked to
+                          </h2>
+                          <Image
+                            src={arrow}
+                            width={50}
+                            height={50}
+                            alt="Question Media"
+                          />
+                        </div>
+                      </div>
+                      <div className="mb-1 mt-1 text-pretty rounded-lg border-2 border-secondaryColor text-center">
+                        <div className="rounded-t-lg bg-secondaryColor">
+                          <h1 className="text-center font-bold text-primaryColor">
+                            Question
+                          </h1>
+                        </div>
+                        {convertQuestionId(item.nextQuizId)}\ Lorem ipsum dolor
+                        sit amet consectetur adipisicing elit. Iste, similique
+                        doloremque. Ab doloremque culpa id eligendi
+                        voluptatibus, ratione fugiat? Voluptates dolorem
+                        exercitationem excepturi cupiditate maxime nisi? Nemo
+                        nam perferendis ducimus.
+                      </div>
                     </div>
                   );
                 })}
-
-                {panelStatus === SET_ANSWER && (
-                  <div>
-                    <UploadForm onFileUrlChange={handleFileUrlChange} />
-                    <div className="flex flex-row">
-                      <input
-                        type="text"
-                        name="answerText"
-                        placeholder="Answer"
-                        className="mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                        value={answerText}
-                        onChange={(e) => {
-                          setAnswerText(e.target.value);
-                        }}
-                      />
-                      <Button
-                        title="Add option"
-                        onClick={() => {
-                          setOptionList((prev) => [
-                            ...prev,
-                            { text: answerText, nextQuizId: answerLink },
-                          ]);
-                          //add more answer
-                          setAnswerLink("");
-                          setAnswerText("");
-                        }}
-                      />
-                    </div>
-                    <select
-                      className="select select-bordered w-full max-w-xs"
-                      value={answerLink}
-                      onChange={(e) => {
-                        setAnswerLink(e.target.value);
-                      }}
-                    >
-                      <option value="" disabled>
-                        Answer
-                      </option>
-                      {questionList.map((item, i) => {
-                        return (
-                          <option key={i} value={item._id}>
-                            {item.question}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
-                )}
-
                 {/* button */}
                 {/* {Panel()} */}
                 {/* textfield for answer */}
