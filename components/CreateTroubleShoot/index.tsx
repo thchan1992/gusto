@@ -113,7 +113,7 @@ const CreateTroubleShoot = () => {
                         <div className="card-body">
                           {/* <h2 className="card-title">Shoes!</h2> */}
                           <h1 className="font-extrabold">Title:</h1>{" "}
-                          {troubleshoot.title}
+                          <div className="card-body">{troubleshoot.title}</div>
                         </div>
                       </Link>
                     </div>

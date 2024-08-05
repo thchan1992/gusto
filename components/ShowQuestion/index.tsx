@@ -14,6 +14,7 @@ const ShowQuestion = ({ id }) => {
   const [error, setError] = useState<string | null>(null);
   const [questionList, setQuestionList] = useState<Quiz[]>([]);
   const [shareLink, setShareLink] = useState("");
+  const [copied, setCopied] = useState(false);
   const [troubleshootTitle, setTroubleShootTitle] = useState<string>("");
   const router = useRouter();
   const { signOut } = useAuth();
@@ -78,23 +79,6 @@ const ShowQuestion = ({ id }) => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  const onShare = async () => {
-    try {
-      const res = await fetch("/api/make_troubleshoot_public/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ troubleshootId: id }),
-      });
-
-      const data = await res.json();
-      console.log(data.url);
-      setShareLink(data.url);
-    } catch (e) {
-      alert(e);
-      console.error("Error adding question:", e);
-    }
-  };
-
   const onRestart = (): void => {
     const cur = findFirstQuestion(questionList);
     setCurrentQuestion(cur);
@@ -109,11 +93,15 @@ const ShowQuestion = ({ id }) => {
     }
   };
 
+  function copyText(text: string) {
+    navigator.clipboard.writeText(text);
+  }
+
   return (
     <>
       <section
         id="createQuiz"
-        className="overflow-hidden py-16 md:py-20 lg:py-28"
+        className="overflow-hidden py-16 md:py-20 lg:py-28 bg-gradient-to-b from-primaryColor to-fifthColor"
       >
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
@@ -124,37 +112,68 @@ const ShowQuestion = ({ id }) => {
                   data-wow-delay=".15s"
                 >
                   <div className="flex justify-between">
-                    {history.length > 0 ? (
-                      <button
-                        className="btn btn-active btn-accent"
-                        onClick={onBack}
-                      >
-                        Back
-                      </button>
-                    ) : (
-                      <div></div>
-                    )}
                     {shareLink === "" ? (
-                      <>
-                        <button
-                          className="btn btn-active btn-secondary"
-                          onClick={onShare}
-                        >
-                          Share
-                        </button>
-                        <CheckoutButton troubleshootId={id} />
-                      </>
+                      <CheckoutButton troubleshootId={id} />
                     ) : (
                       <div></div>
                     )}
-                    Link: {shareLink}
-                    <button
-                      className="btn btn-active btn-secondary"
-                      onClick={onRestart}
-                    >
-                      Restart
-                    </button>
+                    {shareLink !== "" && (
+                      <div className="border-2 rounded-md bg-secondaryColor flex justify-center items-center mr-1">
+                        <h1 className=" text-primaryColor p-1 font-bold">
+                          Link: {shareLink}
+                        </h1>
+                      </div>
+                    )}
+                    <div className="flex flex-col">
+                      <button
+                        className="btn btn-active btn-secondary"
+                        onClick={onRestart}
+                      >
+                        Restart
+                      </button>
+                      {shareLink !== "" && (
+                        <button
+                          onClick={() => {
+                            copyText(shareLink);
+                            setCopied(true);
+                          }}
+                          className="btn btn-accent m-1"
+                        >
+                          {copied ? (
+                            <>
+                              Copied
+                              <svg
+                                className="w-3 h-3 text-white me-1.5"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 16 12"
+                              >
+                                <path
+                                  stroke="currentColor"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M1 5.917 5.724 10.5 15 1.5"
+                                />
+                              </svg>
+                            </>
+                          ) : (
+                            "Copy Link"
+                          )}
+                        </button>
+                      )}
+                    </div>
                   </div>
+
+                  <button
+                    className="btn btn-active btn-accent mt-2"
+                    onClick={onBack}
+                    disabled={history.length > 0 ? false : true}
+                  >
+                    Back
+                  </button>
+
                   <div className="flex justify-center items-center flex-col">
                     {/* card */}
                     <div className="card w-full bg-base-100 shadow-xl p-1 m-4">
@@ -198,7 +217,7 @@ const ShowQuestion = ({ id }) => {
                             }
                           }}
                           key={i}
-                          className="w-full bordered rounded-xl shadow-xl p-4 m-4 bg-base-200 hover:bg-base-300 cursor-pointer"
+                          className="w-full bordered rounded-xl shadow-xl p-4 m-4 bg-base-200 hover:bg-base-300 cursor-pointer hover:border-thirdColor"
                         >
                           Option {i + 1}: {item.text} Lorem ipsum dolor sit
                           amet, consectetur adipiscing elit, sed do eiusmod

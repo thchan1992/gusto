@@ -21,7 +21,11 @@ const CheckoutButton = ({ troubleshootId }) => {
     }
   };
 
-  return <button onClick={handlePayment}>Pay Now</button>;
+  return (
+    <button className="btn btn-info" onClick={handlePayment}>
+      Pay Now
+    </button>
+  );
 };
 
 export default CheckoutButton;
