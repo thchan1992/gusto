@@ -262,12 +262,11 @@ function Modal({
                           Question
                         </h1>
                       </div>
-                      {showAnswerLinkName(item.nextQuizId)}
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Iste, similique doloremque. Ab doloremque culpa id
-                      eligendi voluptatibus, ratione fugiat? Voluptates dolorem
-                      exercitationem excepturi cupiditate maxime nisi? Nemo nam
-                      perferendis ducimus.
+                      {item.nextQuizId
+                        ? showAnswerLinkName(item.nextQuizId) +
+                          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, similique doloremque. Ab doloremque culpa id eligendi voluptatibus, ratione fugiat? Voluptates dolorem exercitationem excepturi cupiditate maxime nisi? Nemo namperferendis ducimus."
+                        : "No question"}
+
                       <div className="m-1 flex flex-row items-center justify-center">
                         <select
                           className="select select-bordered m-1 w-full"
