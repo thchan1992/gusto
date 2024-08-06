@@ -64,8 +64,7 @@ import { v4 as uuidv4 } from "uuid";
 export async function POST(req: NextRequest) {
   const body = await req.text();
   const signature = req.headers.get("Stripe-Signature") as string;
-  console.log("Received payload:", body);
-  console.log("Received signature:", signature);
+
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(
