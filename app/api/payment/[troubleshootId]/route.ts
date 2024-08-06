@@ -12,7 +12,6 @@ export async function GET(
 
   const user = await clerkClient.users.getUser(userId);
 
-  console.log(auth(), "auth");
   if (!userId) {
     return NextResponse.json({ status: 401, message: "Unauthorized" });
   }
