@@ -19,10 +19,14 @@ export async function GET(
     const stripeSession = await stripe.checkout.sessions.create({
       mode: "payment",
       // success_url: "http://localhost:3000/ ",
+      // success_url:
+      //   process.env.NEXT_PUBLIC_URL + "create_troubleshoot/" + troubleshootId,
+      // cancel_url:
+      //   process.env.NEXT_PUBLIC_URL + "create_troubleshoot/" + troubleshootId,
       success_url:
-        process.env.NEXT_PUBLIC_URL + "create_troubleshoot/" + troubleshootId,
+        "https://troubleshush.com/" + "create_troubleshoot/" + troubleshootId,
       cancel_url:
-        process.env.NEXT_PUBLIC_URL + "create_troubleshoot/" + troubleshootId,
+        "https://troubleshush.com/" + "create_troubleshoot/" + troubleshootId,
       payment_method_types: ["card"],
       customer_email: user.emailAddresses[0].emailAddress,
       // line_items: [
