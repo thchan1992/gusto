@@ -56,15 +56,16 @@
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe/stripe";
 import { headers } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import { TroubleShoot } from "@/lib/models/TroubleShoot";
 import { v4 as uuidv4 } from "uuid";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const body = await req.text();
-  const signature = headers().get("Stripe-Signature") as string;
-
+  const signature = req.headers.get("Stripe-Signature") as string;
+  console.log("Received payload:", body);
+  console.log("Received signature:", signature);
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(
