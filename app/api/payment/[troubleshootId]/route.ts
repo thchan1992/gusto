@@ -50,6 +50,7 @@ export async function GET(
 
     return new NextResponse(JSON.stringify({ url: stripeSession.url }));
   } catch (e) {
+    console.log(e, " payment error");
     return NextResponse.json({ message: e }, { status: 500 });
   }
 }
