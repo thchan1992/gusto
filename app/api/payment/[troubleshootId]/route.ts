@@ -19,7 +19,7 @@ export async function GET(
   try {
     const stripeSession = await stripe.checkout.sessions.create({
       mode: "payment",
-      // success_url: "http://localhost:3000/",
+      // success_url: "http://localhost:3000/ ",
       success_url:
         process.env.NEXT_PUBLIC_URL + "create_troubleshoot/" + troubleshootId,
       cancel_url:
