@@ -70,10 +70,11 @@ export async function POST(req: NextRequest) {
   try {
     event = stripe.webhooks.constructEvent(
       body,
-      signature,
+      signature!,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (e) {
+    console.log(e, " invalid singature message");
     return new NextResponse("invalid signature", { status: 400 });
   }
 
