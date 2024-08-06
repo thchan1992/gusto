@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import NewsLatterBox from "./NewsLatterBox";
 
 const Contact = () => {
   const [message, setMessage] = useState("");
@@ -8,7 +7,8 @@ const Contact = () => {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
 
-  const sendEmail = async () => {
+  const sendEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
       const res = await fetch("/api/sendEmail", {
         method: "POST",
@@ -23,6 +23,9 @@ const Contact = () => {
       });
       if (res.status === 200) {
         setSent(true);
+        setName("");
+        setEmail("");
+        setMessage("");
       }
     } catch (e) {
       alert(e);
@@ -42,12 +45,14 @@ const Contact = () => {
               "
           >
             <h2 className="mb-3 text-2xl font-bold text-primaryColor dark:text-primaryColor sm:text-3xl lg:text-2xl xl:text-3xl">
-              Need Help? Open a Ticket
+              {!sent
+                ? "Need Help? Send us a email."
+                : "Your email has been sent."}
             </h2>
             <p className="mb-12 text-base font-medium text-primaryColor">
               Our support team will get back to you ASAP via email.
             </p>
-            <form>
+            <form onSubmit={sendEmail}>
               <div className="-mx-4 flex flex-wrap">
                 <div className="w-full px-4 md:w-1/2">
                   <div className="mb-8">
@@ -108,9 +113,9 @@ const Contact = () => {
                   {!sent && (
                     <button
                       className="rounded-md bg-fifthColor px-9 py-4 text-base font-medium text-white transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
-                      onClick={() => {
-                        sendEmail();
-                      }}
+                      // onClick={() => {
+                      //   sendEmail();
+                      // }}
                     >
                       Submit Ticket
                     </button>
@@ -120,10 +125,6 @@ const Contact = () => {
             </form>
           </div>
         </div>
-        {/* <div className="w-full px-4 lg:w-5/12 xl:w-4/12">
-            <NewsLatterBox />
-          </div> */}
-        {/* </div> */}
       </div>
     </section>
   );

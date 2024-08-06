@@ -64,7 +64,9 @@ const Pricing = () => {
           </PricingBox>
           <PricingBox
             buttonText="Contact us"
-            onPress={() => {}}
+            onPress={() => {
+              router.push("/#contact");
+            }}
             packageName="Ultra"
             price={"100"}
             duration={"Manual"}

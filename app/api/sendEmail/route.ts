@@ -15,7 +15,6 @@ export async function POST(request: NextRequest) {
       Subject: email + " / " + name,
       TextBody: message,
     });
-    console.log(res);
     return Response.json({ res });
   } catch (e) {
     return NextResponse.json({ status: 500, message: "Internal Server Error" });
