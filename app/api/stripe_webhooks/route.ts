@@ -77,7 +77,7 @@ export async function POST(req: Request) {
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
-
+  console.log("processing payment");
   if (event.type === "checkout.session.completed") {
     console.log("payment was successful");
     console.log(session.metadata.troubleshootId);
