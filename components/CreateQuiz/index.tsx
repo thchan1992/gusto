@@ -292,8 +292,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                 data-wow-delay=".15s
               "
               >
-                <div className="border-2 rounded-lg p-2 border-primaryColor flex flex-row ">
-                  <h1 className="m-1 text-center w-full text-primaryColor">
+                <div className="flex flex-row rounded-lg border-2 border-primaryColor p-2 ">
+                  <h1 className="m-1 w-full text-center text-primaryColor">
                     {troubleShootTitle}
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                     Deserunt reprehenderit ducimus veniam quas. Fuga iusto nulla
@@ -325,10 +325,10 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                 {/* New Question */}
 
                 <div className="">
-                  <h1 className="text-black mt-2 font-bold">Question title</h1>
-                  <div className="flex flex-row justify-items-center items-center">
+                  <h1 className="mt-2 font-bold text-black">Question title</h1>
+                  <div className="flex flex-row items-center justify-items-center">
                     {questionList.length < 10 || token !== null ? (
-                      <div className="w-full flex items-center">
+                      <div className="flex w-full items-center">
                         <input
                           type="text"
                           name="questionText"
@@ -362,7 +362,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                         return (
                           <div
                             key={i}
-                            className="card w-96 bg-base-100 shadow-xl mt-2"
+                            className="card mt-2 w-96 bg-base-100 shadow-xl"
                           >
                             <div className="card-body">
                               {item.question}
@@ -392,12 +392,12 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                     : undefined}
                   {panelStatus === SET_ANSWER && (
                     <>
-                      <h1 className="text-black mt-2 font-bold">
+                      <h1 className="mt-2 font-bold text-black">
                         Image for the question
                       </h1>
                       <UploadForm onFileUrlChange={handleFileUrlChange} />
-                      <div className="border-primaryColor border-2 p-1 rounded-md w-full">
-                        <h1 className="text-black mt-2 font-bold">
+                      <div className="w-full rounded-md border-2 border-primaryColor p-1">
+                        <h1 className="mt-2 font-bold text-black">
                           Question title
                         </h1>
                         <div className="flex flex-row">
@@ -405,7 +405,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                             type="text"
                             name="answerText"
                             placeholder="Answer"
-                            className="input input-bordered input-info w-full mb-3 mr-1"
+                            className="input input-bordered input-info mb-3 mr-1 w-full"
                             value={answerText}
                             onChange={(e) => {
                               setAnswerText(e.target.value);

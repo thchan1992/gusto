@@ -5,13 +5,22 @@ const PricingBox = (props: {
   subtitle: string;
   children: React.ReactNode;
   onPress: () => void;
+  buttonText: string;
 }) => {
-  const { price, duration, packageName, subtitle, children, onPress } = props;
+  const {
+    price,
+    duration,
+    packageName,
+    subtitle,
+    children,
+    onPress,
+    buttonText,
+  } = props;
 
   return (
     <div className="w-full">
       <div
-        className="wow fadeInUp relative z-10 rounded-md bg-white px-8 py-10 shadow-signUp dark:bg-gradient-to-b from-primaryColor to-fifthColor"
+        className="wow fadeInUp relative z-10 rounded-md bg-white from-primaryColor to-fifthColor px-8 py-10 shadow-signUp dark:bg-gradient-to-b"
         data-wow-delay=".1s"
       >
         <div className="flex items-center justify-between">
@@ -31,7 +40,7 @@ const PricingBox = (props: {
               onPress();
             }}
           >
-            Start building
+            {buttonText}
           </button>
         </div>
         <div>{children}</div>
