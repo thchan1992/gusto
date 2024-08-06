@@ -6,6 +6,7 @@ const Contact = () => {
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
 
   const sendEmail = async () => {
     try {
@@ -20,6 +21,9 @@ const Contact = () => {
           email: email,
         }),
       });
+      if (res.status === 200) {
+        setSent(true);
+      }
     } catch (e) {
       alert(e);
     }
@@ -101,14 +105,16 @@ const Contact = () => {
                   </div>
                 </div>
                 <div className="w-full px-4">
-                  <button
-                    className="rounded-md bg-fifthColor px-9 py-4 text-base font-medium text-white transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
-                    onClick={() => {
-                      sendEmail();
-                    }}
-                  >
-                    Submit Ticket
-                  </button>
+                  {!sent && (
+                    <button
+                      className="rounded-md bg-fifthColor px-9 py-4 text-base font-medium text-white transition duration-300 ease-in-out hover:bg-opacity-80 hover:shadow-signUp"
+                      onClick={() => {
+                        sendEmail();
+                      }}
+                    >
+                      Submit Ticket
+                    </button>
+                  )}
                 </div>
               </div>
             </form>
