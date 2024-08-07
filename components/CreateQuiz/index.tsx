@@ -16,6 +16,7 @@ import CheckoutButton from "../ShowQuestion/CheckoutButton";
 import { FirstQuestionBadge } from "./FirstQuestionBadge";
 import arrow from "@/assets/arrow.png";
 import Image from "next/image";
+import ConfirmationModal from "./ConfirmationModal";
 interface CreateQuizProps {
   id: string;
 }
@@ -24,6 +25,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   // const [loadedQuestions, setLoadedQuestions] = useState<Quiz[]>(data);
   const [panelStatus, setPanelStatus] = useState<string>("NORMAL");
   const [fileUrl, setFileUrl] = useState("");
+
+  const [deletedItem, setDeleteItem] = useState<Quiz | null>(null);
 
   const handleFileUrlChange = (url: string) => {
     setFileUrl(url);
@@ -36,6 +39,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   const [visible, setVisble] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<Quiz | null>(null);
   const [token, setToken] = useState<string | null>(null);
+
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [optionList, setOptionList] = useState<
     {
       text: string;
@@ -55,6 +60,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     handleAuthorised();
     console.log(isSignedIn);
   }, [isSignedIn, router, signOut]);
+  const [showUpdateConfirmation, setShowUpdateConfirmation] = useState(false);
 
   const NORMAL = "NORMAL";
   const SET_ANSWER = "SET_ANSWER";
@@ -178,12 +184,28 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     }
 
     const data = await res.json();
-
-    alert(data.data);
-
     setQuestionList(data.data.questionList);
+
+    setShowUpdateConfirmation(true);
   };
 
+  const handleUpdateConfirm = () => {
+    setShowUpdateConfirmation(false);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirmation(false);
+  };
+
+  const handleDeleteConfirm = () => {
+    setShowDeleteConfirmation(false);
+    if (deletedItem === null) {
+      handleDeleteTroubleshoot();
+    } else {
+      handleDeleteQuestion(deletedItem);
+      setDeleteItem(null);
+    }
+  };
   const checkIsFirstQuestion = (id: string): boolean => {
     // const question =  questionList.map((question, i )=>{if (question._id === id) {return question}});
     let question: Quiz;
@@ -209,6 +231,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       const data = await res.json();
       console.log(data.data, "returned data");
       setQuestionList(data.data.questionList);
+      setShowUpdateConfirmation(true);
     } else {
       console.log("Cannot delete the first question");
     }
@@ -251,6 +274,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     }
     if (res.status === 200) {
       router.push("/create_troubleshoot");
+      setShowUpdateConfirmation(true);
     }
   };
 
@@ -305,7 +329,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                     <button
                       className="btn btn-error"
                       onClick={() => {
-                        handleDeleteTroubleshoot();
+                        setShowDeleteConfirmation(true);
                       }}
                     >
                       Delete
@@ -313,7 +337,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                   </div>
                 </div>
                 {token === null && (
-                  <div>
+                  <div className="p-1">
                     <CheckoutButton troubleshootId={id} />
                   </div>
                 )}
@@ -374,7 +398,10 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                                   title={"Delete"}
                                   onClick={() => {
                                     // setSelectedQuestion(item);
-                                    handleDeleteQuestion(item);
+
+                                    setShowDeleteConfirmation(true);
+
+                                    setDeleteItem(item);
                                   }}
                                 />
                               ) : (
@@ -484,6 +511,21 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                 {/* button */}
                 {/* {Panel()} */}
                 {/* textfield for answer */}
+                <ConfirmationModal
+                  message={"Changes have been made."}
+                  visible={showUpdateConfirmation}
+                  onConfirm={handleUpdateConfirm}
+                  // modalType="information"
+                  modalType="information"
+                />
+                <ConfirmationModal
+                  message={"Are you sure you want to delete this?"}
+                  visible={showDeleteConfirmation}
+                  onConfirm={handleDeleteConfirm}
+                  onClose={handleDeleteCancel}
+                  // modalType="information"
+                  modalType="warning"
+                />
               </div>
             </div>
           </div>
