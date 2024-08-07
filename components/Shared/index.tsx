@@ -121,16 +121,7 @@ const ShowQuestion = ({ token }) => {
                         <h2 className="card-title">Question!</h2>
                         <div className="card-actions justify-end">
                           <h1 className="break-words">
-                            {currentQuestion.question} Lorem ipsum dolor sit
-                            amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua.
-                            Ut enim ad minim veniam, quis nostrud exercitation
-                            ullamco laboris nisi ut aliquip ex ea commodo
-                            consequat. Duis aute irure dolor in reprehenderit in
-                            voluptate velit esse cillum dolore eu fugiat nulla
-                            pariatur. Excepteur sint occaecat cupidatat non
-                            proident, sunt in culpa qui officia deserunt mollit
-                            anim id est laborum.
+                            {currentQuestion.question}
                           </h1>
                         </div>
                       </div>
@@ -159,16 +150,7 @@ const ShowQuestion = ({ token }) => {
                           key={i}
                           className="w-full bordered rounded-xl shadow-xl p-4 m-4 bg-base-200 hover:bg-base-300 cursor-pointer"
                         >
-                          Option {i + 1}: {item.text} Lorem ipsum dolor sit
-                          amet, consectetur adipiscing elit, sed do eiusmod
-                          tempor incididunt ut labore et dolore magna aliqua. Ut
-                          enim ad minim veniam, quis nostrud exercitation
-                          ullamco laboris nisi ut aliquip ex ea commodo
-                          consequat. Duis aute irure dolor in reprehenderit in
-                          voluptate velit esse cillum dolore eu fugiat nulla
-                          pariatur. Excepteur sint occaecat cupidatat non
-                          proident, sunt in culpa qui officia deserunt mollit
-                          anim id est laborum.
+                          Option {i + 1}: {item.text}
                         </div>
                       );
                     })}

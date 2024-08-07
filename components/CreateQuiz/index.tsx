@@ -292,15 +292,16 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                 data-wow-delay=".15s
               "
               >
-                <div className="flex flex-row rounded-lg border-2 border-primaryColor p-2 ">
-                  <h1 className="m-1 w-full text-center text-primaryColor">
-                    {troubleShootTitle}
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Deserunt reprehenderit ducimus veniam quas. Fuga iusto nulla
-                    harum odit totam voluptas quibusdam vero quas? Totam
-                    sapiente cupiditate vel sequi iusto itaque.
-                  </h1>
-                  <div className="flex items-center">
+                <div className="flex flex-row rounded-lg border-2 border-primaryColor p-2">
+                  <div className="flex-grow-[9]">
+                    <h1 className="text-primaryColor font-bold flex justify-center items-center">
+                      Title
+                    </h1>
+                    <h1 className="m-1 w-full text-center text-primaryColor bg-secondaryColor rounded-lg p-1">
+                      {troubleShootTitle}
+                    </h1>
+                  </div>
+                  <div className="flex-grow-[1] flex items-center justify-center  ml-2">
                     <button
                       className="btn btn-error"
                       onClick={() => {
@@ -310,12 +311,6 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                       Delete
                     </button>
                   </div>
-                  {/* <Button
-                    title="Delete Troubleshoot"
-                    onClick={() => {
-                      handleDeleteTroubleshoot();
-                    }}
-                  /> */}
                 </div>
                 {token === null && (
                   <div>
@@ -460,14 +455,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                             Answer {i + 1}
                           </h1>
                         </div>
-                        <div className="p-1">
-                          {item.text}
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Sit, rem eos debitis reiciendis officiis, quam
-                          repellat soluta, perspiciatis dolore tenetur nesciunt
-                          tempore nemo tempora amet eaque quod non. Illum,
-                          saepe!
-                        </div>
+                        <div className="p-1">{item.text}</div>
                       </div>
                       <div className="flex items-center justify-center">
                         <div className="m-1 flex items-center justify-center rounded-lg border-2 bg-secondaryColor p-1">
@@ -488,12 +476,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                             Question
                           </h1>
                         </div>
-                        {convertQuestionId(item.nextQuizId)}\ Lorem ipsum dolor
-                        sit amet consectetur adipisicing elit. Iste, similique
-                        doloremque. Ab doloremque culpa id eligendi
-                        voluptatibus, ratione fugiat? Voluptates dolorem
-                        exercitationem excepturi cupiditate maxime nisi? Nemo
-                        nam perferendis ducimus.
+                        {convertQuestionId(item.nextQuizId)}
                       </div>
                     </div>
                   );

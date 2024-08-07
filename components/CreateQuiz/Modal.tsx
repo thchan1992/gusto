@@ -225,13 +225,7 @@ function Modal({
                           Answer {i + 1}
                         </h1>
                       </div>
-                      <div className="p-1">
-                        {item.text}
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Sit, rem eos debitis reiciendis officiis, quam repellat
-                        soluta, perspiciatis dolore tenetur nesciunt tempore
-                        nemo tempora amet eaque quod non. Illum, saepe!
-                      </div>
+                      <div className="p-1">{item.text}</div>
                       <div className="flex items-center justify-center p-1">
                         <input
                           type="text"
@@ -263,8 +257,7 @@ function Modal({
                         </h1>
                       </div>
                       {item.nextQuizId
-                        ? showAnswerLinkName(item.nextQuizId) +
-                          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, similique doloremque. Ab doloremque culpa id eligendi voluptatibus, ratione fugiat? Voluptates dolorem exercitationem excepturi cupiditate maxime nisi? Nemo namperferendis ducimus."
+                        ? showAnswerLinkName(item.nextQuizId)
                         : "No question"}
 
                       <div className="m-1 flex flex-row items-center justify-center">
