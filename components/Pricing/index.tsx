@@ -4,9 +4,11 @@ import SectionTitle from "../Common/SectionTitle";
 import OfferList from "./OfferList";
 import PricingBox from "./PricingBox";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 const Pricing = () => {
   const [isMonthly, setIsMonthly] = useState(true);
   const router = useRouter();
+  const { isSignedIn } = useUser();
   return (
     <section
       id="pricing"
@@ -25,7 +27,11 @@ const Pricing = () => {
           <PricingBox
             buttonText="Start building"
             onPress={() => {
-              router.push("/create_troubleshoot");
+              if (isSignedIn) {
+                router.push("/create_troubleshoot");
+              } else {
+                router.push("/signin");
+              }
             }}
             packageName="Free"
             // price={isMonthly ? "40" : "120"}
@@ -45,7 +51,11 @@ const Pricing = () => {
           <PricingBox
             buttonText="Start building"
             onPress={() => {
-              router.push("/create_troubleshoot");
+              if (isSignedIn) {
+                router.push("/create_troubleshoot");
+              } else {
+                router.push("/signin");
+              }
             }}
             packageName="Premium"
             price={"1.99"}
