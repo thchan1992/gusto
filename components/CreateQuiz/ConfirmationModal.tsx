@@ -3,11 +3,11 @@ import { useEffect, useRef } from "react";
 interface ConfirmationModalProps {
   message: string;
   visible: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   onConfirm: () => void;
   confirmButtonText?: string;
   cancelButtonText?: string;
-  modalType?: "confirmation" | "warning" | "information"; // Optional for different styles
+  modalType?: "confirmation" | "warning" | "information";
 }
 
 function ConfirmationModal({

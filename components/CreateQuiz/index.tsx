@@ -26,6 +26,8 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   const [panelStatus, setPanelStatus] = useState<string>("NORMAL");
   const [fileUrl, setFileUrl] = useState("");
 
+  const [deletedItem, setDeleteItem] = useState<Quiz | null>(null);
+
   const handleFileUrlChange = (url: string) => {
     setFileUrl(url);
   };
@@ -38,6 +40,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   const [selectedQuestion, setSelectedQuestion] = useState<Quiz | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [optionList, setOptionList] = useState<
     {
       text: string;
@@ -57,7 +60,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     handleAuthorised();
     console.log(isSignedIn);
   }, [isSignedIn, router, signOut]);
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showUpdateConfirmation, setShowUpdateConfirmation] = useState(false);
 
   const NORMAL = "NORMAL";
   const SET_ANSWER = "SET_ANSWER";
@@ -182,15 +185,26 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
     const data = await res.json();
     setQuestionList(data.data.questionList);
-    setShowConfirmation(true);
+
+    setShowUpdateConfirmation(true);
   };
 
-  const handleConfirmationClose = () => {
-    setShowConfirmation(false);
+  const handleUpdateConfirm = () => {
+    setShowUpdateConfirmation(false);
   };
 
-  const handleConfirmationConfirm = () => {
-    setShowConfirmation(false);
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirmation(false);
+  };
+
+  const handleDeleteConfirm = () => {
+    setShowDeleteConfirmation(false);
+    if (deletedItem === null) {
+      handleDeleteTroubleshoot();
+    } else {
+      handleDeleteQuestion(deletedItem);
+      setDeleteItem(null);
+    }
   };
   const checkIsFirstQuestion = (id: string): boolean => {
     // const question =  questionList.map((question, i )=>{if (question._id === id) {return question}});
@@ -217,6 +231,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       const data = await res.json();
       console.log(data.data, "returned data");
       setQuestionList(data.data.questionList);
+      setShowUpdateConfirmation(true);
     } else {
       console.log("Cannot delete the first question");
     }
@@ -259,6 +274,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     }
     if (res.status === 200) {
       router.push("/create_troubleshoot");
+      setShowUpdateConfirmation(true);
     }
   };
 
@@ -313,7 +329,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                     <button
                       className="btn btn-error"
                       onClick={() => {
-                        handleDeleteTroubleshoot();
+                        setShowDeleteConfirmation(true);
                       }}
                     >
                       Delete
@@ -321,7 +337,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                   </div>
                 </div>
                 {token === null && (
-                  <div>
+                  <div className="p-1">
                     <CheckoutButton troubleshootId={id} />
                   </div>
                 )}
@@ -382,7 +398,10 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                                   title={"Delete"}
                                   onClick={() => {
                                     // setSelectedQuestion(item);
-                                    handleDeleteQuestion(item);
+
+                                    setShowDeleteConfirmation(true);
+
+                                    setDeleteItem(item);
                                   }}
                                 />
                               ) : (
@@ -493,11 +512,19 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                 {/* {Panel()} */}
                 {/* textfield for answer */}
                 <ConfirmationModal
-                  message={"Change has been made."}
-                  visible={showConfirmation}
-                  onClose={handleConfirmationClose}
-                  onConfirm={handleConfirmationConfirm}
+                  message={"Changes have been made."}
+                  visible={showUpdateConfirmation}
+                  onConfirm={handleUpdateConfirm}
+                  // modalType="information"
                   modalType="information"
+                />
+                <ConfirmationModal
+                  message={"Are you sure you want to delete this?"}
+                  visible={showDeleteConfirmation}
+                  onConfirm={handleDeleteConfirm}
+                  onClose={handleDeleteCancel}
+                  // modalType="information"
+                  modalType="warning"
                 />
               </div>
             </div>

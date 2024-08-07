@@ -106,14 +106,16 @@ const ShowQuestion = ({ id }) => {
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
             <div className="w-full px-4 lg:w-7/12 xl:w-8/12 ">
-              {currentQuestion !== undefined ? (
+              {currentQuestion !== undefined || currentQuestion !== null ? (
                 <div
                   className="wow fadeInUp mb-12 rounded-md bg-primary/[3%] px-8 py-11 dark:bg-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]"
                   data-wow-delay=".15s"
                 >
                   <div className="flex justify-between">
                     {shareLink === "" ? (
-                      <CheckoutButton troubleshootId={id} />
+                      <div className="p-1">
+                        <CheckoutButton troubleshootId={id} />
+                      </div>
                     ) : (
                       <div></div>
                     )}
@@ -180,40 +182,43 @@ const ShowQuestion = ({ id }) => {
                       <div className="card-body">
                         <h2 className="card-title">Question!</h2>
                         <div className="card-actions justify-end">
-                          <h1 className="break-words">
-                            {currentQuestion.question}
-                          </h1>
+                          {currentQuestion !== null && (
+                            <h1 className="break-words">
+                              {currentQuestion.question}
+                            </h1>
+                          )}
                         </div>
                       </div>
                     </div>
 
-                    {currentQuestion.options.map((item, i) => {
-                      return (
-                        <div
-                          onClick={() => {
-                            if (item.nextQuizId !== undefined) {
-                              const nextQuestion = questionList.find(
-                                (quest: Quiz) => quest._id === item.nextQuizId
-                              );
+                    {currentQuestion !== null &&
+                      currentQuestion.options.map((item, i) => {
+                        return (
+                          <div
+                            onClick={() => {
+                              if (item.nextQuizId !== undefined) {
+                                const nextQuestion = questionList.find(
+                                  (quest: Quiz) => quest._id === item.nextQuizId
+                                );
 
-                              if (nextQuestion) {
-                                setHistory((prev) => [
-                                  ...prev,
-                                  currentQuestion,
-                                ]);
-                                setCurrentQuestion(nextQuestion);
+                                if (nextQuestion) {
+                                  setHistory((prev) => [
+                                    ...prev,
+                                    currentQuestion,
+                                  ]);
+                                  setCurrentQuestion(nextQuestion);
+                                }
+                              } else {
+                                console.log("the end of the troubleshoot");
                               }
-                            } else {
-                              console.log("the end of the troubleshoot");
-                            }
-                          }}
-                          key={i}
-                          className="w-full bordered rounded-xl shadow-xl p-4 m-4 bg-base-200 hover:bg-base-300 cursor-pointer hover:border-thirdColor"
-                        >
-                          Option {i + 1}: {item.text}
-                        </div>
-                      );
-                    })}
+                            }}
+                            key={i}
+                            className="w-full bordered rounded-xl shadow-xl p-4 m-4 bg-base-200 hover:bg-base-300 cursor-pointer hover:border-thirdColor"
+                          >
+                            Option {i + 1}: {item.text}
+                          </div>
+                        );
+                      })}
                   </div>
                 </div>
               ) : (
