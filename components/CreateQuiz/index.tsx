@@ -16,6 +16,7 @@ import CheckoutButton from "../ShowQuestion/CheckoutButton";
 import { FirstQuestionBadge } from "./FirstQuestionBadge";
 import arrow from "@/assets/arrow.png";
 import Image from "next/image";
+import ConfirmationModal from "./ConfirmationModal";
 interface CreateQuizProps {
   id: string;
 }
@@ -36,6 +37,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   const [visible, setVisble] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<Quiz | null>(null);
   const [token, setToken] = useState<string | null>(null);
+
   const [optionList, setOptionList] = useState<
     {
       text: string;
@@ -55,6 +57,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     handleAuthorised();
     console.log(isSignedIn);
   }, [isSignedIn, router, signOut]);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const NORMAL = "NORMAL";
   const SET_ANSWER = "SET_ANSWER";
@@ -178,12 +181,17 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     }
 
     const data = await res.json();
-
-    alert(data.data);
-
     setQuestionList(data.data.questionList);
+    setShowConfirmation(true);
   };
 
+  const handleConfirmationClose = () => {
+    setShowConfirmation(false);
+  };
+
+  const handleConfirmationConfirm = () => {
+    setShowConfirmation(false);
+  };
   const checkIsFirstQuestion = (id: string): boolean => {
     // const question =  questionList.map((question, i )=>{if (question._id === id) {return question}});
     let question: Quiz;
@@ -484,6 +492,13 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                 {/* button */}
                 {/* {Panel()} */}
                 {/* textfield for answer */}
+                <ConfirmationModal
+                  message={"Change has been made."}
+                  visible={showConfirmation}
+                  onClose={handleConfirmationClose}
+                  onConfirm={handleConfirmationConfirm}
+                  modalType="information"
+                />
               </div>
             </div>
           </div>

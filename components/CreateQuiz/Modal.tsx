@@ -5,6 +5,8 @@ import { UploadForm } from "./S3UploadForm";
 import Image from "next/image";
 import divider from "@/assets/divider.png";
 import arrow from "@/assets/arrow.png";
+import ConfirmationModal from "./ConfirmationModal"; // Import the ConfirmationModal
+
 interface ModalProps {
   title: string;
   child: any;
@@ -26,8 +28,13 @@ function Modal({
   setSelectedQuestion,
   questionList,
 }: ModalProps) {
-  const modalRef = useRef(null);
+  const modalRef = useRef<HTMLDialogElement>(null);
   const [fileUrl, setFileUrl] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [confirmationAction, setConfirmationAction] = useState<() => void>(
+    () => {}
+  );
 
   const handleFileUrlChange = (url: string) => {
     setFileUrl(url);
@@ -35,37 +42,23 @@ function Modal({
   };
   const [answerText, setAnswerText] = useState<string>("");
   const [answerLink, setAnswerLink] = useState<string>("");
-  // const [allowSetIsFirst, setAllowSetIsFirst] = useState<boolean>(false);
-  // const [optionList, setOptionList] = useState<
-  //   {
-  //     text: string;
-  //     nextQuizId: string;
-  //   }[]
-  // >([]);
 
   useEffect(() => {
-    console.log("selected question", question);
-    if (!modalRef.current) {
-      return;
+    if (modalRef.current) {
+      visible ? modalRef.current.showModal() : modalRef.current.close();
     }
-    visible ? modalRef.current.showModal() : modalRef.current.close();
   }, [visible, question]);
 
   const handleClose = () => {
-    if (onClose) {
-      onClose();
-    }
+    setConfirmationMessage("Are you sure you want to close without saving?");
+    setConfirmationAction(() => onClose);
+    setShowConfirmation(true);
   };
 
   const handleConfirm = () => {
-    if (onConfirm) {
-      onConfirm();
-    }
-  };
-
-  const handleESC = (event) => {
-    event.preventDefault();
-    handleClose();
+    setConfirmationMessage("Are you sure you want to confirm the changes?");
+    setConfirmationAction(() => onConfirm);
+    setShowConfirmation(true);
   };
 
   const updateQuestionField = (field: keyof Quiz, value: any) => {
@@ -80,11 +73,7 @@ function Modal({
   const showAnswerLinkName = (id: string) => {
     const questionToFind = questionList.find((question) => question._id === id);
 
-    if (questionToFind !== undefined) {
-      return questionToFind.question;
-    } else {
-      return "undefined";
-    }
+    return questionToFind ? questionToFind.question : "undefined";
   };
 
   const updateOptionField = (
@@ -104,34 +93,25 @@ function Modal({
   };
 
   const checkDuplicateOption = () => {
-    let res = false;
-    question.options.forEach((item) => {
-      if (item.text === answerText) {
-        res = true;
-      }
-    });
-    return res;
+    return question.options.some((item) => item.text === answerText);
   };
 
   const addOption = () => {
-    if (checkDuplicateOption() === true) {
+    if (checkDuplicateOption()) {
       alert("Same option has been inserted.");
-      return;
-    } else {
-      if (answerText.trim()) {
-        const newOption = { text: answerText, nextQuizId: answerLink };
-        const updatedOptions = [...question.options, newOption];
-        setSelectedQuestion({
-          ...question,
-          options: updatedOptions,
-        });
-        setAnswerText("");
-        setAnswerLink("");
-      }
+    } else if (answerText.trim()) {
+      const newOption = { text: answerText, nextQuizId: answerLink };
+      const updatedOptions = [...question.options, newOption];
+      setSelectedQuestion({
+        ...question,
+        options: updatedOptions,
+      });
+      setAnswerText("");
+      setAnswerLink("");
     }
   };
 
-  const handleToggleChange = (e) => {
+  const handleToggleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedQuestion({
       ...question,
       isFirst: e.target.checked,
@@ -152,72 +132,75 @@ function Modal({
     updateOptionField(index, "nextQuizId", null);
   };
 
+  const handleConfirmationClose = () => {
+    setShowConfirmation(false);
+  };
+
+  const handleConfirmationConfirm = () => {
+    setShowConfirmation(false);
+    confirmationAction();
+  };
+
   return (
-    <dialog
-      ref={modalRef}
-      id="my_modal_1"
-      className="modal"
-      onCancel={handleESC}
-    >
-      <form
-        method="dialog"
-        className="modal-box"
-        onSubmit={(e) => e.preventDefault()}
-      >
-        <h3 className="text-lg font-bold">{title}</h3>
-        {question ? (
-          <>
-            <div className="card card-compact mb-1 mt-1 w-full border-2 border-primaryColor bg-primaryColor shadow-xl hover:border-fourthColor">
-              {question.imageUrl !== "" ? (
-                <figure>
-                  <Image
-                    src={question.imageUrl}
-                    width={500}
-                    height={500}
-                    alt="Question Media"
-                  />
-                </figure>
-              ) : (
-                <div className="flex items-center justify-center p-5">
-                  <h1>No Media</h1>
-                </div>
-              )}
-              <div className="card-body">
-                <h2 className="card-title">Question Media</h2>
-                <p>
-                  Upload a picture to add a new media or replace the current
-                  media.
-                </p>
-                <div className="card-actions justify-end">
-                  <UploadForm
-                    onFileUrlChange={handleFileUrlChange}
-                    oldFileUrl={question.imageUrl}
-                  />
+    <>
+      <dialog ref={modalRef} id="my_modal_1" className="modal">
+        <form
+          method="dialog"
+          className="modal-box"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <h3 className="text-lg font-bold">{title}</h3>
+          {question ? (
+            <>
+              <div className="card card-compact mb-1 mt-1 w-full border-2 border-primaryColor bg-primaryColor shadow-xl hover:border-fourthColor">
+                {question.imageUrl !== "" ? (
+                  <figure>
+                    <Image
+                      src={question.imageUrl}
+                      width={500}
+                      height={500}
+                      alt="Question Media"
+                    />
+                  </figure>
+                ) : (
+                  <div className="flex items-center justify-center p-5">
+                    <h1>No Media</h1>
+                  </div>
+                )}
+                <div className="card-body">
+                  <h2 className="card-title">Question Media</h2>
+                  <p>
+                    Upload a picture to add a new media or replace the current
+                    media.
+                  </p>
+                  <div className="card-actions justify-end">
+                    <UploadForm
+                      onFileUrlChange={handleFileUrlChange}
+                      oldFileUrl={question.imageUrl}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="mt-2 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl  hover:border-fourthColor">
-              <h1>Question Title</h1>
-              <input
-                type="text"
-                name="questionText"
-                placeholder="question"
-                className="m-1 mb-5 mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                value={question.question}
-                onChange={(e) => {
-                  updateQuestionField("question", e.target.value);
-                }}
-              />
-            </div>
+              <div className="mt-2 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl hover:border-fourthColor">
+                <h1>Question Title</h1>
+                <input
+                  type="text"
+                  name="questionText"
+                  placeholder="question"
+                  className="m-1 mb-5 mt-5 w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                  value={question.question}
+                  onChange={(e) => {
+                    updateQuestionField("question", e.target.value);
+                  }}
+                />
+              </div>
 
-            <div>
-              {/* Need to add answer removal */}
-              {question.options.map((item, i) => {
-                return (
+              <div>
+                {question.options.map((item, i) => (
                   <div
                     key={i}
-                    className="mt-3 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl  hover:border-fourthColor"
+                    className="mt-3 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl hover:border-fourthColor"
                   >
                     <div className="mb-1 mt-1 text-pretty rounded-lg border-2 border-secondaryColor text-center">
                       <div className="rounded-t-lg bg-secondaryColor">
@@ -241,7 +224,7 @@ function Modal({
                     </div>
                     <div className="flex items-center justify-center">
                       <div className="m-1 flex items-center justify-center rounded-lg border-2 bg-secondaryColor p-1">
-                        <h2 className=" font-bold text-black">is linked to</h2>
+                        <h2 className="font-bold text-black">is linked to</h2>
                         <Image
                           src={arrow}
                           width={50}
@@ -273,13 +256,11 @@ function Modal({
                           <option value="" disabled>
                             Question
                           </option>
-                          {questionList.map((questionItem, j) => {
-                            return (
-                              <option key={j} value={questionItem._id}>
-                                {questionItem.question}
-                              </option>
-                            );
-                          })}
+                          {questionList.map((questionItem, j) => (
+                            <option key={j} value={questionItem._id}>
+                              {questionItem.question}
+                            </option>
+                          ))}
                         </select>
                         {item.nextQuizId !== null && (
                           <button
@@ -305,119 +286,108 @@ function Modal({
                       </div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-2 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl  hover:border-fourthColor">
-              New answer
-              <div className="m-1 flex flex-row items-center justify-center">
-                <input
-                  type="text"
-                  name="answerText"
-                  placeholder="Option"
-                  className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
-                  value={answerText}
-                  onChange={(e) => {
-                    setAnswerText(e.target.value);
-                  }}
-                />
-                <div className="ml-1 py-4">
-                  <button
-                    className="btn btn-primary btn-active"
-                    onClick={() => {
-                      // setOptionList((prev) => [
-                      //   ...prev,
-                      //   { text: answerText, nextQuizId: answerLink },
-                      // ]);
-                      addOption();
-
-                      //add more answer
-                      setAnswerLink("");
-                      setAnswerText("");
-                    }}
-                  >
-                    new option
-                  </button>
-                </div>
-                {/* <Button title="Add option" /> */}
+                ))}
               </div>
-              <select
-                className="select select-bordered m-1 w-full"
-                value={answerLink || ""}
-                onChange={(e) => {
-                  setAnswerLink(e.target.value);
-                }}
-              >
-                <option value="" disabled>
-                  Answer
-                </option>
-                {questionList.map((questionItem, j) => {
-                  return (
+
+              <div className="mt-2 rounded-lg border-2 border-primaryColor bg-primaryColor p-5 shadow-xl hover:border-fourthColor">
+                New answer
+                <div className="m-1 flex flex-row items-center justify-center">
+                  <input
+                    type="text"
+                    name="answerText"
+                    placeholder="Option"
+                    className="w-full rounded-md border border-transparent px-6 py-3 text-base text-body-color placeholder-body-color shadow-one outline-none focus:border-primary focus-visible:shadow-none dark:bg-[#242B51] dark:shadow-signUp"
+                    value={answerText}
+                    onChange={(e) => {
+                      setAnswerText(e.target.value);
+                    }}
+                  />
+                  <div className="ml-1 py-4">
+                    <button
+                      className="btn btn-primary btn-active"
+                      onClick={addOption}
+                    >
+                      new option
+                    </button>
+                  </div>
+                </div>
+                <select
+                  className="select select-bordered m-1 w-full"
+                  value={answerLink || ""}
+                  onChange={(e) => {
+                    setAnswerLink(e.target.value);
+                  }}
+                >
+                  <option value="" disabled>
+                    Answer
+                  </option>
+                  {questionList.map((questionItem, j) => (
                     <option key={j} value={questionItem._id}>
                       {questionItem.question}
                     </option>
-                  );
-                })}
-              </select>
-            </div>
-
-            {!question.isFirst ? (
-              <div className="m-1 w-full">
-                <div className="form-control w-52 ">
-                  <label className="label cursor-pointer">
-                    <span className="label-text">First Question</span>
-                    <input
-                      type="checkbox"
-                      className="toggle toggle-primary"
-                      checked={question.isFirst}
-                      onChange={handleToggleChange}
-                      disabled={question.isFirst ? true : false}
-                    />
-                  </label>
-                </div>
+                  ))}
+                </select>
               </div>
-            ) : (
-              <div className="flex justify-end">
-                <div className="group relative">
-                  <div className="hover:bg-yellow-600 badge badge-warning mt-3 gap-2 hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      className="inline-block h-4 w-4 stroke-current"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      ></path>
-                    </svg>
-                    First question cannot be removed.
+
+              {!question.isFirst ? (
+                <div className="m-1 w-full">
+                  <div className="form-control w-52">
+                    <label className="label cursor-pointer">
+                      <span className="label-text">First Question</span>
+                      <input
+                        type="checkbox"
+                        className="toggle toggle-primary"
+                        checked={question.isFirst}
+                        onChange={handleToggleChange}
+                      />
+                    </label>
                   </div>
-                  {/* <div className="absolute right-full top-1/2 transform -translate-y-1/2 ml-1 hidden w-32 p-2 m-2 bg-gray-800 text-red text-sm rounded-md group-hover:block">
-                                    First question cannot be removed.
-                                  </div> */}
                 </div>
-              </div>
-            )}
-          </>
-        ) : (
-          <p>Loading</p>
-        )}
+              ) : (
+                <div className="flex justify-end">
+                  <div className="group relative">
+                    <div className="hover:bg-yellow-600 badge badge-warning mt-3 gap-2 hover:text-white">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        className="inline-block h-4 w-4 stroke-current"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        ></path>
+                      </svg>
+                      First question cannot be removed.
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <p>Loading</p>
+          )}
 
-        <div className="modal-action">
-          {/* if there is a button in form, it will close the modal */}
-          <button className="btn" onClick={handleClose}>
-            Close
-          </button>
-          <button className="btn" onClick={handleConfirm}>
-            Confirm Change
-          </button>
-        </div>
-      </form>
-    </dialog>
+          <div className="modal-action">
+            <button className="btn" onClick={handleClose}>
+              Close
+            </button>
+            <button className="btn" onClick={handleConfirm}>
+              Confirm Change
+            </button>
+          </div>
+        </form>
+      </dialog>
+
+      <ConfirmationModal
+        message={confirmationMessage}
+        visible={showConfirmation}
+        onClose={handleConfirmationClose}
+        onConfirm={handleConfirmationConfirm}
+      />
+    </>
   );
 }
 export default Modal;
