@@ -19,6 +19,7 @@ const ShowQuestion = ({ id }) => {
   const router = useRouter();
   const { signOut } = useAuth();
   const { isSignedIn } = useUser();
+  console.log(isSignedIn);
   useEffect(() => {
     const handleAuthorised = async () => {
       if (isSignedIn === false) {
