@@ -180,16 +180,23 @@ const ShowQuestion = ({ id }) => {
                   <div className="flex justify-center items-center flex-col">
                     {/* card */}
                     <div className="card w-full bg-base-100 shadow-xl p-1 m-4">
-                      <div className="card-body">
-                        <h2 className="card-title">Question!</h2>
-                        <div className="card-actions justify-end">
-                          {currentQuestion !== null && (
+                      {currentQuestion !== null ? (
+                        <div className="card-body">
+                          <h2 className="card-title">Question</h2>
+                          <div className="card-actions justify-end">
                             <h1 className="break-words">
                               {currentQuestion.question}
                             </h1>
-                          )}
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="card-body">
+                          <h2 className="card-title">
+                            This troubleshooter has no Question
+                          </h2>
+                          <div className="card-actions justify-end"></div>
+                        </div>
+                      )}
                     </div>
 
                     {currentQuestion !== null &&
