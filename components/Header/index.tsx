@@ -155,7 +155,7 @@ const Header = () => {
                             href={"/create_troubleshoot"}
                             className={`flex py-2 text-base text-dark group-hover:opacity-70 dark:text-thirdColor lg:mr-0 lg:inline-flex lg:px-0 lg:py-6`}
                           >
-                            Modify Troubleshush
+                            Modify
                           </Link>
                         </li>
                         <li className="group relative">
@@ -163,7 +163,7 @@ const Header = () => {
                             href={"/show_troubleshoot"}
                             className={`flex py-2 text-base text-dark group-hover:opacity-70 dark:text-thirdColor lg:mr-0 lg:inline-flex lg:px-0 lg:py-6`}
                           >
-                            Troubleshush Preview
+                            Preview
                           </Link>
                         </li>
                       </>
@@ -191,9 +191,9 @@ const Header = () => {
                   // <UserButton />
                   <SignOutButton />
                 )}
-                <div>
+                {/* <div>
                   <ThemeToggler />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

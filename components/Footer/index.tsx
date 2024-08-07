@@ -29,8 +29,8 @@ const Footer = () => {
                   />
                 </Link>
                 <p className="mb-9 text-base font-medium leading-relaxed text-body-color">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Integer lobortis.
+                  a platform, where creating custom and free troubleshooters is
+                  easier than ever.
                 </p>
                 {/* <div className="flex items-center">
                   <a
@@ -99,7 +99,7 @@ const Footer = () => {
                   Useful Links
                 </h2>
                 <ul>
-                  <li>
+                  {/* <li>
                     <a
                       href="/"
                       className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
@@ -107,10 +107,10 @@ const Footer = () => {
                       {" "}
                       Blog{" "}
                     </a>
-                  </li>
+                  </li> */}
                   <li>
                     <a
-                      href="/"
+                      href="/#pricing"
                       className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
                     >
                       {" "}
@@ -119,7 +119,7 @@ const Footer = () => {
                   </li>
                   <li>
                     <a
-                      href="/"
+                      href="/#about"
                       className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
                     >
                       {" "}
@@ -145,7 +145,7 @@ const Footer = () => {
                       TOS{" "}
                     </a>
                   </li>
-                  <li>
+                  {/* <li>
                     <a
                       href="/"
                       className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
@@ -162,7 +162,7 @@ const Footer = () => {
                       {" "}
                       Refund Policy{" "}
                     </a>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </div>
@@ -175,14 +175,14 @@ const Footer = () => {
                 <ul>
                   <li>
                     <a
-                      href="/"
+                      href="/#contact"
                       className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
                     >
                       {" "}
-                      Open Support Ticket{" "}
+                      Contact Us{" "}
                     </a>
                   </li>
-                  <li>
+                  {/* <li>
                     <a
                       href="/"
                       className="mb-4 inline-block text-base font-medium text-body-color hover:text-primary"
@@ -199,7 +199,7 @@ const Footer = () => {
                       {" "}
                       About{" "}
                     </a>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
             </div>
