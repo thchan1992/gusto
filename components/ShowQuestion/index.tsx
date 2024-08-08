@@ -7,6 +7,7 @@ import { Quiz } from "@/lib/types/Quiz";
 import CheckoutButton from "./CheckoutButton";
 import { TroubleShoot } from "@/lib/models/TroubleShoot";
 import { useUser, useAuth } from "@clerk/nextjs";
+import Image from "next/image";
 const ShowQuestion = ({ id }) => {
   const [loading, setLoading] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState<Quiz | null>(null);
@@ -168,7 +169,16 @@ const ShowQuestion = ({ id }) => {
                       )}
                     </div>
                   </div>
-
+                  <div className="m-1 border-2 border-thirdColor rounded-xl">
+                    <Image
+                      className="rounded-xl shadow-xl"
+                      src={currentQuestion.imageUrl}
+                      layout="responsive"
+                      width={500}
+                      height={500}
+                      alt="Question Media"
+                    />
+                  </div>
                   <button
                     className="btn btn-active btn-accent mt-2"
                     onClick={onBack}
@@ -180,16 +190,23 @@ const ShowQuestion = ({ id }) => {
                   <div className="flex justify-center items-center flex-col">
                     {/* card */}
                     <div className="card w-full bg-base-100 shadow-xl p-1 m-4">
-                      <div className="card-body">
-                        <h2 className="card-title">Question!</h2>
-                        <div className="card-actions justify-end">
-                          {currentQuestion !== null && (
+                      {currentQuestion !== null ? (
+                        <div className="card-body">
+                          <h2 className="card-title">Question</h2>
+                          <div className="card-actions justify-end">
                             <h1 className="break-words">
                               {currentQuestion.question}
                             </h1>
-                          )}
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="card-body">
+                          <h2 className="card-title">
+                            This troubleshooter has no Question
+                          </h2>
+                          <div className="card-actions justify-end"></div>
+                        </div>
+                      )}
                     </div>
 
                     {currentQuestion !== null &&
