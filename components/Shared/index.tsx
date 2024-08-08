@@ -129,7 +129,7 @@ const ShowQuestion = ({ token }) => {
                     {/* card */}
                     <div className="card w-full bg-base-100 shadow-xl p-1 m-4">
                       <div className="card-body">
-                        <h2 className="card-title">Question!</h2>
+                        <h2 className="card-title">Question</h2>
                         <div className="card-actions justify-end">
                           <h1 className="break-words">
                             {currentQuestion.question}
