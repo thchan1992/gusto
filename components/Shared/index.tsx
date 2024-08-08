@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Button from "../Button";
 import { Quiz } from "@/lib/types/Quiz";
+import Image from "next/image";
 
 const ShowQuestion = ({ token }) => {
   const [loading, setLoading] = useState(true);
@@ -113,6 +114,16 @@ const ShowQuestion = ({ token }) => {
                     >
                       Restart
                     </button>
+                  </div>
+                  <div className="m-1 border-2 border-thirdColor rounded-xl">
+                    <Image
+                      className="rounded-xl shadow-xl"
+                      src={currentQuestion.imageUrl}
+                      layout="responsive"
+                      width={500}
+                      height={500}
+                      alt="Question Media"
+                    />
                   </div>
                   <div className="flex justify-center items-center flex-col">
                     {/* card */}

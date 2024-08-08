@@ -7,6 +7,7 @@ import { Quiz } from "@/lib/types/Quiz";
 import CheckoutButton from "./CheckoutButton";
 import { TroubleShoot } from "@/lib/models/TroubleShoot";
 import { useUser, useAuth } from "@clerk/nextjs";
+import Image from "next/image";
 const ShowQuestion = ({ id }) => {
   const [loading, setLoading] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState<Quiz | null>(null);
@@ -168,7 +169,16 @@ const ShowQuestion = ({ id }) => {
                       )}
                     </div>
                   </div>
-
+                  <div className="m-1 border-2 border-thirdColor rounded-xl">
+                    <Image
+                      className="rounded-xl shadow-xl"
+                      src={currentQuestion.imageUrl}
+                      layout="responsive"
+                      width={500}
+                      height={500}
+                      alt="Question Media"
+                    />
+                  </div>
                   <button
                     className="btn btn-active btn-accent mt-2"
                     onClick={onBack}

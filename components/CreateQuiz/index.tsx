@@ -279,10 +279,15 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   };
 
   const convertQuestionId = (nextQuizId: string): string => {
+    console.log;
     const res = questionList.filter((item) => {
       return item._id === nextQuizId;
     });
-    return res[0].question;
+    try {
+      return res[0].question;
+    } catch (e) {
+      return "";
+    }
   };
 
   return (
@@ -484,27 +489,31 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                         </div>
                         <div className="p-1">{item.text}</div>
                       </div>
-                      <div className="flex items-center justify-center">
-                        <div className="m-1 flex items-center justify-center rounded-lg border-2 bg-secondaryColor p-1">
-                          <h2 className=" font-bold text-black">
-                            is linked to
-                          </h2>
-                          <Image
-                            src={arrow}
-                            width={50}
-                            height={50}
-                            alt="Question Media"
-                          />
-                        </div>
-                      </div>
-                      <div className="mb-1 mt-1 text-pretty rounded-lg border-2 border-secondaryColor text-center">
-                        <div className="rounded-t-lg bg-secondaryColor">
-                          <h1 className="text-center font-bold text-primaryColor">
-                            Question
-                          </h1>
-                        </div>
-                        {convertQuestionId(item.nextQuizId)}
-                      </div>
+                      {convertQuestionId(item.nextQuizId) !== "" && (
+                        <>
+                          <div className="flex items-center justify-center">
+                            <div className="m-1 flex items-center justify-center rounded-lg border-2 bg-secondaryColor p-1">
+                              <h2 className=" font-bold text-black">
+                                is linked to
+                              </h2>
+                              <Image
+                                src={arrow}
+                                width={50}
+                                height={50}
+                                alt="Question Media"
+                              />
+                            </div>
+                          </div>
+                          <div className="mb-1 mt-1 text-pretty rounded-lg border-2 border-secondaryColor text-center">
+                            <div className="rounded-t-lg bg-secondaryColor">
+                              <h1 className="text-center font-bold text-primaryColor">
+                                Question
+                              </h1>
+                            </div>
+                            {convertQuestionId(item.nextQuizId)}
+                          </div>
+                        </>
+                      )}
                     </div>
                   );
                 })}
