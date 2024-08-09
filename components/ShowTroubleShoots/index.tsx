@@ -51,7 +51,12 @@ const ShowTroubleShoots = () => {
     fetchTroubleShoots();
   }, [router, signOut]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <p className="flex justify-center items-center">
+        <span className="loading loading-dots loading-lg"></span>
+      </p>
+    );
   if (error) return <p>Error: {error}</p>;
 
   return (
