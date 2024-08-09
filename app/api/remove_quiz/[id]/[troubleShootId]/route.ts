@@ -23,9 +23,16 @@ export async function DELETE(request: Request, context: { params: Params }) {
 
     const deleteQuiz = async (quizId: string) => {
       try {
-        const deletedQuiz = await Quiz.findByIdAndDelete(quizId);
+        const deletedQuiz = await Quiz.findById(quizId);
+        if (deletedQuiz.createdBy !== userId) {
+          return NextResponse.json({
+            status: 401,
+            message: "You do not have the access.",
+          });
+        }
+        const deleteQuiz = await Quiz.findByIdAndDelete(quizId);
 
-        if (!deletedQuiz) {
+        if (!deleteQuiz) {
           return NextResponse.json({ status: 400, message: "Invalid quizId" });
         }
 

@@ -24,15 +24,23 @@ export async function DELETE(request: Request, context: { params: Params }) {
 
     const deleteTroubleshoot = async (troubleShootId: string) => {
       try {
-        const deleteTroubleshoot = await TroubleShoot.findByIdAndDelete(
-          troubleShootId
-        );
+        const deleteTroubleshoot = await TroubleShoot.findById(troubleShootId);
+
+        if (deleteTroubleshoot.createdBy !== userId) {
+          return NextResponse.json({
+            status: 401,
+            message: "You do not have the access.",
+          });
+        }
+
         if (!deleteTroubleshoot) {
           return NextResponse.json({
             status: 400,
             message: "Invalid Troubleshoot",
           });
         }
+
+        await TroubleShoot.findByIdAndDelete(troubleShootId);
         return deleteTroubleshoot;
       } catch (error) {
         return NextResponse.json({ status: 500, message: "Server error" });

@@ -23,6 +23,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ status: 400, message: "Invalid quizId" });
     }
 
+    const quizToUpdate = await Quiz.findById(quizId);
+
+    console.log("updating options");
+
+    if (quizToUpdate.createdBy !== userId) {
+      return NextResponse.json({
+        status: 401,
+        message: "You do not have the access.",
+      });
+    }
+
     const transformedOptions = optionList.map((option: any) => {
       let nextQuizId;
       if (option.nextQuizId && option.nextQuizId !== "") {
