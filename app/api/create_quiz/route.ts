@@ -30,14 +30,22 @@ export async function POST(req: Request) {
       _id: new mongoose.Types.ObjectId(troubleShootId),
     });
 
-    console.log(troubleShoot.quizList.length, "length");
-    console.log(troubleShoot.isPublic, "is public");
     if (troubleShoot.quizList.length > 10 && !troubleShoot.isPublic) {
       return NextResponse.json({
         status: 400,
         message: "Cannot add more question.",
       });
     } else {
+      const troubleShoot = await TroubleShoot.findById(troubleShootId).exec();
+
+      console.log(troubleShoot.createdBy, "created by");
+      console.log(userId, "user Id");
+      if (troubleShoot.createdBy !== userId) {
+        return NextResponse.json({
+          status: 401,
+          message: "You do not have the access.",
+        });
+      }
       const question = await Quiz.findOne({
         troubleShootId: new mongoose.Types.ObjectId(troubleShootId),
       });

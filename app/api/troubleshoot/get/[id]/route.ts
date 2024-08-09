@@ -18,6 +18,15 @@ export async function GET(
 
   try {
     const troubleShoot = await TroubleShoot.findById(troubleShootId).exec();
+
+    console.log(troubleShoot.createdBy, "createBy");
+    console.log(userId, "user id");
+    if (troubleShoot.createdBy !== userId) {
+      return NextResponse.json({
+        status: 401,
+        message: "You do not have the access.",
+      });
+    }
     const relatedQuizzes = await Quiz.find({
       troubleShootId: troubleShootId,
     }).sort({ createdAt: 1 });
