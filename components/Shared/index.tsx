@@ -120,16 +120,18 @@ const ShowQuestion = ({ token }) => {
                       Restart
                     </button>
                   </div>
-                  <div className="m-1 border-2 border-thirdColor rounded-xl">
-                    <Image
-                      className="rounded-xl shadow-xl"
-                      src={currentQuestion.imageUrl}
-                      layout="responsive"
-                      width={500}
-                      height={500}
-                      alt="Question Media"
-                    />
-                  </div>
+                  {currentQuestion.imageUrl && (
+                    <div className="m-1 border-2 border-thirdColor rounded-xl">
+                      <Image
+                        className="rounded-xl shadow-xl"
+                        src={currentQuestion.imageUrl}
+                        layout="responsive"
+                        width={500}
+                        height={500}
+                        alt="Question Media"
+                      />
+                    </div>
+                  )}
                   <div className="flex justify-center items-center flex-col">
                     {/* card */}
                     <div className="card w-full bg-base-100 shadow-xl p-1 m-4">

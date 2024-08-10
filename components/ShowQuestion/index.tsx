@@ -58,16 +58,21 @@ const ShowQuestion = ({ id }) => {
         setQuestionList(data.data.questions);
         console.log(data.data.troubleshoot);
         if (data.data.troubleshoot.isPublic) {
+          // setShareLink(
+          //   "http://localhost:3000/shared/" + data.data.troubleshoot.token
+          // );
           setShareLink(
-            "http://localhost:3000/shared/" + data.data.troubleshoot.token
+            process.env.NEXT_PUBLIC_URL + data.data.troubleshoot.token
           );
         }
 
         const cur: Quiz = findFirstQuestion(data.data.questions);
 
         if (cur === undefined) {
+          console.log("undefinedx");
         } else {
           setCurrentQuestion(cur);
+          console.log(cur, "current question?");
         }
       } catch (error) {
         setError(error.message);
@@ -112,142 +117,153 @@ const ShowQuestion = ({ id }) => {
       >
         <div className="container">
           <div className="-mx-4 flex flex-wrap">
-            <div className="w-full px-4 lg:w-7/12 xl:w-8/12 ">
-              {currentQuestion !== undefined || currentQuestion !== null ? (
-                <div
-                  className="wow fadeInUp mb-12 rounded-md bg-primary/[3%] px-8 py-11 dark:bg-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]"
-                  data-wow-delay=".15s"
-                >
-                  <div className="flex justify-between">
-                    {shareLink === "" ? (
-                      <div className="p-1">
-                        <CheckoutButton troubleshootId={id} />
-                      </div>
-                    ) : (
-                      <div></div>
-                    )}
-                    {shareLink !== "" && (
-                      <div className="border-2 rounded-md bg-secondaryColor flex justify-center items-center mr-1">
-                        <h1 className=" text-primaryColor p-1 font-bold">
-                          Link: {shareLink}
-                        </h1>
-                      </div>
-                    )}
-                    <div className="flex flex-col">
-                      <button
-                        className="btn btn-active btn-secondary"
-                        onClick={onRestart}
-                      >
-                        Restart
-                      </button>
-                      {shareLink !== "" && (
-                        <button
-                          onClick={() => {
-                            copyText(shareLink);
-                            setCopied(true);
-                          }}
-                          className="btn btn-accent m-1"
-                        >
-                          {copied ? (
-                            <>
-                              Copied
-                              <svg
-                                className="w-3 h-3 text-white me-1.5"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 16 12"
-                              >
-                                <path
-                                  stroke="currentColor"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M1 5.917 5.724 10.5 15 1.5"
-                                />
-                              </svg>
-                            </>
-                          ) : (
-                            "Copy Link"
-                          )}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <div className="m-1 border-2 border-thirdColor rounded-xl">
-                    <Image
-                      className="rounded-xl shadow-xl"
-                      src={currentQuestion.imageUrl}
-                      layout="responsive"
-                      width={500}
-                      height={500}
-                      alt="Question Media"
-                    />
-                  </div>
-                  <button
-                    className="btn btn-active btn-accent mt-2"
-                    onClick={onBack}
-                    disabled={history.length > 0 ? false : true}
+            {currentQuestion !== null ? (
+              <div className="w-full px-4 lg:w-7/12 xl:w-8/12 ">
+                {currentQuestion !== undefined || currentQuestion !== null ? (
+                  <div
+                    className="wow fadeInUp mb-12 rounded-md bg-primary/[3%] px-8 py-11 dark:bg-dark sm:p-[55px] lg:mb-5 lg:px-8 xl:p-[55px]"
+                    data-wow-delay=".15s"
                   >
-                    Back
-                  </button>
-
-                  <div className="flex justify-center items-center flex-col">
-                    {/* card */}
-                    <div className="card w-full bg-base-100 shadow-xl p-1 m-4">
-                      {currentQuestion !== null ? (
-                        <div className="card-body">
-                          <h2 className="card-title">Question</h2>
-                          <div className="card-actions justify-end">
-                            <h1 className="break-words">
-                              {currentQuestion.question}
-                            </h1>
-                          </div>
+                    <div className="flex justify-between">
+                      {shareLink === "" ? (
+                        <div className="p-1">
+                          <CheckoutButton troubleshootId={id} />
                         </div>
                       ) : (
-                        <div className="card-body">
-                          <h2 className="card-title">
-                            This troubleshooter has no Question
-                          </h2>
-                          <div className="card-actions justify-end"></div>
+                        <div></div>
+                      )}
+                      {shareLink !== "" && (
+                        <div className="border-2 rounded-md bg-secondaryColor flex justify-center items-center mr-1">
+                          <h1 className=" text-primaryColor p-1 font-bold">
+                            Link: {shareLink}
+                          </h1>
                         </div>
                       )}
-                    </div>
-
-                    {currentQuestion !== null &&
-                      currentQuestion.options.map((item, i) => {
-                        return (
-                          <div
+                      <div className="flex flex-col">
+                        <button
+                          className="btn btn-active btn-secondary"
+                          onClick={onRestart}
+                        >
+                          Restart
+                        </button>
+                        {shareLink !== "" && (
+                          <button
                             onClick={() => {
-                              if (item.nextQuizId !== undefined) {
-                                const nextQuestion = questionList.find(
-                                  (quest: Quiz) => quest._id === item.nextQuizId
-                                );
-
-                                if (nextQuestion) {
-                                  setHistory((prev) => [
-                                    ...prev,
-                                    currentQuestion,
-                                  ]);
-                                  setCurrentQuestion(nextQuestion);
-                                }
-                              } else {
-                                console.log("the end of the troubleshoot");
-                              }
+                              copyText(shareLink);
+                              setCopied(true);
                             }}
-                            key={i}
-                            className="w-full bordered rounded-xl shadow-xl p-4 m-4 bg-base-200 hover:bg-base-300 cursor-pointer hover:border-thirdColor"
+                            className="btn btn-accent m-1"
                           >
-                            Option {i + 1}: {item.text}
+                            {copied ? (
+                              <>
+                                Copied
+                                <svg
+                                  className="w-3 h-3 text-white me-1.5"
+                                  aria-hidden="true"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 16 12"
+                                >
+                                  <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M1 5.917 5.724 10.5 15 1.5"
+                                  />
+                                </svg>
+                              </>
+                            ) : (
+                              "Copy Link"
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    {currentQuestion.imageUrl !== "" && (
+                      <div className="m-1 border-2 border-thirdColor rounded-xl">
+                        <Image
+                          className="rounded-xl shadow-xl"
+                          src={currentQuestion.imageUrl}
+                          layout="responsive"
+                          width={500}
+                          height={500}
+                          alt="Question Media"
+                        />
+                      </div>
+                    )}
+                    <button
+                      className="btn btn-active btn-accent mt-2"
+                      onClick={onBack}
+                      disabled={history.length > 0 ? false : true}
+                    >
+                      Back
+                    </button>
+
+                    <div className="flex justify-center items-center flex-col">
+                      {/* card */}
+                      <div className="card w-full bg-base-100 shadow-xl p-1 m-4">
+                        {currentQuestion !== null ? (
+                          <div className="card-body">
+                            <h2 className="card-title">Question</h2>
+                            <div className="card-actions justify-end">
+                              <h1 className="break-words">
+                                {currentQuestion.question}
+                              </h1>
+                            </div>
                           </div>
-                        );
-                      })}
+                        ) : (
+                          <div className="card-body">
+                            <h2 className="card-title">
+                              This troubleshooter has no Question
+                            </h2>
+                            <div className="card-actions justify-end"></div>
+                          </div>
+                        )}
+                      </div>
+
+                      {currentQuestion !== null &&
+                        currentQuestion.options.map((item, i) => {
+                          return (
+                            <div
+                              onClick={() => {
+                                if (item.nextQuizId !== undefined) {
+                                  const nextQuestion = questionList.find(
+                                    (quest: Quiz) =>
+                                      quest._id === item.nextQuizId
+                                  );
+
+                                  if (nextQuestion) {
+                                    setHistory((prev) => [
+                                      ...prev,
+                                      currentQuestion,
+                                    ]);
+                                    setCurrentQuestion(nextQuestion);
+                                  }
+                                } else {
+                                  console.log("the end of the troubleshoot");
+                                }
+                              }}
+                              key={i}
+                              className="w-full bordered rounded-xl shadow-xl p-4 m-4 bg-base-200 hover:bg-base-300 cursor-pointer hover:border-thirdColor"
+                            >
+                              Option {i + 1}: {item.text}
+                            </div>
+                          );
+                        })}
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div>This trouble shoot dose not have a first question</div>
-              )}
-            </div>
+                ) : (
+                  <div>This trouble shoot dose not have a first question</div>
+                )}
+              </div>
+            ) : (
+              <div className="flex justify-center items-center w-full h-full">
+                <h2 className="font-bold">
+                  This trouble-shush has no question.
+                </h2>
+              </div>
+            )}
           </div>
         </div>
       </section>
