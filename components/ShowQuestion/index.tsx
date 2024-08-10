@@ -58,8 +58,11 @@ const ShowQuestion = ({ id }) => {
         setQuestionList(data.data.questions);
         console.log(data.data.troubleshoot);
         if (data.data.troubleshoot.isPublic) {
+          // setShareLink(
+          //   "http://localhost:3000/shared/" + data.data.troubleshoot.token
+          // );
           setShareLink(
-            "http://localhost:3000/shared/" + data.data.troubleshoot.token
+            process.env.NEXT_PUBLIC_URL + data.data.troubleshoot.token
           );
         }
 
