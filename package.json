@@ -16,6 +16,7 @@
     "@svgr/webpack": "^8.1.0",
     "@upstash/ratelimit": "^2.0.1",
     "@vercel/kv": "^2.0.0",
+    "@vercel/node": "^3.2.8",
     "eslint": "8.33.0",
     "eslint-config-next": "^14.2.3",
     "micro": "^10.0.1",
