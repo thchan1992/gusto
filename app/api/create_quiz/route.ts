@@ -1,11 +1,14 @@
 import dbConnect from "@/lib/dbConnect";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { TroubleShoot } from "@/lib/models/TroubleShoot";
 import { auth } from "@clerk/nextjs/server";
 import Quiz from "@/lib/models/Quiz";
 import { User } from "@/lib/models/User";
 import mongoose from "mongoose";
-export async function POST(req: Request) {
+import rateLimitMiddleware from "@/lib/rateLimit";
+
+export const POST = rateLimitMiddleware(async (req: NextRequest) => {
+  // export async function POST(req: Request) {
   try {
     const data = await req.json();
 
@@ -80,4 +83,4 @@ export async function POST(req: Request) {
     console.error(error);
     return NextResponse.json({ status: 500, message: "Internal Server Error" });
   }
-}
+}, 6);

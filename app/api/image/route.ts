@@ -5,6 +5,7 @@ import {
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 import { auth } from "@clerk/nextjs/server";
+import rateLimitMiddleware from "@/lib/rateLimit";
 
 const s3Client = new S3Client({
   region: process.env.NEXT_PUBLIC_AWS_S3_REGION,
@@ -47,8 +48,8 @@ async function deleteFileFromS3(fileUrl) {
   const command = new DeleteObjectCommand(deleteParams);
   await s3Client.send(command);
 }
-
-export async function POST(req: NextRequest) {
+export const POST = rateLimitMiddleware(async (req: NextRequest) => {
+  // export async function POST(req: NextRequest) {
   const { userId } = auth();
   if (!userId) {
     return NextResponse.json({ status: 401, message: "Unauthorized" });
@@ -82,4 +83,4 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+}, 2);

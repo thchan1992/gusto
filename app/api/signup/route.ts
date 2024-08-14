@@ -4,15 +4,14 @@ import dbConnect from "@/lib/dbConnect";
 import { getAuth } from "@clerk/nextjs/server";
 import { User } from "@/lib/models/User";
 import { useUser } from "@clerk/nextjs";
+import rateLimitMiddleware from "@/lib/rateLimit";
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export const POST = rateLimitMiddleware(async (req: NextRequest) => {
+  // export async function POST(req: NextRequest, res: NextResponse) {
   await dbConnect();
 
   const { user } = useUser();
   const { userId } = getAuth(req);
-
-  console.log("user email", user.primaryEmailAddress);
-  console.log("user id ", userId);
 
   if (userId) {
     try {
@@ -22,4 +21,4 @@ export async function POST(req: NextRequest, res: NextResponse) {
   } else {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-}
+});

@@ -26,11 +26,12 @@ const ShowQuestion = ({ token }) => {
     const fetchTroubleShoots = async () => {
       try {
         const response = await fetch("/api/get_troubleshoot_public/" + token);
+        console.log("calling shared");
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
         const data = await response.json();
-        console.log(data.questions, "troubleshoot returned");
+
         setTroubleShootTitle(data.data.troubleshoot.title);
         setQuestionList(data.data.questions);
         console.log(data.data.troubleshoot);

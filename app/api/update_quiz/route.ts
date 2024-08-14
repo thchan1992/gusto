@@ -1,8 +1,9 @@
 import dbConnect from "@/lib/dbConnect";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import Quiz, { IQuiz } from "@/lib/models/Quiz";
 import mongoose from "mongoose";
+import rateLimitMiddleware from "@/lib/rateLimit";
 
 type Option = {
   text: string;
@@ -21,7 +22,8 @@ interface IQuizUpdate {
   updatedAt?: Date;
 }
 
-export async function PUT(req: Request) {
+export const PUT = rateLimitMiddleware(async (req: NextRequest) => {
+  // export async function PUT(req: Request) {
   try {
     const data = await req.json();
 
@@ -63,6 +65,7 @@ export async function PUT(req: Request) {
     }
 
     const { updatedQuestion } = data;
+    console.log(updatedQuestion, "update Question");
 
     if (updatedQuestion.isFirst === true) {
       await Quiz.updateOne(
@@ -94,4 +97,4 @@ export async function PUT(req: Request) {
     console.error("Error in PUT handler:", error);
     return NextResponse.json({ status: 500, message: "Internal Server Error" });
   }
-}
+}, 3);
