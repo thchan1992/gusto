@@ -4,8 +4,9 @@ import Quiz from "@/lib/models/Quiz";
 import { getAuth } from "@clerk/nextjs/server";
 import { TroubleShoot } from "@/lib/models/TroubleShoot";
 import { NextApiRequest } from "next";
+import rateLimitMiddleware from "@/lib/rateLimit";
 
-export async function GET(req: NextRequest) {
+export const GET = rateLimitMiddleware(async (req: NextRequest) => {
   await dbConnect();
   const { userId } = getAuth(req);
 
@@ -26,4 +27,4 @@ export async function GET(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+});

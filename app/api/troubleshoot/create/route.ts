@@ -3,10 +3,12 @@ import { NextResponse, NextRequest } from "next/server";
 import { User } from "@/lib/models/User";
 import { getAuth } from "@clerk/nextjs/server";
 import { TroubleShoot } from "@/lib/models/TroubleShoot";
-
+import rateLimitMiddleware from "@/lib/rateLimit";
 import { auth } from "@clerk/nextjs/server";
 
-export async function POST(req: Request) {
+// export async function POST(req: Request) {
+
+export const POST = rateLimitMiddleware(async (req: NextRequest) => {
   await dbConnect();
   const data = await req.json();
   const { userId } = auth();
@@ -27,4 +29,4 @@ export async function POST(req: Request) {
   const savedTroubleShoot = await newTroubleShoot.save();
 
   return NextResponse.json({ data: savedTroubleShoot }, { status: 200 });
-}
+});

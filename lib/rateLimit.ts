@@ -2,14 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 const rateLimitMap = new Map();
 
-export default function rateLimitMiddleware(handler) {
+export default function rateLimitMiddleware(
+  handler: any,
+  limitNumber?: number
+) {
   return async (req: NextRequest, context) => {
     console.log("Request Method:", req.method);
 
-    if (req.method === "HEAD") {
-      console.log("HEAD");
-      return handler(req, context);
-    }
+    // if (req.method === "HEAD") {
+    //   console.log("HEAD");
+    //   return handler(req, context);
+    // }
     // const ip =
     //   req.headers.get("x-forwarded-for") ||
     //   req.ip ||
@@ -22,7 +25,8 @@ export default function rateLimitMiddleware(handler) {
     console.log("Client IP:", ip);
 
     console.log("Rate Limit Middleware Invoked", { ip });
-    const limit = 10;
+
+    const limit = limitNumber ? limitNumber : 10;
     const windowMs = 60 * 1000;
 
     if (!rateLimitMap.has(ip)) {
