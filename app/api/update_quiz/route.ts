@@ -43,6 +43,13 @@ export const PUT = rateLimitMiddleware(async (req: NextRequest) => {
       }
 
       try {
+        const updatedQuizToCheck = await Quiz.findById(quizId);
+        if (updatedQuizToCheck.createdBy !== userId) {
+          return NextResponse.json({
+            status: 401,
+            message: "You do not have the access.",
+          });
+        }
         const updatedQuiz = await Quiz.findByIdAndUpdate(quizId, updatedData, {
           new: true,
           runValidators: true,
@@ -97,4 +104,4 @@ export const PUT = rateLimitMiddleware(async (req: NextRequest) => {
     console.error("Error in PUT handler:", error);
     return NextResponse.json({ status: 500, message: "Internal Server Error" });
   }
-}, 3);
+}, 10);
