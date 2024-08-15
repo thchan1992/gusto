@@ -58,7 +58,7 @@ export const POST = rateLimitMiddleware(async (req: NextRequest) => {
         imageUrl: imageUrl,
         question: title,
         options: [],
-        createdBy: user._id,
+        createdBy: userId,
         troubleShootId: troubleShootId,
       });
 

@@ -27,6 +27,9 @@ export const DELETE = rateLimitMiddleware(
       const deleteQuiz = async (quizId: string) => {
         try {
           const deletedQuiz = await Quiz.findById(quizId);
+
+          console.log(deletedQuiz.createdBy, "user created by");
+          console.log(userId, "user ID");
           if (deletedQuiz.createdBy !== userId) {
             return NextResponse.json({
               status: 401,
@@ -53,6 +56,7 @@ export const DELETE = rateLimitMiddleware(
         }
       };
 
+      console.log("removing");
       await deleteQuiz(id);
 
       const relatedQuizzes = await Quiz.find({

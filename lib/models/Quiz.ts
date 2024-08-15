@@ -9,7 +9,8 @@ export interface IQuiz extends Document {
     text: string;
     nextQuizId?: mongoose.Schema.Types.ObjectId | null;
   }[];
-  createdBy: mongoose.Schema.Types.ObjectId;
+  // createdBy: mongoose.Schema.Types.ObjectId;
+  createdBy: string;
   troubleShootId: mongoose.Schema.Types.ObjectId;
 }
 
@@ -32,7 +33,8 @@ const quizSchema: Schema = new Schema<IQuiz>(
     question: { type: String, required: true },
     options: [optionSchema],
     createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
+      // type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "User",
       required: true,
     },

@@ -81,4 +81,4 @@ export const POST = rateLimitMiddleware(async (req: NextRequest) => {
     console.error(error);
     return NextResponse.json({ status: 500, message: "Internal Server Error" });
   }
-}, 2);
+}, 20);
