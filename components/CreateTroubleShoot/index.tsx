@@ -32,10 +32,12 @@ const CreateTroubleShoot = () => {
         const response = await fetch("/api/troubleshoot/get_all");
         if (response.status === 401) {
           await signOut();
-          router.push("/");
+          router.push("/error/" + response.status);
           return;
         }
         if (!response.ok) {
+          // console.log(response.status, "status");
+          router.push("/error/" + response.status);
           throw new Error(`Error: ${response.statusText}`);
         }
 
@@ -93,9 +95,13 @@ const CreateTroubleShoot = () => {
                         title: troubleshootTitle,
                       }),
                     });
+
+                    if (!response.ok) {
+                      router.push("/error/" + response.status);
+                      throw new Error(`Error: ${response.statusText}`);
+                    }
                     if (response.ok) {
                       const result = await response.json();
-
                       router.push("/create_troubleshoot/" + result.data._id);
                     }
                   }}

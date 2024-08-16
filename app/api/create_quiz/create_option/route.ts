@@ -31,7 +31,7 @@ export const POST = rateLimitMiddleware(async (req: NextRequest) => {
 
     if (quizToUpdate.createdBy !== userId) {
       return NextResponse.json({
-        status: 401,
+        status: 403,
         message: "You do not have the access.",
       });
     }

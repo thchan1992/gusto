@@ -70,6 +70,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       try {
         const response = await fetch("/api/troubleshoot/get/" + id);
         if (!response.ok) {
+          router.push("/error/" + response.status);
           throw new Error(`Error: ${response.statusText}`);
         }
         if (response.status === 401) {
@@ -110,6 +111,11 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
         }),
       });
 
+      if (!res.ok) {
+        router.push("/error/" + res.status);
+        throw new Error(`Error: ${res.statusText}`);
+      }
+
       if (res.status === 401) {
         console.log("create_Quiz: 401");
         await signOut();
@@ -149,6 +155,11 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
           optionList: optionList,
         }),
       });
+
+      if (!res.ok) {
+        router.push("/error/" + res.status);
+        throw new Error(`Error: ${res.statusText}`);
+      }
       if (res.status === 401) {
         await signOut();
         router.push("/");
@@ -177,6 +188,11 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
         updatedQuestion: selectedQuestion,
       }),
     });
+
+    if (!res.ok) {
+      router.push("/error/" + res.status);
+      throw new Error(`Error: ${res.statusText}`);
+    }
     if (res.status === 401) {
       await signOut();
       router.push("/");
@@ -222,6 +238,11 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       const res = await fetch("/api/remove_quiz/" + item._id + "/" + id, {
         method: "DELETE",
       });
+
+      if (!res.ok) {
+        router.push("/error/" + res.status);
+        throw new Error(`Error: ${res.statusText}`);
+      }
       if (res.status === 401) {
         await signOut();
         router.push("/");
@@ -267,10 +288,16 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     const res = await fetch("/api/remove_troubleshoot/" + id, {
       method: "DELETE",
     });
+
     if (res.status === 401) {
       await signOut();
       router.push("/");
       return;
+    }
+
+    if (!res.ok) {
+      router.push("/error/" + res.status);
+      throw new Error(`Error: ${res.statusText}`);
     }
     if (res.status === 200) {
       router.push("/create_troubleshoot");

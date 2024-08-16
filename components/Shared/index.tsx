@@ -28,6 +28,8 @@ const ShowQuestion = ({ token }) => {
         const response = await fetch("/api/get_troubleshoot_public/" + token);
         console.log("calling shared");
         if (!response.ok) {
+          router.push("/error/" + response.status);
+
           throw new Error(`Error: ${response.statusText}`);
         }
         const data = await response.json();

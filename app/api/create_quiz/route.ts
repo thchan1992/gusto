@@ -45,7 +45,7 @@ export const POST = rateLimitMiddleware(async (req: NextRequest) => {
       console.log(userId, "user Id");
       if (troubleShoot.createdBy !== userId) {
         return NextResponse.json({
-          status: 401,
+          status: 403,
           message: "You do not have the access.",
         });
       }
@@ -83,4 +83,4 @@ export const POST = rateLimitMiddleware(async (req: NextRequest) => {
     console.error(error);
     return NextResponse.json({ status: 500, message: "Internal Server Error" });
   }
-}, 6);
+}, 10);
