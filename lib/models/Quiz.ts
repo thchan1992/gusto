@@ -1,5 +1,4 @@
-import mongoose, { Document, Schema, Types } from "mongoose";
-import { IUser } from "./User";
+import mongoose, { Document, Schema } from "mongoose";
 
 export interface IQuiz extends Document {
   isFirst: boolean;
