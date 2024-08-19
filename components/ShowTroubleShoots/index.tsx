@@ -5,12 +5,15 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useUser, useAuth } from "@clerk/nextjs";
 import { LoadingSpinner } from "../LoadingSpinner";
+import { fetchTroubleShootsApi } from "@/lib/api";
+
+import useHandleApiErrors from "@/lib/hook/useHandlerApiErrors";
 
 const ShowTroubleShoots = () => {
-  const [status, setStatus] = useState({ loading: true, error: null });
   const [troubleshootList, setTroubleshootList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { handleApiErrors } = useHandleApiErrors();
 
   const router = useRouter();
   const { signOut } = useAuth();
@@ -24,18 +27,10 @@ const ShowTroubleShoots = () => {
   useEffect(() => {
     const fetchTroubleShoots = async () => {
       try {
-        const response = await fetch("/api/troubleshoot/get_all");
-        if (response.status === 401) {
-          await signOut();
-          router.push("/");
-          return;
-        }
-        if (!response.ok) {
-          router.push("/error/" + response.status);
-          throw new Error(`Error: ${response.statusText}`);
-        }
+        const response = await fetchTroubleShootsApi();
+        const isSuccess = await handleApiErrors(response);
+        if (!isSuccess) return;
         const data = await response.json();
-
         setTroubleshootList(data.data);
       } catch (error) {
         setError(error.message);
@@ -43,17 +38,12 @@ const ShowTroubleShoots = () => {
         setLoading(false);
       }
     };
-
     fetchTroubleShoots();
-  }, [router, signOut]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading) return <LoadingSpinner />;
-  // return (
-  //   <p className="flex justify-center items-center">
-  //     <span className="loading loading-dots loading-lg"></span>
-  //   </p>
-  // );
-  // if (error) return <p>Error: {error}</p>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <>
