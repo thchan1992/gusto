@@ -3,7 +3,6 @@ import logo from "../../assets/logo.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import ThemeToggler from "./ThemeToggler";
 import menuData from "./menuData";
 import { SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 const Header = () => {
@@ -55,13 +54,6 @@ const Header = () => {
                   sticky ? "py-5 lg:py-2" : "py-8"
                 } `}
               >
-                {/* <Image
-                  src="/images/logo/logo-2.svg"
-                  alt="logo"
-                  width={140}
-                  height={30}
-                  className="w-full dark:hidden"
-                /> */}
                 <Image
                   src={logo}
                   alt="logo"
@@ -189,7 +181,9 @@ const Header = () => {
                   </>
                 ) : (
                   // <UserButton />
-                  <SignOutButton />
+                  <SignOutButton>
+                    <button className="btn btn-active">Sign Out</button>
+                  </SignOutButton>
                 )}
                 {/* <div>
                   <ThemeToggler />
