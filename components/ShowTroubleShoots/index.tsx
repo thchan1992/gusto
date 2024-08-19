@@ -36,6 +36,7 @@ const ShowTroubleShoots = () => {
           return;
         }
         if (!response.ok) {
+          router.push("/error/" + response.status);
           throw new Error(`Error: ${response.statusText}`);
         }
         const data = await response.json();
