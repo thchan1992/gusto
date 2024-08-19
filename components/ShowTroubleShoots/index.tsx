@@ -3,27 +3,22 @@ import Link from "next/link";
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import Button from "../Button";
-
 import { useUser, useAuth } from "@clerk/nextjs";
+import { LoadingSpinner } from "../LoadingSpinner";
 
 const ShowTroubleShoots = () => {
+  const [status, setStatus] = useState({ loading: true, error: null });
+  const [troubleshootList, setTroubleshootList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [troubleshootList, setTroubleshootList] = useState([]);
 
   const router = useRouter();
   const { signOut } = useAuth();
   const { isSignedIn } = useUser();
   useEffect(() => {
-    const handleAuthorised = async () => {
-      if (isSignedIn === false) {
-        await signOut();
-        router.push("/");
-      }
-    };
-    handleAuthorised();
-    console.log(isSignedIn);
+    if (isSignedIn === false) {
+      signOut().then(() => router.push("/"));
+    }
   }, [isSignedIn, router, signOut]);
 
   useEffect(() => {
@@ -52,13 +47,13 @@ const ShowTroubleShoots = () => {
     fetchTroubleShoots();
   }, [router, signOut]);
 
-  if (loading)
-    return (
-      <p className="flex justify-center items-center">
-        <span className="loading loading-dots loading-lg"></span>
-      </p>
-    );
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <LoadingSpinner />;
+  // return (
+  //   <p className="flex justify-center items-center">
+  //     <span className="loading loading-dots loading-lg"></span>
+  //   </p>
+  // );
+  // if (error) return <p>Error: {error}</p>;
 
   return (
     <>
