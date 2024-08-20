@@ -1,13 +1,9 @@
 "use client";
-import Link from "next/link";
+
 import React from "react";
 import Button from "../Button";
 import { useState, useEffect } from "react";
-import { RootState } from "@/lib/store";
-import { useDispatch, useSelector } from "react-redux";
-import { addQuizList } from "@/lib/features/quizList/quizListSlice";
 import { Quiz } from "@/lib/types/Quiz";
-import data from "@/util/dummy.json";
 import Modal from "./Modal";
 import { UploadForm } from "./S3UploadForm";
 import { useUser, useAuth } from "@clerk/nextjs";
@@ -17,6 +13,15 @@ import { FirstQuestionBadge } from "./FirstQuestionBadge";
 import arrow from "@/assets/arrow.png";
 import Image from "next/image";
 import ConfirmationModal from "./ConfirmationModal";
+import {
+  createOptionApi,
+  createQuizApi,
+  fetchOneTroubleShootApi,
+  removeQuizApi,
+  removeTroubleShootApi,
+  updateQuestionApi,
+} from "@/lib/api";
+import useHandleApiErrors from "@/lib/hook/useHandlerApiErrors";
 interface CreateQuizProps {
   id: string;
 }
@@ -50,16 +55,13 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   const router = useRouter();
   const { signOut } = useAuth();
   const { isSignedIn } = useUser();
+  const { handleApiErrors } = useHandleApiErrors();
   useEffect(() => {
-    const handleAuthorised = async () => {
-      if (isSignedIn === false) {
-        await signOut();
-        router.push("/");
-      }
-    };
-    handleAuthorised();
-    console.log(isSignedIn);
-  }, [isSignedIn, router, signOut]);
+    if (isSignedIn === false) {
+      signOut().then(() => router.push("/"));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [showUpdateConfirmation, setShowUpdateConfirmation] = useState(false);
 
   const NORMAL = "NORMAL";
@@ -68,23 +70,12 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   useEffect(() => {
     const fetchTroubleShoots = async () => {
       try {
-        const response = await fetch("/api/troubleshoot/get/" + id);
-        if (!response.ok) {
-          router.push("/error/" + response.status);
-          throw new Error(`Error: ${response.statusText}`);
-        }
-        if (response.status === 401) {
-          await signOut();
-          router.push("/");
-          return;
-        }
-
+        const response = await fetchOneTroubleShootApi(id);
+        const isSuccess = await handleApiErrors(response);
+        if (!isSuccess) return;
         const data = await response.json();
-
         setToken(data.data.troubleshoot.token);
-
         setTroubleShootTitle(data.data.troubleshoot.title);
-
         setQuestionList(data.data.questions);
       } catch (error) {
         // setError(error.message);
@@ -93,38 +84,16 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
       }
     };
     fetchTroubleShoots();
-  }, [id, router, signOut]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const addQuestionAPI = async () => {
     const imageUrl = fileUrl === null ? "" : fileUrl;
     try {
-      const res = await fetch("/api/create_quiz", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          isFirst: true,
-          title: questionText,
-          troubleShootId: id,
-          imageUrl: imageUrl,
-        }),
-      });
-
-      if (!res.ok) {
-        router.push("/error/" + res.status);
-        throw new Error(`Error: ${res.statusText}`);
-      }
-
-      if (res.status === 401) {
-        console.log("create_Quiz: 401");
-        await signOut();
-        router.push("/");
-        return;
-      }
-
-      const data = await res.json();
-
+      const response = await createQuizApi(true, questionText, id, imageUrl);
+      const isSuccess = await handleApiErrors(response);
+      if (!isSuccess) return;
+      const data = await response.json();
       if (data?.data?.questionList) {
         setQuestionList(data.data.questionList);
       } else {
@@ -145,28 +114,11 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
 
   const addOptionAPI = async () => {
     try {
-      const res = await fetch("/api/create_quiz/create_option", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          quizId: quizId,
-          optionList: optionList,
-        }),
-      });
+      const response = await createOptionApi(quizId, optionList);
+      const isSuccess = await handleApiErrors(response);
+      if (!isSuccess) return;
 
-      if (!res.ok) {
-        router.push("/error/" + res.status);
-        throw new Error(`Error: ${res.statusText}`);
-      }
-      if (res.status === 401) {
-        await signOut();
-        router.push("/");
-        return;
-      }
-
-      const data = await res.json();
+      const data = await response.json();
       if (data?.data?.questionList) {
         setQuestionList(data.data.questionList);
       } else {
@@ -179,29 +131,12 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   };
 
   const updateQuestion = async () => {
-    const res = await fetch("/api/update_quiz", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        updatedQuestion: selectedQuestion,
-      }),
-    });
+    const response = await updateQuestionApi(selectedQuestion);
+    const isSuccess = await handleApiErrors(response);
+    if (!isSuccess) return;
 
-    if (!res.ok) {
-      router.push("/error/" + res.status);
-      throw new Error(`Error: ${res.statusText}`);
-    }
-    if (res.status === 401) {
-      await signOut();
-      router.push("/");
-      return;
-    }
-
-    const data = await res.json();
+    const data = await response.json();
     setQuestionList(data.data.questionList);
-
     setShowUpdateConfirmation(true);
   };
 
@@ -223,7 +158,6 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
     }
   };
   const checkIsFirstQuestion = (id: string): boolean => {
-    // const question =  questionList.map((question, i )=>{if (question._id === id) {return question}});
     let question: Quiz;
     for (let i = 0; i < questionList.length; i++) {
       if (questionList[i]._id === id) {
@@ -235,26 +169,12 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   };
   const handleDeleteQuestion = async (item: Quiz) => {
     if (!checkIsFirstQuestion(item._id)) {
-      const res = await fetch("/api/remove_quiz/" + item._id + "/" + id, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        router.push("/error/" + res.status);
-        throw new Error(`Error: ${res.statusText}`);
-      }
-      if (res.status === 401) {
-        await signOut();
-        router.push("/");
-        return;
-      }
-
-      const data = await res.json();
-      console.log(data.data, "returned data");
+      const response = await removeQuizApi(item._id, id);
+      const isSuccess = await handleApiErrors(response);
+      if (!isSuccess) return;
+      const data = await response.json();
       setQuestionList(data.data.questionList);
       setShowUpdateConfirmation(true);
-    } else {
-      console.log("Cannot delete the first question");
     }
   };
   const handleAddAnswer = async () => {
@@ -285,21 +205,13 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
   };
 
   const handleDeleteTroubleshoot = async () => {
-    const res = await fetch("/api/remove_troubleshoot/" + id, {
-      method: "DELETE",
-    });
-
-    if (res.status === 401) {
-      await signOut();
-      router.push("/");
-      return;
-    }
-
-    if (!res.ok) {
-      router.push("/error/" + res.status);
-      throw new Error(`Error: ${res.statusText}`);
-    }
-    if (res.status === 200) {
+    // const res = await fetch("/api/remove_troubleshoot/" + id, {
+    //   method: "DELETE",
+    // });
+    const response = await removeTroubleShootApi(id);
+    const isSuccess = await handleApiErrors(response);
+    if (!isSuccess) return;
+    if (isSuccess) {
       router.push("/create_troubleshoot");
       setShowUpdateConfirmation(true);
     }
@@ -336,7 +248,6 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
           onConfirm={() => {
             visible ? setVisble(false) : setVisble(true);
             //send api to update the question
-
             updateQuestion();
           }}
         />
@@ -544,9 +455,7 @@ const CreateQuiz: React.FC<CreateQuizProps> = ({ id }) => {
                     </div>
                   );
                 })}
-                {/* button */}
-                {/* {Panel()} */}
-                {/* textfield for answer */}
+
                 <ConfirmationModal
                   message={"Changes have been made."}
                   visible={showUpdateConfirmation}
