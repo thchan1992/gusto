@@ -81,30 +81,7 @@ const CreateTroubleShoot = () => {
                 />
                 <button
                   className="btn btn-info w-1/4 mb-8"
-                  // title="Create a new troubleshoot"
-                  onClick={
-                    onCreateTroubleShoot
-                    //   async () => {
-                    //   const response = await fetch("/api/troubleshoot/create", {
-                    //     method: "POST",
-                    //     headers: {
-                    //       "Content-Type": "application/json",
-                    //     },
-                    //     body: JSON.stringify({
-                    //       title: troubleshootTitle,
-                    //     }),
-                    //   });
-
-                    //   if (!response.ok) {
-                    //     router.push("/error/" + response.status);
-                    //     throw new Error(`Error: ${response.statusText}`);
-                    //   }
-                    //   if (response.ok) {
-                    //     const result = await response.json();
-                    //     router.push("/create_troubleshoot/" + result.data._id);
-                    //   }
-                    // }
-                  }
+                  onClick={onCreateTroubleShoot}
                 >
                   New trouble-shush
                 </button>
