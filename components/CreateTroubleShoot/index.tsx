@@ -9,6 +9,7 @@ import { useUser, useAuth } from "@clerk/nextjs";
 import { fetchTroubleShootsApi } from "@/lib/api";
 import useHandleApiErrors from "@/lib/hook/useHandlerApiErrors";
 import { LoadingSpinner } from "../LoadingSpinner";
+import { createTroubleShootApi } from "@/lib/api";
 
 const CreateTroubleShoot = () => {
   const [loading, setLoading] = useState(true);
@@ -23,7 +24,8 @@ const CreateTroubleShoot = () => {
     if (isSignedIn === false) {
       signOut().then(() => router.push("/"));
     }
-  }, [isSignedIn, router, signOut]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const fetchTroubleShoots = async () => {
@@ -43,6 +45,16 @@ const CreateTroubleShoot = () => {
     fetchTroubleShoots();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const onCreateTroubleShoot = async () => {
+    const response = await createTroubleShootApi(troubleshootTitle);
+    const isSuccess = await handleApiErrors(response);
+    if (!isSuccess) return;
+    if (isSuccess) {
+      const result = await response.json();
+      router.push("/create_troubleshoot/" + result.data._id);
+    }
+  };
 
   if (loading) return <LoadingSpinner />;
   if (error) return <p>Error: {error}</p>;
@@ -70,26 +82,29 @@ const CreateTroubleShoot = () => {
                 <button
                   className="btn btn-info w-1/4 mb-8"
                   // title="Create a new troubleshoot"
-                  onClick={async () => {
-                    const response = await fetch("/api/troubleshoot/create", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        title: troubleshootTitle,
-                      }),
-                    });
+                  onClick={
+                    onCreateTroubleShoot
+                    //   async () => {
+                    //   const response = await fetch("/api/troubleshoot/create", {
+                    //     method: "POST",
+                    //     headers: {
+                    //       "Content-Type": "application/json",
+                    //     },
+                    //     body: JSON.stringify({
+                    //       title: troubleshootTitle,
+                    //     }),
+                    //   });
 
-                    if (!response.ok) {
-                      router.push("/error/" + response.status);
-                      throw new Error(`Error: ${response.statusText}`);
-                    }
-                    if (response.ok) {
-                      const result = await response.json();
-                      router.push("/create_troubleshoot/" + result.data._id);
-                    }
-                  }}
+                    //   if (!response.ok) {
+                    //     router.push("/error/" + response.status);
+                    //     throw new Error(`Error: ${response.statusText}`);
+                    //   }
+                    //   if (response.ok) {
+                    //     const result = await response.json();
+                    //     router.push("/create_troubleshoot/" + result.data._id);
+                    //   }
+                    // }
+                  }
                 >
                   New trouble-shush
                 </button>

@@ -28,3 +28,20 @@ export const fetchOnePublicTroubleShootApi = async (
     throw new Error(`Network Error Occurred`);
   }
 };
+
+export const createTroubleShootApi = async (troubleshootTitle: string) => {
+  try {
+    const response = await fetch("/api/troubleshoot/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: troubleshootTitle,
+      }),
+    });
+    return response;
+  } catch (e) {
+    throw new Error(`Network Error Occurred`);
+  }
+};

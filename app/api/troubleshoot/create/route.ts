@@ -29,4 +29,4 @@ export const POST = rateLimitMiddleware(async (req: NextRequest) => {
   const savedTroubleShoot = await newTroubleShoot.save();
 
   return NextResponse.json({ data: savedTroubleShoot }, { status: 200 });
-});
+}, 1);
