@@ -22,7 +22,6 @@ export const GET = rateLimitMiddleware(
         troubleShootId: troubleshoot._id,
       }).sort({ createdAt: 1 });
 
-      console.log(token);
       if (!troubleshoot) {
         return NextResponse.json(
           { message: "Troubleshoot not found" },
@@ -45,14 +44,11 @@ export const GET = rateLimitMiddleware(
 
       // console.log(troubleshoot, "trouble shoot returned");
 
-      console.log(relatedQuestions, "related Question");
-      console.log(troubleshoot, "troubleshoot");
       return NextResponse.json(
         { data: { questions: relatedQuestions, troubleshoot: troubleshoot } },
         { status: 200 }
       );
     } catch (error) {
-      console.log(error);
       return NextResponse.json(
         { message: "Internal Server Error" },
         { status: 500 }

@@ -22,7 +22,8 @@ const ShowTroubleShoots = () => {
     if (isSignedIn === false) {
       signOut().then(() => router.push("/"));
     }
-  }, [isSignedIn, router, signOut]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const fetchTroubleShoots = async () => {
@@ -59,7 +60,7 @@ const ShowTroubleShoots = () => {
                 data-wow-delay=".15s
               "
               >
-                {troubleshootList.length > 0 &&
+                {troubleshootList.length > 0 ? (
                   troubleshootList.map((troubleshoot, i) => (
                     <div
                       key={i}
@@ -72,7 +73,10 @@ const ShowTroubleShoots = () => {
                         </div>
                       </Link>
                     </div>
-                  ))}
+                  ))
+                ) : (
+                  <p>No Toruble shoots found.</p>
+                )}
               </div>
             </div>
           </div>
