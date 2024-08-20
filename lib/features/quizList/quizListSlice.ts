@@ -9,6 +9,7 @@ const initialState: Quiz[] = [
     imageUrl: "string",
     options: [{ text: "string", nextQuizId: "string" }],
     troubleShootId: "",
+    createdBy: "",
   },
 ];
 

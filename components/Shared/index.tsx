@@ -1,10 +1,19 @@
 "use client";
-import Link from "next/link";
+
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Button from "../Button";
 import { Quiz } from "@/lib/types/Quiz";
-import Image from "next/image";
+import {
+  findFirstQuestion,
+  onBack,
+  onRestart,
+} from "@/util/questionNavigation";
+import { LoadingSpinner } from "../LoadingSpinner";
+import { OptionsList } from "../ShowQuestion/OptionsList";
+import { ImageDisplay } from "../ShowQuestion/ImageDisplay";
+import { QuestionCard } from "../ShowQuestion/QuestionCard";
+import { fetchOnePublicTroubleShootApi } from "@/lib/api";
+import useHandleApiErrors from "@/lib/hook/useHandlerApiErrors";
 
 const ShowQuestion = ({ token }) => {
   const [loading, setLoading] = useState(true);
@@ -12,41 +21,21 @@ const ShowQuestion = ({ token }) => {
   const [history, setHistory] = useState<Quiz[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [questionList, setQuestionList] = useState<Quiz[]>([]);
-  const [shareLink, setShareLink] = useState("");
   const [troubleshootTitle, setTroubleShootTitle] = useState<string>("");
-  const router = useRouter();
 
-  const findFirstQuestion = (questions: Quiz[]): Quiz => {
-    const cur: Quiz = questions.find((item: Quiz) => item.isFirst === true);
-
-    return cur;
-  };
+  const { handleApiErrors } = useHandleApiErrors();
 
   useEffect(() => {
     const fetchTroubleShoots = async () => {
       try {
-        const response = await fetch("/api/get_troubleshoot_public/" + token);
-        console.log("calling shared");
-        if (!response.ok) {
-          router.push("/error/" + response.status);
-
-          throw new Error(`Error: ${response.statusText}`);
-        }
+        const response = await fetchOnePublicTroubleShootApi(token);
+        const isSuccess = await handleApiErrors(response);
+        if (!isSuccess) return;
         const data = await response.json();
-
         setTroubleShootTitle(data.data.troubleshoot.title);
         setQuestionList(data.data.questions);
-        console.log(data.data.troubleshoot);
-        // if (data.data.troubleshoot.isPublic) {
-        //   setShareLink(
-        //     "http://localhost:3000/shared/" + data.data.troubleshoot.token
-        //   );
-        // }
-
         const cur: Quiz = findFirstQuestion(data.data.questions);
-
-        if (cur === undefined) {
-        } else {
+        if (cur !== undefined) {
           setCurrentQuestion(cur);
         }
       } catch (error) {
@@ -56,29 +45,11 @@ const ShowQuestion = ({ token }) => {
       }
     };
     fetchTroubleShoots();
-  }, [token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  if (loading)
-    return (
-      <p className="flex justify-center items-center">
-        <span className="loading loading-dots loading-lg"></span>
-      </p>
-    );
+  if (loading) return <LoadingSpinner />;
   if (error) return <p>Error: {error}</p>;
-
-  const onRestart = (): void => {
-    const cur = findFirstQuestion(questionList);
-    setCurrentQuestion(cur);
-    setHistory([]);
-  };
-
-  const onBack = () => {
-    if (history.length > 0) {
-      const lastQuestion = history[history.length - 1];
-      setHistory((prev) => prev.slice(0, -1));
-      setCurrentQuestion(lastQuestion);
-    }
-  };
 
   return (
     <>
@@ -98,83 +69,35 @@ const ShowQuestion = ({ token }) => {
                     {history.length > 0 ? (
                       <button
                         className="btn btn-active btn-accent"
-                        onClick={onBack}
+                        onClick={() =>
+                          onBack(history, setHistory, setCurrentQuestion)
+                        }
                       >
                         Back
                       </button>
                     ) : (
                       <div></div>
                     )}
-                    {/* {shareLink === "" ? (
-                      <button
-                        className="btn btn-active btn-secondary"
-                        onClick={onShare}
-                      >
-                        Share
-                      </button>
-                    ) : (
-                      <div></div>
-                    )} */}
-                    {/* Link: {shareLink} */}
                     <button
                       className="btn btn-active btn-secondary"
-                      onClick={onRestart}
+                      onClick={() =>
+                        onRestart(questionList, setCurrentQuestion, setHistory)
+                      }
                     >
                       Restart
                     </button>
                   </div>
-                  {currentQuestion.imageUrl && (
-                    <div className="m-1 border-2 border-thirdColor rounded-xl">
-                      <Image
-                        className="rounded-xl shadow-xl"
-                        src={currentQuestion.imageUrl}
-                        layout="responsive"
-                        width={500}
-                        height={500}
-                        alt="Question Media"
-                      />
-                    </div>
-                  )}
+
+                  <ImageDisplay imageUrl={currentQuestion.imageUrl} />
                   <div className="flex justify-center items-center flex-col">
                     {/* card */}
-                    <div className="card w-full bg-base-100 shadow-xl p-1 m-4">
-                      <div className="card-body">
-                        <h2 className="card-title">Question</h2>
-                        <div className="card-actions justify-end">
-                          <h1 className="break-words">
-                            {currentQuestion.question}
-                          </h1>
-                        </div>
-                      </div>
-                    </div>
-
-                    {currentQuestion.options.map((item, i) => {
-                      return (
-                        <div
-                          onClick={() => {
-                            if (item.nextQuizId !== undefined) {
-                              const nextQuestion = questionList.find(
-                                (quest: Quiz) => quest._id === item.nextQuizId
-                              );
-
-                              if (nextQuestion) {
-                                setHistory((prev) => [
-                                  ...prev,
-                                  currentQuestion,
-                                ]);
-                                setCurrentQuestion(nextQuestion);
-                              }
-                            } else {
-                              console.log("the end of the troubleshoot");
-                            }
-                          }}
-                          key={i}
-                          className="w-full bordered rounded-xl shadow-xl p-4 m-4 bg-base-200 hover:bg-base-300 cursor-pointer"
-                        >
-                          Option {i + 1}: {item.text}
-                        </div>
-                      );
-                    })}
+                    <QuestionCard currentQuestion={currentQuestion} />
+                    <OptionsList
+                      currentQuestion={currentQuestion}
+                      questionList={questionList}
+                      setHistory={setHistory}
+                      setCurrentQuestion={setCurrentQuestion}
+                    />
                   </div>
                 </div>
               ) : (

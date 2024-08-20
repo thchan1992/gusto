@@ -6,6 +6,10 @@ import { useState, useEffect } from "react";
 import Button from "../Button";
 
 import { useUser, useAuth } from "@clerk/nextjs";
+import { fetchTroubleShootsApi } from "@/lib/api";
+import useHandleApiErrors from "@/lib/hook/useHandlerApiErrors";
+import { LoadingSpinner } from "../LoadingSpinner";
+import { createTroubleShootApi } from "@/lib/api";
 
 const CreateTroubleShoot = () => {
   const [loading, setLoading] = useState(true);
@@ -15,34 +19,22 @@ const CreateTroubleShoot = () => {
   const router = useRouter();
   const { signOut } = useAuth();
   const { isSignedIn } = useUser();
+  const { handleApiErrors } = useHandleApiErrors();
   useEffect(() => {
-    const handleAuthorised = async () => {
-      if (isSignedIn === false) {
-        await signOut();
-        router.push("/");
-      }
-    };
-    handleAuthorised();
-    console.log(isSignedIn);
-  }, [isSignedIn, router, signOut]);
+    if (isSignedIn === false) {
+      signOut().then(() => router.push("/"));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const fetchTroubleShoots = async () => {
       try {
-        const response = await fetch("/api/troubleshoot/get_all");
-        if (response.status === 401) {
-          await signOut();
-          router.push("/error/" + response.status);
-          return;
-        }
-        if (!response.ok) {
-          // console.log(response.status, "status");
-          router.push("/error/" + response.status);
-          throw new Error(`Error: ${response.statusText}`);
-        }
-
+        // const response = await fetch("/api/troubleshoot/get_all");
+        const response = await fetchTroubleShootsApi();
+        const isSuccess = await handleApiErrors(response);
+        if (!isSuccess) return;
         const data = await response.json();
-
         setTroubleshootList(data.data);
       } catch (error) {
         setError(error.message);
@@ -50,16 +42,21 @@ const CreateTroubleShoot = () => {
         setLoading(false);
       }
     };
-
     fetchTroubleShoots();
-  }, [router, signOut]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  if (loading)
-    return (
-      <p className="flex items-center justify-center">
-        <span className="loading loading-dots loading-lg"></span>
-      </p>
-    );
+  const onCreateTroubleShoot = async () => {
+    const response = await createTroubleShootApi(troubleshootTitle);
+    const isSuccess = await handleApiErrors(response);
+    if (!isSuccess) return;
+    if (isSuccess) {
+      const result = await response.json();
+      router.push("/create_troubleshoot/" + result.data._id);
+    }
+  };
+
+  if (loading) return <LoadingSpinner />;
   if (error) return <p>Error: {error}</p>;
 
   return (
@@ -84,27 +81,7 @@ const CreateTroubleShoot = () => {
                 />
                 <button
                   className="btn btn-info w-1/4 mb-8"
-                  // title="Create a new troubleshoot"
-                  onClick={async () => {
-                    const response = await fetch("/api/troubleshoot/create", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        title: troubleshootTitle,
-                      }),
-                    });
-
-                    if (!response.ok) {
-                      router.push("/error/" + response.status);
-                      throw new Error(`Error: ${response.statusText}`);
-                    }
-                    if (response.ok) {
-                      const result = await response.json();
-                      router.push("/create_troubleshoot/" + result.data._id);
-                    }
-                  }}
+                  onClick={onCreateTroubleShoot}
                 >
                   New trouble-shush
                 </button>

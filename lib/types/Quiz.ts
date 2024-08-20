@@ -4,5 +4,6 @@ export type Quiz = {
   question: string;
   imageUrl: string;
   options: { text: string; nextQuizId: string }[];
+  createdBy: string;
   troubleShootId: string;
 };

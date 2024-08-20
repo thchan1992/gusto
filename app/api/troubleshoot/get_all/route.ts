@@ -27,4 +27,4 @@ export const GET = rateLimitMiddleware(async (req: NextRequest) => {
       { status: 500 }
     );
   }
-});
+}, 10);
