@@ -9,16 +9,16 @@ import rateLimitMiddleware from "@/lib/rateLimit";
 
 export const POST = rateLimitMiddleware(async (req: NextRequest) => {
   try {
-    const data = await req.json();
+    const { title, isFirst, troubleShootId, imageUrl } = await req.json();
 
     await dbConnect();
 
     const { userId } = auth();
-
     if (!userId) {
       return NextResponse.json({ status: 401, message: "Unauthorized" });
     }
-    const user = await User.findOne({ userId: userId });
+
+    const user = await User.findOne({ userId });
     if (!user) {
       return NextResponse.json({
         status: 404,
@@ -26,58 +26,59 @@ export const POST = rateLimitMiddleware(async (req: NextRequest) => {
       });
     }
 
-    const { title, isFirst, troubleShootId, imageUrl } = data;
-
-    const troubleShoot = await TroubleShoot.findOne({
-      _id: new mongoose.Types.ObjectId(troubleShootId),
-    });
-
-    if (troubleShoot.quizList.length > 10 && !troubleShoot.isPublic) {
+    const troubleShoot = await TroubleShoot.findById(troubleShootId);
+    if (!troubleShoot) {
       return NextResponse.json({
-        status: 400,
-        message: "Cannot add more question.",
-      });
-    } else {
-      const troubleShoot = await TroubleShoot.findById(troubleShootId).exec();
-
-      console.log(troubleShoot.createdBy, "created by");
-      console.log(userId, "user Id");
-      if (troubleShoot.createdBy !== userId) {
-        return NextResponse.json({
-          status: 403,
-          message: "You do not have the access.",
-        });
-      }
-      const question = await Quiz.findOne({
-        troubleShootId: new mongoose.Types.ObjectId(troubleShootId),
-      });
-
-      const newQuestion = new Quiz({
-        isFirst: question !== null ? false : true,
-        imageUrl: imageUrl,
-        question: title,
-        options: [],
-        createdBy: userId,
-        troubleShootId: troubleShootId,
-      });
-
-      const savedQuestion = await newQuestion.save();
-
-      await TroubleShoot.findByIdAndUpdate(troubleShootId, {
-        $push: { quizList: savedQuestion._id },
-      });
-
-      const relatedQuizzes = await Quiz.find({
-        troubleShootId: troubleShootId,
-      }).sort({ createdAt: 1 });
-
-      return NextResponse.json({
-        status: 200,
-        data: { questionList: relatedQuizzes, newQuestion: savedQuestion },
+        status: 404,
+        message: "Troubleshoot not found",
       });
     }
+
+    if (troubleShoot.createdBy !== userId) {
+      return NextResponse.json({
+        status: 403,
+        message: "You do not have access.",
+      });
+    }
+
+    if (troubleShoot.quizList.length >= 10 && !troubleShoot.isPublic) {
+      return NextResponse.json({
+        status: 400,
+        message: "Cannot add more questions.",
+      });
+    }
+
+    const isFirstQuestion = await Quiz.exists({ troubleShootId });
+
+    const newQuestion = new Quiz({
+      isFirst: !isFirstQuestion,
+      imageUrl,
+      question: title,
+      options: [],
+      createdBy: userId,
+      troubleShootId,
+    });
+
+    const savedQuestion = await newQuestion.save();
+
+    await TroubleShoot.findByIdAndUpdate(troubleShootId, {
+      $push: { quizList: savedQuestion._id },
+    });
+
+    const relatedQuizzes = await Quiz.find({ troubleShootId })
+      .sort({ createdAt: 1 })
+      .exec();
+
+    return NextResponse.json({
+      status: 200,
+      data: { questionList: relatedQuizzes, newQuestion: savedQuestion },
+    });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ status: 500, message: "Internal Server Error" });
+
+    return NextResponse.json({
+      status: 500,
+      message: "Internal Server Error",
+    });
   }
 }, 10);
