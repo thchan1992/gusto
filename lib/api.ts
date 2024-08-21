@@ -57,7 +57,7 @@ export const createQuizApi = async (
   imageUrl: string
 ): Promise<Response> => {
   try {
-    const response = await fetch("/api/create_quiz", {
+    const response = await fetch("/api/quiz/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export const createOptionApi = async (
   }[]
 ): Promise<Response> => {
   try {
-    const response = await fetch("/api/create_quiz/create_option", {
+    const response = await fetch("/api/quiz/create_option", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export const updateQuestionApi = async (
   updatedQuestion: Quiz
 ): Promise<Response> => {
   try {
-    const response = await fetch("/api/update_quiz", {
+    const response = await fetch("/api/quiz/update", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export const removeQuizApi = async (
 ): Promise<Response> => {
   try {
     const response = await fetch(
-      "/api/remove_quiz/" + quizId + "/" + troubleshootId,
+      "/api/quiz/remove/" + quizId + "/" + troubleshootId,
       {
         method: "DELETE",
       }
@@ -135,7 +135,7 @@ export const removeQuizApi = async (
 
 export const removeTroubleShootApi = async (id: string): Promise<Response> => {
   try {
-    const response = await fetch("/api/remove_troubleshoot/" + id, {
+    const response = await fetch("/api/troubleshoot/remove/" + id, {
       method: "DELETE",
     });
     return response;

@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import Quiz from "@/lib/models/Quiz";
 import mongoose from "mongoose";
-import { User } from "@/lib/models/User";
 import rateLimitMiddleware from "@/lib/rateLimit";
 
 // export async function POST(req: Request) {

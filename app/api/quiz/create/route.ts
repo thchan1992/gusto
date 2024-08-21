@@ -8,7 +8,6 @@ import mongoose from "mongoose";
 import rateLimitMiddleware from "@/lib/rateLimit";
 
 export const POST = rateLimitMiddleware(async (req: NextRequest) => {
-  // export async function POST(req: Request) {
   try {
     const data = await req.json();
 
@@ -71,8 +70,6 @@ export const POST = rateLimitMiddleware(async (req: NextRequest) => {
       const relatedQuizzes = await Quiz.find({
         troubleShootId: troubleShootId,
       }).sort({ createdAt: 1 });
-
-      // return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
       return NextResponse.json({
         status: 200,
