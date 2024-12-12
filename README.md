@@ -1,35 +1,50 @@
-# Startup - Free Next.js Startup Website Template
+# **Troubleshush**
 
-Startup free, open-source, and premium-quality startup website template for Next.js comes with everything you need to launch a startup, business, or SaaS website, including all essential sections, components, and pages.
-
-If you're looking for a high-quality and visually appealing, feature-rich Next.js Template for your next startup, SaaS, or business website, this is the perfect choice and starting point for you!
-
-### ✨ Key Features
-- Crafted for Startup and SaaS Business
-- Next.js 13 and Tailwind CSS
-- All Essential Business Sections and Pages
-- High-quality and Clean Design
-- Dark and Light Version
-- TypeScript Support
-and Much More ...
-
-### [🚀 View Demo](https://startup.nextjstemplates.com/)
-
-### [📦 Download](https://nextjstemplates.com/templates/startup)
-
-### [🔌 Documentation](https://nextjstemplates.com/docs)
-
-### ⚡ Deploy Now
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FNextJSTemplates%2Fstartup-nextjs)
-
-[![Deploy with Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/NextJSTemplates/startup-nextjs)
+**Troubleshush** is a web application designed for those who want to create an interactive trouble shoot manual.
 
 
-### 📄 License
-Startup is 100% free and open-source, feel free to use with your personal and commercial projects.
+---
+Access the live application at [TroubleShush](https://troubleshush.com/).
 
-### 💜 Support
-If you like the template, please star this repository to inspire the team to create more stuff like this and reach more users like you!
+## **Features**
+- **Intuitive Manual Creation:** Effortlessly create detailed troubleshooting manuals to guide users through self-diagnostic procedures.
+  
+- **Rich Media Integration:** Enhance your manuals with images at each step for clearer and more effective explanations.
+  
+- **Seamless Sharing:** Share your manuals with others effortlessly (available in the paid version), ensuring everyone has access to the information they need.
 
-### ✨ Explore and Download - Free [Next.js Templates](https://nextjstemplates.com)
+---
+
+## **Technologies Used**
+- **Frontend & Backend**: TypeScript, Next.js, Next.js API Route
+- **Database**: MongoDB, Mongoose
+- **Platform**: Vercel, AWS S3
+- **Other Tools**: Tailwind CSS, RESTful API, Postmark, Stripe, Redux, Clerk Authenication
+
+---
+
+#### **Prerequisites**
+1. Install [Node.js](https://nodejs.org/) 
+2. Ensure you have a running instance of [MongoDB](https://www.mongodb.com/try/download/community) or a connection string to a MongoDB Atlas database.
+3. Have an AWS S3 bucket set up if file storage is required.
+
+---
+
+## **Install Dependencies**
+Clone this repository:
+   ```bash
+   git clone https://github.com/thchan1992/gusto.git
+   cd gusto
+   npm install
+```
+
+Start the application:
+  ```bash
+npm run dev 
+```
+---
+# **License**
+
+This project is licensed under the MIT License.
+
+
